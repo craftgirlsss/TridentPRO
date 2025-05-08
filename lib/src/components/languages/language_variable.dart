@@ -1,3 +1,4 @@
+
 class LanguageGlobalVar {
   static const String MASUK = "Masuk";
   static const String LUPA = "Lupa Kata Sandi?";
@@ -11,4 +12,31 @@ class LanguageGlobalVar {
   static const String REGIST_NOW = "Daftar Sekarang";
   static const String OR_REGIST_WITH = "Atau lanjut dengan";
   static const String CREATE_ACCOUNT_FOR_START = "Buat akun untuk memulai trading!";
+  static const String SEND_OTP = "Kirim OTP";
+  static const String RESET_PASSWORD = "Atur Ulang Kata Sandi";
+  static const String RESET_PASSWORD_TEXT = "Jika anda lupa kata sandi anda, anda bisa mengatur ulang dengan mengisi form dibawah ini.";
+  static const String SET_PASSCODE = "Atur Passcode";
+  static const String SET_PASSCODE_TEXT = "Masukkan 4 digit angka untuk membuka kunci aplikasi";
+  static const String NOT_HAVE_ACCOUNT_REAL = "Tidak Ada Akun Real";
+  static const String NOT_HAVE_ACCOUNT_REAL_TEXT = "Anda belum memiliki Akun Real. Mohon untuk buat terlebih dahulu";
+  static const String NOT_HAVE_ACCOUNT_DEMO = "Tidak Ada Akun Demo";
+  static const String NOT_HAVE_ACCOUNT_DEMO_TEXT = "Anda belum memiliki Akun Demo. Mohon untuk buat terlebih dahulu";
+  static const String EMAIL_ADDRESS = "Alamat Email";
+  static const String PASSWORD = "Kata Sandi";
+  static const String OTP_CODE = "Kode OTP";
+  static const String CREATE_PASSWORD = "Buat Kata Sandi";
+  static const String REPEAT_PASSWORD = "Ulangi Kata Sandi";
+  static const String HAVE_READ = "Saya Telah Membaca!";
+  static const String AND = "dan";
+  static const String PHONE_NUMBER = "Nomor HP";
+  static const String FULL_NAME = "Nama Lengkap";
+  static const String SET_UP_LATER = "Atur Nanti";
+  static const String HOME = "Beranda";
+  static const String TRADING_ACCOUNT = "Akun Trading";
+  static const String MARKET = "Market";
+  static const String CREATE_TRADING_ACCOUNT = "Buat Akun Trading";
+  static const String SELECT_TRADING_ACCOUNT = "Pilih Jenis Akun Trading";
+  static const String WHAT_WILL_WE_GET = "Apa Yang Akan Didapat?";
+  static const String FOLLOW_USD = "Mengikuti Harga Kurs USD";
+  static const String LEVERAGE_START_FROM = "Leverage Mulai Dari ";
 }

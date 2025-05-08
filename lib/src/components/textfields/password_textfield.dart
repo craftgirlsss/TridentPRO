@@ -10,9 +10,10 @@ import 'package:tridentpro/src/helpers/validator/email_validator.dart';
 class PasswordTextField extends StatefulWidget {
   final String? hintText;
   final String? labelText;
+  final String? fieldName;
   final bool? readOnly;
   final TextEditingController? controller;
-  const PasswordTextField({super.key, this.hintText, this.labelText, this.controller, this.readOnly});
+  const PasswordTextField({super.key, this.hintText, this.labelText, this.controller, this.readOnly, this.fieldName});
 
   @override
   State<PasswordTextField> createState() => _PasswordTextFieldState();
@@ -61,7 +62,8 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
           decoration: InputDecoration(
             hintText: widget.hintText,
             hintStyle: GoogleFonts.inter(
-              color: CustomColor.textThemeDarkSoftColor
+              color: CustomColor.textThemeDarkSoftColor,
+              fontSize: 14
             ),
             labelText: widget.labelText,
             labelStyle: const TextStyle(color: CustomColor.defaultColor),

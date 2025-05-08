@@ -8,9 +8,10 @@ import 'package:tridentpro/src/helpers/validator/email_validator.dart';
 class EmailTextField extends StatefulWidget {
   final String? hintText;
   final String? labelText;
+  final String? fieldName;
   final bool? readOnly;
   final TextEditingController? controller;
-  const EmailTextField({super.key, this.hintText, this.labelText, this.controller, this.readOnly});
+  const EmailTextField({super.key, this.hintText, this.labelText, this.controller, this.readOnly, this.fieldName});
 
   @override
   State<EmailTextField> createState() => _EmailTextFieldState();
@@ -29,20 +30,21 @@ class _EmailTextFieldState extends State<EmailTextField> {
         controller: widget.controller,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         autofillHints: const [AutofillHints.email],
-        keyboardAppearance: Brightness.dark,
+        keyboardType: TextInputType.emailAddress,
         cursorColor: CustomColor.defaultColor,
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'Mohon isikan ${widget.labelText}';
+            return 'Mohon isikan ${widget.fieldName}';
           }else if(validateEmailBool(value) == false){
-            return 'Mohon isikan ${widget.labelText} yang benar';
+            return 'Mohon isikan ${widget.fieldName} yang benar';
           }
           return null;
         },
         decoration: InputDecoration(
           hintText: widget.hintText,
           hintStyle: GoogleFonts.inter(
-            color: CustomColor.textThemeDarkSoftColor
+            color: CustomColor.textThemeDarkSoftColor,
+            fontSize: 14
           ),
           labelText: widget.labelText,
           labelStyle: const TextStyle(color: CustomColor.defaultColor),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:tridentpro/src/components/buttons/default.dart';
+import 'package:tridentpro/src/components/buttons/elevated_button.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/views/authentications/signin.dart';
@@ -85,7 +85,7 @@ class _OnboardingState extends State<Onboarding> {
         child: SizedBox(
           width: size.width,
           child: DefaultButton.defaultElevatedButton(
-            title: LanguageGlobalVar.MASUK.tr,
+            title: LanguageGlobalVar.SELANJUTNYA.tr,
             onPressed: () => Get.to(() => const SignIn()),
           ),
         ),

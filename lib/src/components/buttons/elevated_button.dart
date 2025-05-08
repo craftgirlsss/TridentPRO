@@ -12,6 +12,7 @@ class DefaultButton {
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
             elevation: 0,
+            overlayColor: CustomColor.backgroundLightColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12)
             ),

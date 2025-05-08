@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       defaultTransition: Transition.cupertino,
       debugShowCheckedModeBanner: false,
       translations: Languages(),
-      locale: Locale('id', 'ID'),
+      locale: Get.deviceLocale,
       theme: CustomTheme.defaultLightTheme(),
       darkTheme: CustomTheme.defaultDarkTheme(),
       themeMode: ThemeMode.system,

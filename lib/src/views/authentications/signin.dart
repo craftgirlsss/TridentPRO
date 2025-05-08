@@ -4,12 +4,14 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:tridentpro/src/components/buttons/default.dart';
+import 'package:tridentpro/src/components/buttons/elevated_button.dart';
 import 'package:tridentpro/src/components/buttons/iconbuttons.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/components/textfields/email_textfield.dart';
 import 'package:tridentpro/src/components/textfields/password_textfield.dart';
+import 'package:tridentpro/src/views/authentications/forgot.dart';
+import 'package:tridentpro/src/views/authentications/passcode.dart';
 import 'package:tridentpro/src/views/authentications/signup.dart';
 
 class SignIn extends StatefulWidget {
@@ -93,15 +95,17 @@ class _SignInState extends State<SignIn> {
                         children: [
                           EmailTextField(
                             readOnly: false,
-                            hintText: "Alamat Email",
+                            fieldName: LanguageGlobalVar.EMAIL_ADDRESS.tr,
+                            hintText: LanguageGlobalVar.EMAIL_ADDRESS.tr,
                             controller: emailController,
                           ),
                           PasswordTextField(
+                            fieldName: LanguageGlobalVar.PASSWORD.tr,
                             controller: passwordController,
-                            hintText: "Kata Sandi",
+                            hintText: LanguageGlobalVar.PASSWORD.tr,
                           ),
                           TextButton(
-                            onPressed: (){},
+                            onPressed: () => Get.to(() => const Forgot()),
                             style: TextButton.styleFrom(
                               padding: EdgeInsets.only(
                                 bottom: 24,
@@ -116,7 +120,9 @@ class _SignInState extends State<SignIn> {
                             width: size.width,
                             child: DefaultButton.defaultElevatedButton(
                               onPressed: (){
-                                if(_formKey.currentState!.validate()){}
+                                if(_formKey.currentState!.validate()){
+                                  Get.to(() => const Passcode());
+                                }
                               },
                               title: LanguageGlobalVar.MASUK.tr
                             ),

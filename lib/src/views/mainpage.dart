@@ -1,4 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:icons_plus/icons_plus.dart';
+import 'package:tridentpro/src/components/colors/default.dart';
+import 'package:tridentpro/src/components/languages/language_variable.dart';
+import 'package:tridentpro/src/views/accounts/index.dart';
+import 'package:tridentpro/src/views/beranda/index.dart';
+import 'package:tridentpro/src/views/settings/index.dart';
+import 'package:tridentpro/src/views/trade/index.dart';
 
 class Mainpage extends StatefulWidget {
   const Mainpage({super.key});
@@ -8,8 +17,62 @@ class Mainpage extends StatefulWidget {
 }
 
 class _MainpageState extends State<Mainpage> {
+  int _selectedIndex = 0;
+  static final List<Widget> _widgetOptions = <Widget>[
+    const Beranda(),
+    const Accounts(),
+    const Trade(),
+    const Settings(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        body: _widgetOptions.elementAt(_selectedIndex),
+        bottomNavigationBar: Container(
+          color: Colors.white,
+          child: BottomNavigationBar(
+            selectedLabelStyle: GoogleFonts.inter(fontSize: 14),
+            unselectedLabelStyle: GoogleFonts.inter(fontSize: 14),
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(ZondIcons.explore),
+                label: LanguageGlobalVar.HOME.tr,
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Clarity.lightbulb_solid),
+                label: LanguageGlobalVar.TRADING_ACCOUNT.tr,
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.stacked_line_chart),
+                label: "Markets",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Bootstrap.person_fill_gear),
+                label: 'Settings',
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            elevation: 0,
+            showSelectedLabels: true,
+            type: BottomNavigationBarType.fixed,
+            unselectedFontSize: 12,
+            selectedItemColor: CustomColor.defaultColor,
+            unselectedIconTheme: IconThemeData(color: CustomColor.textThemeLightSoftColor),
+            selectedIconTheme: IconThemeData(size: 25, color: CustomColor.defaultColor),
+            unselectedItemColor: CustomColor.textThemeLightSoftColor,
+            onTap: _onItemTapped,
+          ),
+        ),
+      ),
+    );
   }
 }
