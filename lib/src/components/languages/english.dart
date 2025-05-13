@@ -40,6 +40,11 @@ class English {
     LanguageGlobalVar.SELECT_TRADING_ACCOUNT: "Select Trading Account Type",
     LanguageGlobalVar.WHAT_WILL_WE_GET: "What Will We Get",
     LanguageGlobalVar.FOLLOW_USD: "Follow The USD Exchange Rate",
-    LanguageGlobalVar.LEVERAGE_START_FROM: "Leverage Start From "
+    LanguageGlobalVar.LEVERAGE_START_FROM: "Leverage Start From ",
+    LanguageGlobalVar.PERSONAL_INFORMATION: "Personal Information",
+    LanguageGlobalVar.ID_CARD: "Nationaly Identification Card",
+    LanguageGlobalVar.TAX_CARD: "Tax Identification Card",
+    LanguageGlobalVar.FEMALE: "Female",
+    LanguageGlobalVar.MEN: "Male"
   };
 }

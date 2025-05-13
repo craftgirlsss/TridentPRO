@@ -38,6 +38,11 @@ class IndonesiaLanguage {
     LanguageGlobalVar.SELECT_TRADING_ACCOUNT: LanguageGlobalVar.SELECT_TRADING_ACCOUNT,
     LanguageGlobalVar.WHAT_WILL_WE_GET: LanguageGlobalVar.WHAT_WILL_WE_GET,
     LanguageGlobalVar.FOLLOW_USD: LanguageGlobalVar.FOLLOW_USD,
-    LanguageGlobalVar.LEVERAGE_START_FROM: LanguageGlobalVar.LEVERAGE_START_FROM
+    LanguageGlobalVar.LEVERAGE_START_FROM: LanguageGlobalVar.LEVERAGE_START_FROM,
+    LanguageGlobalVar.PERSONAL_INFORMATION: LanguageGlobalVar.PERSONAL_INFORMATION,
+    LanguageGlobalVar.MEN: LanguageGlobalVar.MEN,
+    LanguageGlobalVar.FEMALE: LanguageGlobalVar.FEMALE,
+    LanguageGlobalVar.TAX_CARD: LanguageGlobalVar.TAX_CARD,
+    LanguageGlobalVar.ID_CARD: LanguageGlobalVar.ID_CARD
   };
 }

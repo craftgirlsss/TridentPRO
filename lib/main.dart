@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tridentpro/src/components/languages/languages.dart';
 import 'package:tridentpro/src/components/themes/default.dart';
+import 'package:tridentpro/src/helpers/get_utilities/routes.dart';
 import 'package:tridentpro/src/views/authentications/onboarding.dart';
 
 void main() {
@@ -15,6 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'TridentPRO',
+      getPages: GetUtilities.routes,
       defaultTransition: Transition.cupertino,
       debugShowCheckedModeBanner: false,
       translations: Languages(),

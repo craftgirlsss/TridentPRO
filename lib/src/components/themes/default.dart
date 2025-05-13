@@ -14,6 +14,17 @@ class CustomTheme{
       elevatedButtonTheme: defaultElevatedButtonTheme(),
       brightness: Brightness.light,
       useMaterial3: true,
+        textTheme: TextTheme(
+            bodyLarge: GoogleFonts.inter(color: Colors.black),
+          bodyMedium: GoogleFonts.inter(color: Colors.black54),
+          bodySmall: GoogleFonts.inter(color: Colors.black45),
+          titleLarge: GoogleFonts.inter(color: Colors.black),
+          titleMedium: GoogleFonts.inter(color: Colors.black54),
+          titleSmall: GoogleFonts.inter(color: Colors.black45),
+          displayLarge: GoogleFonts.inter(color: Colors.black),
+          displayMedium: GoogleFonts.inter(color: Colors.black54),
+          displaySmall: GoogleFonts.inter(color: Colors.black45),
+        ),
       dividerTheme: defaultDividerThemeDark(),
       iconButtonTheme: defaultIconButtonThemeLight()
       // textButtonTheme: defaultTextButtonThemeData()
@@ -29,6 +40,17 @@ class CustomTheme{
       segmentedButtonTheme: defaultSegmentedButtonDark(),
       brightness: Brightness.dark,
       useMaterial3: true,
+      textTheme: TextTheme(
+        bodyLarge: GoogleFonts.inter(color: Colors.white),
+        bodyMedium: GoogleFonts.inter(color: Colors.white70),
+        bodySmall: GoogleFonts.inter(color: Colors.white60),
+        titleLarge: GoogleFonts.inter(color: Colors.white),
+        titleMedium: GoogleFonts.inter(color: Colors.white70),
+        titleSmall: GoogleFonts.inter(color: Colors.white60),
+        displayLarge: GoogleFonts.inter(color: Colors.white),
+        displayMedium: GoogleFonts.inter(color: Colors.white70),
+        displaySmall: GoogleFonts.inter(color: Colors.white60),
+      ),
       dividerTheme: defaultDividerThemeDark(),
       iconButtonTheme: defaultIconButtonThemeDark()
       // textButtonTheme: defaultTextButtonThemeData()

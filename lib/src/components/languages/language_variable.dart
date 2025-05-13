@@ -39,4 +39,9 @@ class LanguageGlobalVar {
   static const String WHAT_WILL_WE_GET = "Apa Yang Akan Didapat?";
   static const String FOLLOW_USD = "Mengikuti Harga Kurs USD";
   static const String LEVERAGE_START_FROM = "Leverage Mulai Dari ";
+  static const String PERSONAL_INFORMATION = "Data Diri ";
+  static const String MEN = "Wanita";
+  static const String FEMALE = "Pria";
+  static const String ID_CARD = "KTP";
+  static const String TAX_CARD = "NPWP";
 }

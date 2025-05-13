@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tridentpro/src/components/buttons/elevated_button.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
+import 'package:tridentpro/src/views/accounts/step_1_upload_photo.dart';
 import 'components/simple_utilities.dart';
 
 class CreateReal extends StatefulWidget {
@@ -63,7 +64,9 @@ class _CreateRealState extends State<CreateReal> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         child: DefaultButton.defaultElevatedButton(
-            onPressed: (){},
+            onPressed: (){
+              Get.to(() => const Step1UploadPhoto());
+            },
             title: LanguageGlobalVar.CREATE_TRADING_ACCOUNT.tr
         ),
       ),

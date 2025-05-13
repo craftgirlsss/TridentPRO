@@ -1,42 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/helpers/validator/email_validator.dart';
 
-class EmailTextField extends StatefulWidget {
+class VoidTextField extends StatefulWidget {
   final String? hintText;
   final String? labelText;
   final String? fieldName;
   final bool? readOnly;
+  final Function()? onPressed;
   final TextEditingController? controller;
-  const EmailTextField({super.key, this.hintText, this.labelText, this.controller, this.readOnly, this.fieldName});
+  const VoidTextField({super.key, this.hintText, this.labelText, this.controller, this.readOnly, this.fieldName, this.onPressed});
 
   @override
-  State<EmailTextField> createState() => _EmailTextFieldState();
+  State<VoidTextField> createState() => _VoidTextFieldState();
 }
 
-class _EmailTextFieldState extends State<EmailTextField> {
+class _VoidTextFieldState extends State<VoidTextField> {
   RxBool isEmail = false.obs;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
-      child: Obx(
-        () => TextFormField(
-        readOnly: widget.readOnly ?? false,
+      child: TextFormField(
+        readOnly: true,
+        onTap: widget.onPressed,
         controller: widget.controller,
         autovalidateMode: AutovalidateMode.onUserInteraction,
-        autofillHints: const [AutofillHints.email],
-        keyboardType: TextInputType.emailAddress,
         cursorColor: CustomColor.defaultColor,
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Mohon isikan ${widget.fieldName}';
-          }else if(validateEmailBool(value) == false){
-            return 'Mohon isikan ${widget.fieldName} yang benar';
           }
           return null;
         },
@@ -49,14 +45,7 @@ class _EmailTextFieldState extends State<EmailTextField> {
           labelText: widget.labelText,
           labelStyle: const TextStyle(color: CustomColor.textThemeDarkSoftColor),
           filled: false,
-          suffix: AnimatedContainer(
-            duration: const Duration(milliseconds: 500),
-            padding: const EdgeInsets.all(2),
-            decoration:  BoxDecoration(
-              color: isEmail.value == false ? Colors.red : CustomColor.defaultColor,
-              shape: BoxShape.circle),
-            child: isEmail.value == false ? const Icon(Icons.close, color: Colors.white, size: 16) : const Icon(Icons.done, color: Colors.white, size: 16),
-          ),
+          suffixIcon: Icon(Icons.keyboard_arrow_down, color: Colors.black54,),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.0),
             borderSide: BorderSide(
@@ -84,7 +73,6 @@ class _EmailTextFieldState extends State<EmailTextField> {
             }
           },
         ),
-      ),
     );
   }
 }

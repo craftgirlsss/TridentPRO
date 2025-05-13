@@ -47,7 +47,7 @@ class _PhoneTextFieldState extends State<PhoneTextField> {
               fontSize: 14
             ),
             labelText: widget.labelText,
-            labelStyle: const TextStyle(color: CustomColor.defaultColor),
+            labelStyle: const TextStyle(color: CustomColor.textThemeDarkSoftColor),
             filled: false,
             suffix: AnimatedContainer(
               duration: const Duration(milliseconds: 500),
