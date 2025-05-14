@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
 import 'package:tridentpro/src/components/buttons/elevated_button.dart';
+import 'package:tridentpro/src/components/containers/phone_code_selector.dart';
 import 'package:tridentpro/src/components/containers/utilities.dart';
 import 'package:tridentpro/src/components/dates/material_datepicker.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
@@ -12,7 +13,9 @@ import 'package:tridentpro/src/components/textfields/email_textfield.dart';
 import 'package:tridentpro/src/components/textfields/name_textfield.dart';
 import 'package:tridentpro/src/components/textfields/phone_textfield.dart';
 import 'package:tridentpro/src/components/textfields/void_textfield.dart';
+import 'package:tridentpro/src/helpers/variables/countries.dart';
 import 'package:tridentpro/src/helpers/variables/global_variables.dart';
+import 'package:tridentpro/src/views/accounts/step_3_marital.dart';
 
 class Step2StoredData extends StatefulWidget {
   const Step2StoredData({super.key});
@@ -34,6 +37,7 @@ class _Step2StoredData extends State<Step2StoredData> {
   TextEditingController genderController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+  RxString selectedPhone = "62".obs;
 
   @override
   void dispose() {
@@ -79,7 +83,26 @@ class _Step2StoredData extends State<Step2StoredData> {
                   children: [
                     NameTextField(controller: nameController, fieldName: "Name", hintText: "Input your name", labelText: "Full Name"),
                     EmailTextField(controller: emailController, fieldName: "Email", hintText: "Input your email address", labelText: "Email Address"),
-                    PhoneTextField(controller: phoneController, fieldName: "Phone", hintText: "+62", labelText: "Phone Number"),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Obx(() => CustomPhoneSelector.phoneCodeSelector(onTap: (){
+                          CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Choose your Nationaly", children: List.generate(countryList.length, (i){
+                            return ListTile(
+                              leading: Text("+${countryList[i].phoneCode}", style: GoogleFonts.inter()),
+                              onTap: (){
+                                Navigator.pop(context);
+                                selectedPhone(countryList[i].phoneCode);
+                              },
+                              title: Text(countryList[i].name, style: GoogleFonts.inter()),
+                            );
+                          }));
+                        }, selectedPhone: selectedPhone.value)),
+                        const SizedBox(width: 5),
+                        Expanded(child: PhoneTextField(controller: phoneController, fieldName: "Phone", hintText: "81xxxx", labelText: "Phone Number")),
+                      ],
+                    ),
                   ]
                 ),
 
@@ -118,7 +141,7 @@ class _Step2StoredData extends State<Step2StoredData> {
               if(_formKey.currentState!.validate()){
 
               }else{
-
+                Get.to(() => const Step3Marital());
               }
             },
             title: LanguageGlobalVar.SELANJUTNYA.tr

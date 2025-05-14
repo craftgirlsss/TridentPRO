@@ -43,6 +43,14 @@ class IndonesiaLanguage {
     LanguageGlobalVar.MEN: LanguageGlobalVar.MEN,
     LanguageGlobalVar.FEMALE: LanguageGlobalVar.FEMALE,
     LanguageGlobalVar.TAX_CARD: LanguageGlobalVar.TAX_CARD,
-    LanguageGlobalVar.ID_CARD: LanguageGlobalVar.ID_CARD
+    LanguageGlobalVar.ID_CARD: LanguageGlobalVar.ID_CARD,
+    LanguageGlobalVar.DIVORCED: LanguageGlobalVar.DIVORCED,
+    LanguageGlobalVar.MARRIED: LanguageGlobalVar.MARRIED,
+    LanguageGlobalVar.SINGLE: LanguageGlobalVar.SINGLE,
+    LanguageGlobalVar.MARITAL_STATUS: LanguageGlobalVar.MARITAL_STATUS,
+    LanguageGlobalVar.FATHER: LanguageGlobalVar.FATHER,
+    LanguageGlobalVar.MOTHER: LanguageGlobalVar.MOTHER,
+    LanguageGlobalVar.BROTHER: LanguageGlobalVar.BROTHER,
+    LanguageGlobalVar.YOUNR_BROTHER: LanguageGlobalVar.YOUNR_BROTHER
   };
 }

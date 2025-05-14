@@ -44,4 +44,13 @@ class LanguageGlobalVar {
   static const String FEMALE = "Pria";
   static const String ID_CARD = "KTP";
   static const String TAX_CARD = "NPWP";
+  static const String MARITAL_STATUS = "Status Pernikahan";
+  static const String FAMILY_INFORMATION = "Informasi Keluarga";
+  static const String MARRIED = "Menikah";
+  static const String DIVORCED = "Cerai";
+  static const String SINGLE = "Belum Menikah";
+  static const String MOTHER = "Ibu";
+  static const String FATHER = "Ayah";
+  static const String YOUNR_BROTHER = "Adik";
+  static const String BROTHER = "Kakak";
 }

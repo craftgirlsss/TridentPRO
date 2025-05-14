@@ -45,6 +45,14 @@ class English {
     LanguageGlobalVar.ID_CARD: "Nationaly Identification Card",
     LanguageGlobalVar.TAX_CARD: "Tax Identification Card",
     LanguageGlobalVar.FEMALE: "Female",
-    LanguageGlobalVar.MEN: "Male"
+    LanguageGlobalVar.MEN: "Male",
+    LanguageGlobalVar.MARITAL_STATUS: "Marital Status",
+    LanguageGlobalVar.SINGLE: "Single",
+    LanguageGlobalVar.MARRIED: "Married",
+    LanguageGlobalVar.DIVORCED: "Divorced",
+    LanguageGlobalVar.MOTHER: "Mother",
+    LanguageGlobalVar.FATHER: "Father",
+    LanguageGlobalVar.BROTHER: "Brother",
+    LanguageGlobalVar.YOUNR_BROTHER: "Younger Brother"
   };
 }
