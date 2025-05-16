@@ -14,11 +14,21 @@ class _DemoSectionState extends State<DemoSection> {
     final Size size = MediaQuery.of(context).size;
     return RefreshIndicator(
       onRefresh: () async {},
-      child: ListView(
-        physics: const BouncingScrollPhysics(),
-        children: [
-          doesntHaveAccount(isDemo: true, size: size)
-        ],
+      child: SizedBox(
+        width: double.infinity,
+        height: double.maxFinite,
+        child: Center(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                doesntHaveAccount(isDemo: true, size: size)
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

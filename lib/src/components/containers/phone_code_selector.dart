@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 
 class CustomPhoneSelector {

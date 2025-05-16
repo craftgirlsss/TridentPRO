@@ -14,10 +14,21 @@ class _RealSectionState extends State<RealSection> {
     final Size size = MediaQuery.of(context).size;
     return RefreshIndicator(
       onRefresh: () async {},
-      child: ListView(
-        children: [
-          doesntHaveAccount(size: size)
-        ],
+      child: SizedBox(
+        width: double.infinity,
+        height: double.maxFinite,
+        child: Center(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                doesntHaveAccount(isDemo: false, size: size)
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

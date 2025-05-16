@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
-import 'package:tridentpro/src/components/buttons/elevated_button.dart';
 import 'package:tridentpro/src/components/containers/phone_code_selector.dart';
 import 'package:tridentpro/src/components/containers/utilities.dart';
 import 'package:tridentpro/src/components/dates/material_datepicker.dart';
@@ -16,6 +15,8 @@ import 'package:tridentpro/src/components/textfields/void_textfield.dart';
 import 'package:tridentpro/src/helpers/variables/countries.dart';
 import 'package:tridentpro/src/helpers/variables/global_variables.dart';
 import 'package:tridentpro/src/views/accounts/step_3_marital.dart';
+
+import 'components/step_position.dart';
 
 class Step2StoredData extends StatefulWidget {
   const Step2StoredData({super.key});
@@ -134,18 +135,14 @@ class _Step2StoredData extends State<Step2StoredData> {
             ),
           ),
         ),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          child: DefaultButton.defaultElevatedButton(
-            onPressed: (){
-              if(_formKey.currentState!.validate()){
-
-              }else{
-                Get.to(() => const Step3Marital());
-              }
-            },
-            title: LanguageGlobalVar.SELANJUTNYA.tr
-          ),
+        bottomNavigationBar: StepUtilities.stepOnlineRegister(
+          size: size,
+          title: "Pengumpulan Data",
+          onPressed: (){
+            Get.to(() => const Step3Marital());
+          },
+          progressEnd: 4,
+          progressStart: 2
         ),
       ),
     );

@@ -1,14 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
-import 'package:tridentpro/src/components/buttons/elevated_button.dart';
-import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/components/containers/utilities.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/components/textfields/void_textfield.dart';
@@ -16,6 +11,8 @@ import 'package:tridentpro/src/helpers/handlers/image_picker.dart';
 import 'package:tridentpro/src/helpers/variables/countries.dart';
 import 'package:tridentpro/src/helpers/variables/id_type.dart' show idTypeList;
 import 'package:tridentpro/src/views/accounts/step_2_stored_data.dart';
+
+import 'components/step_position.dart';
 
 class Step1UploadPhoto extends StatefulWidget {
   const Step1UploadPhoto({super.key});
@@ -106,22 +103,14 @@ class _Step1UploadPhotoState extends State<Step1UploadPhoto> {
             ),
           ),
         ),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          child: DefaultButton.defaultElevatedButton(
-              onPressed: (){
-                if(idPhoto.value == "" || idPhotoSelfie.value == ""){
-                  CustomAlert.alertError(
-                    message: "Please Fill All Photos",
-                  );
-                }else{
-                  if(_formKey.currentState!.validate()){
-                    Get.to(() => const Step2StoredData());
-                  }
-                }
-              },
-              title: LanguageGlobalVar.SELANJUTNYA.tr
-          ),
+        bottomNavigationBar: StepUtilities.stepOnlineRegister(
+          size: size,
+          title: "Verification Identity",
+          onPressed: (){
+            Get.to(() => const Step2StoredData());
+          },
+          progressEnd: 4,
+          progressStart: 1
         ),
       ),
     );

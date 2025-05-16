@@ -4,13 +4,14 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
-import 'package:tridentpro/src/components/buttons/elevated_button.dart';
 import 'package:tridentpro/src/components/containers/utilities.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/components/textfields/name_textfield.dart';
 import 'package:tridentpro/src/components/textfields/void_textfield.dart';
 import 'package:tridentpro/src/helpers/variables/global_variables.dart';
 import 'package:tridentpro/src/views/accounts/step_4_emergency_contact.dart';
+
+import 'components/step_position.dart';
 
 class Step3Marital extends StatefulWidget {
   const Step3Marital({super.key});
@@ -85,18 +86,14 @@ class _Step3Marital extends State<Step3Marital> {
             ),
           ),
         ),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          child: DefaultButton.defaultElevatedButton(
-            onPressed: (){
-              if(_formKey.currentState!.validate()){
-
-              }else{
-                Get.to(() => Step4EmergencyContact());
-              }
-            },
-            title: LanguageGlobalVar.SELANJUTNYA.tr
-          ),
+        bottomNavigationBar: StepUtilities.stepOnlineRegister(
+          size: size,
+          title: "Marital Status",
+          onPressed: (){
+            Get.to(() => const Step4EmergencyContact());
+          },
+          progressEnd: 4,
+          progressStart: 3
         ),
       ),
     );
