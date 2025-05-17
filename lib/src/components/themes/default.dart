@@ -9,7 +9,25 @@ class CustomTheme{
     return ThemeData(
       appBarTheme: defaultAppbarThemeLight(),
       iconTheme: defaultIconThemeDataLight(),
+      checkboxTheme: CheckboxThemeData(
+        checkColor: WidgetStatePropertyAll(Colors.white),
+        shape: CircleBorder(),
+        overlayColor: WidgetStatePropertyAll(CustomColor.defaultSoftColor),
+        fillColor: WidgetStatePropertyAll(CustomColor.defaultColor)
+      ),
+      buttonTheme: ButtonThemeData(
+        textTheme: ButtonTextTheme.accent,
+        colorScheme: ColorScheme.highContrastDark()
+      ),
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: CustomColor.defaultColor,
+        selectionColor: CustomColor.defaultSoftColor,
+        selectionHandleColor: CustomColor.defaultColor
+      ),
       colorScheme: ColorScheme.light(),
+      radioTheme: RadioThemeData(
+        fillColor: WidgetStatePropertyAll(CustomColor.defaultColor)
+      ),
       segmentedButtonTheme: defaultSegmentedButtonLight(),
       elevatedButtonTheme: defaultElevatedButtonTheme(),
       brightness: Brightness.light,
@@ -36,6 +54,24 @@ class CustomTheme{
       appBarTheme: defaultAppbarThemeDark(),
       iconTheme: defaultIconThemeDataDark(),
       colorScheme: ColorScheme.dark(),
+      checkboxTheme: CheckboxThemeData(
+        checkColor: WidgetStatePropertyAll(Colors.white),
+        overlayColor: WidgetStatePropertyAll(CustomColor.defaultSoftColor),
+        shape: CircleBorder(),
+        fillColor: WidgetStatePropertyAll(CustomColor.defaultColor)
+      ),
+      buttonTheme: ButtonThemeData(
+          textTheme: ButtonTextTheme.accent,
+          colorScheme: ColorScheme.highContrastDark()
+      ),
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: CustomColor.defaultColor,
+        selectionColor: CustomColor.defaultSoftColor,
+        selectionHandleColor: CustomColor.defaultColor
+      ),
+      radioTheme: RadioThemeData(
+          fillColor: WidgetStatePropertyAll(CustomColor.defaultColor)
+      ),
       elevatedButtonTheme: defaultElevatedButtonTheme(),
       segmentedButtonTheme: defaultSegmentedButtonDark(),
       brightness: Brightness.dark,

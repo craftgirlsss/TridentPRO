@@ -6,20 +6,20 @@ import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/helpers/variables/global_variables.dart';
-import 'package:tridentpro/src/views/accounts/step_6_invest_experience.dart';
+import 'package:tridentpro/src/views/accounts/step_8_income_range.dart';
 
 import 'components/step_position.dart';
 
-class Step5InvestmentGoal extends StatefulWidget {
-  const Step5InvestmentGoal({super.key});
+class Step7BalanceSources extends StatefulWidget {
+  const Step7BalanceSources({super.key});
 
   @override
-  State<Step5InvestmentGoal> createState() => _Step5InvestmentGoal();
+  State<Step7BalanceSources> createState() => _Step7BalanceSources();
 }
 
-class _Step5InvestmentGoal extends State<Step5InvestmentGoal> {
+class _Step7BalanceSources extends State<Step7BalanceSources> {
 
-  RxInt _selectedValue = 1.obs;
+  RxInt selectedValue = 1.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -44,47 +44,48 @@ class _Step5InvestmentGoal extends State<Step5InvestmentGoal> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Text("What Is Your Main Goal of Investing?", style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold)),
+                child: Text("Where Do The Funds For Your Investment Come From?", style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold)),
               ),
               ListView.builder(
                 shrinkWrap: true,
                 physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.all(16.0),
-                itemCount: GlobalVariable.investmentGoal.length,
+                itemCount: GlobalVariable.balanceSources.length,
                 itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Obx(
-                    () => RadioListTile(
-                      enableFeedback: true,
-                      toggleable: false,
-                      selected: false,
-                      selectedTileColor: CustomColor.defaultColor,
-                      shape: StadiumBorder(
-                        side: BorderSide(color: CustomColor.defaultColor)
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Obx(
+                      () => RadioListTile(
+                        enableFeedback: true,
+                        toggleable: false,
+                        selected: false,
+                        selectedTileColor: CustomColor.defaultColor,
+                        shape: StadiumBorder(
+                          side: BorderSide(color: CustomColor.defaultColor)
+                        ),
+                        title: Text(GlobalVariable.balanceSources[index]),
+                        value: index + 1,
+                        groupValue: selectedValue.value,
+                        onChanged: (value) {
+                          selectedValue(value);
+                        },
                       ),
-                      title: Text(GlobalVariable.investmentGoal[index]),
-                      value: index + 1,
-                      groupValue: _selectedValue.value,
-                      onChanged: (value) {
-                        _selectedValue(value);
-                      },
                     ),
-                  ),
-                );
-              },),
+                  );
+                },
+              ),
             ],
           ),
         ),
         bottomNavigationBar: StepUtilities.stepOnlineRegister(
           size: size,
-          title: "Investment Goal",
+          title: "Balance Sources",
           onPressed: (){
-            Get.to(() => const Step6InvestmentExperience());
+            Get.to(() => const Step8IncomeRange());
           },
           progressEnd: 6,
           currentAllPageStatus: 2,
-          progressStart: 1
+          progressStart: 3
         ),
       ),
     );
