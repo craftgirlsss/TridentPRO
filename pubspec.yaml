@@ -29,6 +29,8 @@ dependencies:
   web_socket_channel: ^3.0.3
   image_picker: ^1.1.2
   lottie: ^3.3.1
+  intl_phone_field: ^3.2.0
+  path: ^1.9.1
 
 dev_dependencies:
   flutter_test:

@@ -70,7 +70,7 @@ class _OTPTextFieldState extends State<OTPTextField> {
             )
           ),
           onChanged: (value) {
-            if(value.length > 4){
+            if(value.length > 3){
               isPhone(true);
             }else{
               isPhone(false);

@@ -171,9 +171,9 @@ class _TradeState extends State<Trade> {
       width: 200,
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: CustomColor.defaultSoftColor,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade100)
+        border: Border.all(color: Colors.black12),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -217,9 +217,9 @@ class StockTile extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 4),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: CustomColor.defaultSoftColor,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade100)
+        border: Border.all(color: Colors.black12)
       ),
       child: Row(
         children: [

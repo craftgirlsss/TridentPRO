@@ -79,17 +79,17 @@ class _Step2StoredData extends State<Step2StoredData> {
             child: Column(
               children: [
                 UtilitiesWidget.titleContent(
-                  title: "Data Profile",
-                  subtitle: "Please fill all your account details",
+                  title: LanguageGlobalVar.TITLE_REGOL_PAGE_2.tr,
+                  subtitle: LanguageGlobalVar.SUBTITLE_REGOL_PAGE_2.tr,
                   children: [
-                    NameTextField(controller: nameController, fieldName: "Name", hintText: "Input your name", labelText: "Full Name"),
-                    EmailTextField(controller: emailController, fieldName: "Email", hintText: "Input your email address", labelText: "Email Address"),
+                    NameTextField(controller: nameController, fieldName: LanguageGlobalVar.FULL_NAME.tr, hintText: LanguageGlobalVar.INPUT_YOUR_NAME.tr, labelText: LanguageGlobalVar.FULL_NAME.tr),
+                    EmailTextField(controller: emailController, fieldName: LanguageGlobalVar.EMAIL_ADDRESS.tr, hintText: LanguageGlobalVar.INPUT_YOUR_EMAIL_ADDRESS.tr, labelText: LanguageGlobalVar.EMAIL_ADDRESS.tr),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Obx(() => CustomPhoneSelector.phoneCodeSelector(onTap: (){
-                          CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Choose your Nationaly", children: List.generate(countryList.length, (i){
+                          CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: LanguageGlobalVar.CHOOSE_YOUR_PHONE_CODE.tr, children: List.generate(countryList.length, (i){
                             return ListTile(
                               leading: Text("+${countryList[i].phoneCode}", style: GoogleFonts.inter()),
                               onTap: (){
@@ -101,25 +101,25 @@ class _Step2StoredData extends State<Step2StoredData> {
                           }));
                         }, selectedPhone: selectedPhone.value)),
                         const SizedBox(width: 5),
-                        Expanded(child: PhoneTextField(controller: phoneController, fieldName: "Phone", hintText: "81xxxx", labelText: "Phone Number")),
+                        Expanded(child: PhoneTextField(controller: phoneController, fieldName: LanguageGlobalVar.PHONE_NUMBER.tr, hintText: "81xxxx", labelText: LanguageGlobalVar.PHONE_NUMBER.tr)),
                       ],
                     ),
                   ]
                 ),
 
                 UtilitiesWidget.titleContent(
-                    title: "Personal Information",
-                    subtitle: "Please fill all your personal details",
+                    title: LanguageGlobalVar.TITLE_REGOL_PAGE_2_2.tr,
+                    subtitle: LanguageGlobalVar.SUBTITLE_REGOL_PAGE_2_2.tr,
                     children: [
-                      PhoneTextField(controller: idNumberController, fieldName: "ID Type Number", hintText: "ID Type Number", labelText: "ID Type Number"),
-                      PhoneTextField(controller: taxController, fieldName: "Tax Number", hintText: "Tax Number", labelText: "Tax Number"),
-                      VoidTextField(controller: dateBirthController, fieldName: "Date Birth", hintText: "Date Birth", labelText: "Date Birth", onPressed: () async {
+                      PhoneTextField(controller: idNumberController, fieldName: LanguageGlobalVar.ID_TYPE_NUMBER.tr, hintText: LanguageGlobalVar.ID_TYPE_NUMBER.tr, labelText: LanguageGlobalVar.ID_TYPE_NUMBER.tr),
+                      PhoneTextField(controller: taxController, fieldName: LanguageGlobalVar.TAX_CARD.tr, hintText: LanguageGlobalVar.TAX_CARD.tr, labelText: LanguageGlobalVar.TAX_CARD.tr),
+                      VoidTextField(controller: dateBirthController, fieldName: LanguageGlobalVar.BIRTH_DATE.tr, hintText: LanguageGlobalVar.BIRTH_DATE.tr, labelText: LanguageGlobalVar.BIRTH_DATE.tr, onPressed: () async {
                         var result = await CustomMaterialDatePicker.selectDate(context);
                         dateBirthController.text = result ?? "";
                       }),
-                      NameTextField(controller: placeBirthController, fieldName: "Place Birth", hintText: "Place Birth", labelText: "Place Birth"),
-                      VoidTextField(controller: genderController, fieldName: "Gender", hintText: "Gender", labelText: "Gender", onPressed: (){
-                        CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, isScrolledController: false, title: "Please choose your gender", children: List.generate(GlobalVariable.gender.length, (i){
+                      NameTextField(controller: placeBirthController, fieldName: LanguageGlobalVar.BIRTH_PLACE.tr, hintText: LanguageGlobalVar.BIRTH_PLACE.tr, labelText: LanguageGlobalVar.BIRTH_PLACE.tr),
+                      VoidTextField(controller: genderController, fieldName: LanguageGlobalVar.GENDER.tr, hintText: LanguageGlobalVar.GENDER.tr, labelText: LanguageGlobalVar.GENDER.tr, onPressed: (){
+                        CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, isScrolledController: false, title: LanguageGlobalVar.CHOOSE_YOUR_GENDER.tr, children: List.generate(GlobalVariable.gender.length, (i){
                           return ListTile(
                             title: Text(GlobalVariable.gender[i], style: GoogleFonts.inter()),
                             onTap: (){
@@ -137,7 +137,7 @@ class _Step2StoredData extends State<Step2StoredData> {
         ),
         bottomNavigationBar: StepUtilities.stepOnlineRegister(
           size: size,
-          title: "Pengumpulan Data",
+          title: LanguageGlobalVar.DATA_COLLECTION.tr,
           onPressed: (){
             Get.to(() => const Step3Marital());
           },

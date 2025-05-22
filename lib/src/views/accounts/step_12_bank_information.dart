@@ -6,14 +6,12 @@ import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
 import 'package:tridentpro/src/components/containers/utilities.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
-import 'package:tridentpro/src/components/textfields/descriptive_textfield.dart';
 import 'package:tridentpro/src/components/textfields/name_textfield.dart';
 import 'package:tridentpro/src/components/textfields/phone_textfield.dart';
 import 'package:tridentpro/src/components/textfields/void_textfield.dart';
 import 'package:tridentpro/src/helpers/handlers/json_file_reader.dart';
 import 'package:tridentpro/src/helpers/variables/countrycurrency.dart';
 import 'package:tridentpro/src/helpers/variables/global_variables.dart';
-import 'package:tridentpro/src/views/accounts/step_12_bank_information.dart';
 import 'package:tridentpro/src/views/accounts/step_13_perselisihan.dart';
 import 'components/step_position.dart';
 

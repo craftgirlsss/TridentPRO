@@ -40,7 +40,7 @@ class CustomAlert {
 
   static alertDialogCustomSuccess({Function()? onTap, String? message, String? title, String? textButton}){
     return Get.defaultDialog(
-        backgroundColor: CupertinoColors.darkBackgroundGray,
+        backgroundColor: CupertinoColors.lightBackgroundGray,
         radius: 30,
         barrierDismissible: false,
         title: "",
@@ -50,12 +50,12 @@ class CustomAlert {
             const SizedBox(height: 10),
             Text(title ?? "Berhasil", style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold),),
             const SizedBox(height: 5),
-            Text(message ?? "Berhasil", style: const TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: Colors.white38), textAlign: TextAlign.center)
+            Text(message ?? "", style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.normal), textAlign: TextAlign.center)
           ],
         ),
         actions: [
           SizedBox(
-            width: 100,
+            width: 120,
             child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder(),
@@ -64,7 +64,7 @@ class CustomAlert {
                 ),
                 onPressed: onTap,
                 child: Text(textButton ?? "Lanjutkan", style: GoogleFonts.inter(color: Colors.white
-                ))),
+                ), textAlign: TextAlign.center)),
           ),
         ]
     );
@@ -72,7 +72,7 @@ class CustomAlert {
 
   static alertDialogCustomInfo({Function()? onTap, String? message, String? title, String? textButton}){
     return Get.defaultDialog(
-        backgroundColor: CupertinoColors.darkBackgroundGray,
+        backgroundColor: CupertinoColors.lightBackgroundGray,
         radius: 30,
         barrierDismissible: false,
         title: "",
@@ -87,7 +87,7 @@ class CustomAlert {
         ),
         actions: [
           SizedBox(
-            width: 100,
+            width: 120,
             child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder(),
@@ -104,7 +104,7 @@ class CustomAlert {
 
   static alertError({Function()? onTap, String? message, String? title}){
     return Get.defaultDialog(
-        backgroundColor: CupertinoColors.darkBackgroundGray,
+        backgroundColor: CupertinoColors.lightBackgroundGray,
         radius: 30,
         barrierDismissible: false,
         title: "",
@@ -114,12 +114,12 @@ class CustomAlert {
             const SizedBox(height: 10),
             Text(title ?? "Gagal", style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold),),
             const SizedBox(height: 5),
-            Text(message ?? "Galat", style: const TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: Colors.white38), textAlign: TextAlign.center)
+            Text(message ?? "Galat", style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.normal), textAlign: TextAlign.center)
           ],
         ),
         actions: [
           SizedBox(
-            width: 100,
+            width: 120,
             child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   shape: const StadiumBorder(),

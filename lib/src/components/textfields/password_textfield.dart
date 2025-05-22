@@ -21,7 +21,7 @@ class PasswordTextField extends StatefulWidget {
 
 class _PasswordTextFieldState extends State<PasswordTextField> {
   RxBool isEmail = false.obs;
-  RxBool show = false.obs;
+  RxBool show = true.obs;
   RxBool isEightCharacter = false.obs;
 
   @override

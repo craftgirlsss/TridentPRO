@@ -64,10 +64,10 @@ class _CreateRealState extends State<CreateReal> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         child: DefaultButton.defaultElevatedButton(
-            onPressed: (){
-              Get.to(() => const Step1UploadPhoto());
-            },
-            title: LanguageGlobalVar.CREATE_TRADING_ACCOUNT.tr
+          onPressed: (){
+            Get.to(() => const Step1UploadPhoto());
+          },
+          title: LanguageGlobalVar.CREATE_TRADING_ACCOUNT.tr
         ),
       ),
     );

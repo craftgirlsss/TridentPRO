@@ -11,7 +11,6 @@ import 'package:tridentpro/src/helpers/handlers/image_picker.dart';
 import 'package:tridentpro/src/helpers/variables/countries.dart';
 import 'package:tridentpro/src/helpers/variables/id_type.dart' show idTypeList;
 import 'package:tridentpro/src/views/accounts/step_2_stored_data.dart';
-
 import 'components/step_position.dart';
 
 class Step1UploadPhoto extends StatefulWidget {
@@ -62,12 +61,12 @@ class _Step1UploadPhotoState extends State<Step1UploadPhoto> {
             child: Column(
               children: [
                 UtilitiesWidget.titleContent(
-                    title: "Upload some photos in the below, so we know who you are",
-                    subtitle: "you are clear, and not cut off. Maximum file size 2 MB and Jpeg or PNG Format",
+                    title: LanguageGlobalVar.TITLE_REGOL_PAGE_1.tr,
+                    subtitle: LanguageGlobalVar.SUBTITLE_REGOL_PAGE_1.tr,
                     children: [
                       const SizedBox(height: 10),
-                      VoidTextField(controller: nationallyController, fieldName: "Nationaly", hintText: "Nationaly", labelText: "Nationaly", onPressed: (){
-                        CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Choose your Nationaly", children: List.generate(countryList.length, (i){
+                      VoidTextField(controller: nationallyController, fieldName: LanguageGlobalVar.NATIONALY.tr, hintText: LanguageGlobalVar.CHOOSE_NATIONALY.tr, labelText: LanguageGlobalVar.NATIONALY.tr, onPressed: (){
+                        CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: LanguageGlobalVar.CHOOSE_NATIONALY.tr, children: List.generate(countryList.length, (i){
                           return ListTile(
                             onTap: (){
                               Navigator.pop(context);
@@ -78,7 +77,7 @@ class _Step1UploadPhotoState extends State<Step1UploadPhoto> {
                         }));
                       }),
                       VoidTextField(onPressed: (){
-                        CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Choose your ID Type", isScrolledController: false, children: List.generate(idTypeList.length, (i){
+                        CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: LanguageGlobalVar.CHOOSE_YOUR_ID_TYPE.tr, isScrolledController: false, children: List.generate(idTypeList.length, (i){
                           return ListTile(
                             onTap: (){
                               Navigator.pop(context);
@@ -87,14 +86,15 @@ class _Step1UploadPhotoState extends State<Step1UploadPhoto> {
                             title: Text(idTypeList[i].name, style: GoogleFonts.inter()),
                           );
                         }));
-                      }, controller: idTypeController, fieldName: "ID Type", hintText: "ID Type", labelText: "ID Type"),
+                      },
+                        controller: idTypeController, fieldName: LanguageGlobalVar.ID_TYPE.tr, hintText: LanguageGlobalVar.ID_TYPE.tr, labelText: LanguageGlobalVar.ID_TYPE.tr),
                       Obx(
-                        () => UtilitiesWidget.uploadPhoto(title: "ID Card", onPressed: () async {
+                        () => UtilitiesWidget.uploadPhoto(title: LanguageGlobalVar.ID_CARD_PHOTO.tr, onPressed: () async {
                           idPhoto.value = await CustomImagePicker.pickImageFromCameraAndReturnUrl();
                         }, urlPhoto: idPhoto.value),
                       ),
                       Obx(
-                        () => UtilitiesWidget.uploadPhoto(title: "Selfie with ID Card", urlPhoto: idPhotoSelfie.value, onPressed: () async {
+                        () => UtilitiesWidget.uploadPhoto(title: LanguageGlobalVar.SELFIE_WITH_ID.tr, urlPhoto: idPhotoSelfie.value, onPressed: () async {
                           idPhotoSelfie.value = await CustomImagePicker.pickImageFromCameraAndReturnUrl();
                         })),
                     ]
@@ -105,7 +105,7 @@ class _Step1UploadPhotoState extends State<Step1UploadPhoto> {
         ),
         bottomNavigationBar: StepUtilities.stepOnlineRegister(
           size: size,
-          title: "Verification Identity",
+          title: LanguageGlobalVar.VERIFICATION_IDENTITY.tr,
           onPressed: (){
             Get.to(() => const Step2StoredData());
           },

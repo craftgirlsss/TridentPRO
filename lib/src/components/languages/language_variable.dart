@@ -1,4 +1,3 @@
-
 class LanguageGlobalVar {
   static const String MASUK = "Masuk";
   static const String LUPA = "Lupa Kata Sandi?";
@@ -26,7 +25,7 @@ class LanguageGlobalVar {
   static const String OTP_CODE = "Kode OTP";
   static const String CREATE_PASSWORD = "Buat Kata Sandi";
   static const String REPEAT_PASSWORD = "Ulangi Kata Sandi";
-  static const String HAVE_READ = "Saya Telah Membaca!";
+  static const String HAVE_READ = "Saya telah membaca!";
   static const String AND = "dan";
   static const String PHONE_NUMBER = "Nomor HP";
   static const String FULL_NAME = "Nama Lengkap";
@@ -53,4 +52,31 @@ class LanguageGlobalVar {
   static const String FATHER = "Ayah";
   static const String YOUNR_BROTHER = "Adik";
   static const String BROTHER = "Kakak";
+  static const String ERROR_PHONE_NULL = "Mohon untuk mengisi nomor HP terlebih dahulu";
+  static const String TERMS_AND_CONDITIONS = "Syarat dan Ketentuan";
+  static const String PRIVACY_AND_POLICY = "Privacy and Policy";
+  static const String PASSWORD_NOT_THE_SAME = "Password not the same";
+  static const String NATIONALY = "Nationaly";
+  static const String CHOOSE_NATIONALY = "Choose your Nationaly";
+  static const String ID_TYPE = "ID_TYPE";
+  static const String CHOOSE_YOUR_ID_TYPE = "Choose your ID Type";
+  static const String SELFIE_WITH_ID = "Selfie with ID Card";
+  static const String ID_CARD_PHOTO = "ID Card Photo";
+  static const String VERIFICATION_IDENTITY = "Verification My Identity";
+  static const String INPUT_YOUR_NAME = "Input Your Full Name";
+  static const String INPUT_YOUR_EMAIL_ADDRESS = "Input your email address";
+  static const String CHOOSE_YOUR_PHONE_CODE = "Choose your Phone Code";
+  static const String CHOOSE_YOUR_GENDER = "Choose your Gender";
+  static const String PHONE = "Phone Number";
+  static const String ID_TYPE_NUMBER = "ID Type Number";
+  static const String BIRTH_DATE = "Birth Date";
+  static const String BIRTH_PLACE = "Birth Place";
+  static const String GENDER = "Gender";
+  static const String DATA_COLLECTION = "Data Collection";
+  static const String TITLE_REGOL_PAGE_1 = "Upload some photos in the below, so we know who you are";
+  static const String SUBTITLE_REGOL_PAGE_1 = "You are clear, and not cut off. Maximum file size 5 MB and Jpeg or PNG Format";
+  static const String TITLE_REGOL_PAGE_2 = "Data Profile";
+  static const String SUBTITLE_REGOL_PAGE_2 = "Please fill all your account details";
+  static const String TITLE_REGOL_PAGE_2_2 = "Personal Information";
+  static const String SUBTITLE_REGOL_PAGE_2_2 = "Please fill all your personal details";
 }
