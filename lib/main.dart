@@ -2,16 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tridentpro/src/components/languages/languages.dart';
 import 'package:tridentpro/src/components/themes/default.dart';
+import 'package:tridentpro/src/controllers/authentication.dart';
+import 'package:tridentpro/src/controllers/home.dart';
 import 'package:tridentpro/src/helpers/get_utilities/routes.dart';
+import 'package:tridentpro/src/service/auth_service.dart';
 // import 'package:tridentpro/src/views/authentications/onboarding.dart';
 import 'package:tridentpro/src/views/authentications/splashscreen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+  
+  final authService = Get.put(AuthService());
+  final authController = Get.put(AuthController());
+  final homeController = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
