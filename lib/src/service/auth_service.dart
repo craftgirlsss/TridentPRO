@@ -22,9 +22,6 @@ class AuthService extends GetxController {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     accessToken = preferences.getString('accessToken');
     refreshToken = preferences.getString('refreshToken');
-
-    // accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJUzI1NiJ9.eyJ1c2VyX2lkIjoiMTc0NzcwNjYxMCIsInR5cGUiOiJhY2Nlc3MiLCJleHAiOjE3NDc5NzQ3NTh9.5tn59rtT5tMp9B+23Lb7Lv/ZcJJSG/2WzxuCoehWfTc=";
-    // refreshToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMTc0NzcwNjYxMCIsInR5cGUiOiJyZWZyZXNoIiwiZXhwIjoxNzUwNTYzMTU4fQ==.ZNVgbqNSlllMnUFNC0U58P2R9td5uEKkQbwUI/xGW3g=";
   
     return true;
   }
@@ -58,7 +55,7 @@ class AuthService extends GetxController {
         preferences.setString('accessToken', accessToken!);
         preferences.setString('refreshToken', refreshToken!);
 
-        return await get(url);
+        return await post(url, body, maxReload: maxReload + 1);
       }
 
       Map<String, dynamic> respBody = jsonDecode(response.body);
@@ -113,7 +110,7 @@ class AuthService extends GetxController {
         preferences.setString('accessToken', accessToken!);
         preferences.setString('refreshToken', refreshToken!);
 
-        return await get(url);
+        return await multipart(url, body, file, maxReload: maxReload + 1);
       }
 
       return {
@@ -156,7 +153,7 @@ class AuthService extends GetxController {
         preferences.setString('accessToken', accessToken!);
         preferences.setString('refreshToken', refreshToken!);
 
-        return await get(url);
+        return await get(url, maxReload: maxReload + 1);
       }
 
       Map<String, dynamic> respBody = jsonDecode(response.body);
