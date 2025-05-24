@@ -71,8 +71,11 @@ class RegolController extends GetxController {
       await authService.multipart("regol/verifikasiIdentitas", body, file);
       isLoading(false);
       return true;
+      
     } catch (e) {
-      rethrow;
+      isLoading(false);
+      responseMessage(e.toString());
+      return false;
     }
   }
 
