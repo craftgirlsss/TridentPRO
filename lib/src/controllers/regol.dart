@@ -17,7 +17,8 @@ class RegolController extends GetxController {
       if (result['statusCode'] != 200) {
         return false;
       }
-      productModels(ProductModels.fromJson(result['response']));
+      print(result);
+      productModels(ProductModels.fromJson(result));
       responseMessage(result['message']);
       return true;
     } catch (e) {
@@ -51,6 +52,7 @@ class RegolController extends GetxController {
 
   Future<bool> postStepOne({String? appFotoTerbaru, String? appFotoIdentitas, required String country, required String idType, required String idTypeNumber}) async {
     try {
+      isLoading(true);
       Map<String, String> body = {
         'country': country,
         'id_type': idType,
@@ -67,6 +69,7 @@ class RegolController extends GetxController {
       }
 
       await authService.multipart("regol/verifikasiIdentitas", body, file);
+      isLoading(false);
       return true;
     } catch (e) {
       rethrow;

@@ -126,6 +126,7 @@ class AuthService extends GetxController {
   }
 
   Future<Map<String, dynamic>> get(String url, {int maxReload = 0}) async {
+    print(accessToken);
     try {
       await init();
       headers['Authorization'] = 'Bearer $accessToken';
@@ -157,6 +158,7 @@ class AuthService extends GetxController {
       }
 
       Map<String, dynamic> respBody = jsonDecode(response.body);
+      print(respBody);
       return {
         'status': respBody['status'],
         'statusCode': response.statusCode,

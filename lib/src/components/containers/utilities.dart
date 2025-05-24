@@ -32,10 +32,10 @@ class UtilitiesWidget {
         width: double.infinity,
         height: 200,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Colors.black12),
-            color: CustomColor.backgroundIcon,
-            image: urlPhoto == null ? null : DecorationImage(image: FileImage(File(urlPhoto)), fit: BoxFit.cover)
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.black12),
+          color: CustomColor.backgroundIcon,
+          image: urlPhoto == null ? null : DecorationImage(image: FileImage(File(urlPhoto)), fit: BoxFit.cover)
         ),
         child: Center(
           child: Column(
@@ -51,7 +51,7 @@ class UtilitiesWidget {
                 child: Icon(CupertinoIcons.camera_fill, color: CustomColor.defaultColor),
               ),
               const SizedBox(height: 10),
-              Text("Please take photo ${title ?? ""}", style: GoogleFonts.inter(color: CustomColor.textThemeLightSoftColor, fontSize: 16.0))
+              Text("Please take photo ${title ?? ""}", style: GoogleFonts.inter(color: CustomColor.textThemeLightSoftColor, fontSize: 16.0), textAlign: TextAlign.center)
             ],
           ),
         ),

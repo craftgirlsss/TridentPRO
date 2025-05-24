@@ -27,7 +27,7 @@ class _CreateRealState extends State<CreateReal> {
   RxString accountTypeSuffix = "".obs;
 
   TextEditingController productController = TextEditingController();
-  RegolController regolController = Get.find();
+  RegolController regolController = Get.put(RegolController());
 
   @override
   void initState() {
@@ -64,15 +64,15 @@ class _CreateRealState extends State<CreateReal> {
                       SimpleUtilities.titleCreateReal(),
                       Obx(
                         () => isLoading.value ? const SizedBox() : VoidTextField(controller: productController, fieldName: "Trading Account Type", hintText:  "Trading Account Type", labelText: "Trading Account Type", onPressed: (){
-                          CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Choose Trading Account Type", children: List.generate(regolController.productModels.value?.data.length ?? 0, (i){
+                          CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Choose Trading Account Type", children: List.generate(regolController.productModels.value?.response.length ?? 0, (i){
                             return ListTile(
                               onTap: (){
                                 Navigator.pop(context);
                                 selectedIndex(i);
-                                productController.text = regolController.productModels.value?.data[i].type != null ? regolController.productModels.value!.data[i].type.toUpperCase() : "-";
+                                productController.text = regolController.productModels.value?.response[i].type != null ? regolController.productModels.value!.response[i].type!.toUpperCase() : "-";
                                 selectedType(true);
                               },
-                              title: Text(regolController.productModels.value?.data[i].type != null ? regolController.productModels.value!.data[i].type.toUpperCase() :  "-", style: GoogleFonts.inter()),
+                              title: Text(regolController.productModels.value?.response[i].type != null ? regolController.productModels.value!.response[i].type!.toUpperCase() :  "-", style: GoogleFonts.inter()),
                             );
                           }));
                         }),
@@ -81,7 +81,7 @@ class _CreateRealState extends State<CreateReal> {
                         () => selectedType.value ? ListView.builder(
                           shrinkWrap: true,
                           physics: const BouncingScrollPhysics(),
-                          itemCount: regolController.productModels.value?.data[selectedIndex.value].products.length,
+                          itemCount: regolController.productModels.value?.response[selectedIndex.value].products!.length,
                           itemBuilder: (context, index) {
                             return Padding(
                               padding: const EdgeInsets.only(bottom: 8.0),
@@ -94,11 +94,11 @@ class _CreateRealState extends State<CreateReal> {
                                   shape: StadiumBorder(
                                     side: BorderSide(color: CustomColor.defaultColor)
                                   ),
-                                  title: Text(regolController.productModels.value?.data[selectedIndex.value].products[index].name ?? "-"),
+                                  title: Text(regolController.productModels.value?.response[selectedIndex.value].products?[index].name ?? "-"),
                                   value: index + 1,
                                   groupValue: selectedRadio.value,
                                   onChanged: (value) {
-                                    accountTypeSuffix(regolController.productModels.value?.data[selectedIndex.value].products[index].suffix);
+                                    accountTypeSuffix(regolController.productModels.value?.response[selectedIndex.value].products?[index].suffix);
                                     selectedRadio(value);
                                   },
                                 ),

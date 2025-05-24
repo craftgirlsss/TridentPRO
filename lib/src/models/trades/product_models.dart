@@ -1,26 +1,23 @@
 class ProductModels {
   ProductModels({
-    required this.success,
-    required this.data,
+    required this.response,
   });
-  late final bool success;
-  late final List<Data> data;
+  late final List<Response> response;
 
   ProductModels.fromJson(Map<String, dynamic> json){
-    success = json['success'];
-    data = List.from(json['data']).map((e)=>Data.fromJson(e)).toList();
+    response = List.from(json['response']).map((e)=>Response.fromJson(e)).toList();
   }
 }
 
-class Data {
-  Data({
+class Response {
+  Response({
     required this.type,
     required this.products,
   });
-  late final String type;
-  late final List<Products> products;
+  String? type;
+  List<Products>? products;
 
-  Data.fromJson(Map<String, dynamic> json){
+  Response.fromJson(Map<String, dynamic> json){
     type = json['type'];
     products = List.from(json['products']).map((e)=>Products.fromJson(e)).toList();
   }
@@ -42,6 +39,6 @@ class Products {
     suffix = json['suffix'];
     name = json['name'];
     rate = json['rate'];
-    currency = null;
+    currency = json['currency'];
   }
 }

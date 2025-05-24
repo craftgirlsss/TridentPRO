@@ -7,12 +7,13 @@ import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.da
 import 'package:tridentpro/src/components/containers/utilities.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/components/painters/loading_water.dart';
-import 'package:tridentpro/src/components/textfields/phone_textfield.dart';
+import 'package:tridentpro/src/components/textfields/number_textfield.dart';
 import 'package:tridentpro/src/components/textfields/void_textfield.dart';
 import 'package:tridentpro/src/controllers/regol.dart';
 import 'package:tridentpro/src/helpers/handlers/image_picker.dart';
 import 'package:tridentpro/src/helpers/variables/countries.dart';
 import 'package:tridentpro/src/helpers/variables/id_type.dart' show idTypeList;
+import 'package:tridentpro/src/views/accounts/step_2_stored_data.dart';
 import 'components/step_position.dart';
 
 class Step1UploadPhoto extends StatefulWidget {
@@ -97,7 +98,7 @@ class _Step1UploadPhotoState extends State<Step1UploadPhoto> {
                         },
                           controller: idTypeController, fieldName: LanguageGlobalVar.ID_TYPE.tr, hintText: LanguageGlobalVar.ID_TYPE.tr, labelText: LanguageGlobalVar.ID_TYPE.tr
                         ),
-                        PhoneTextField(controller: idTypeNumber, fieldName: LanguageGlobalVar.ID_TYPE_NUMBER.tr, hintText: LanguageGlobalVar.ID_TYPE_NUMBER.tr, labelText: LanguageGlobalVar.ID_TYPE_NUMBER.tr),
+                        NumberTextField(controller: idTypeNumber, fieldName: LanguageGlobalVar.ID_TYPE_NUMBER.tr, hintText: LanguageGlobalVar.ID_TYPE_NUMBER.tr, labelText: LanguageGlobalVar.ID_TYPE_NUMBER.tr, maxLength: 14),
                         Obx(
                           () => isLoading.value ? const SizedBox() : UtilitiesWidget.uploadPhoto(title: "Foto KTP", onPressed: () async {
                             idPhoto.value = await CustomImagePicker.pickImageFromCameraAndReturnUrl();
@@ -113,21 +114,25 @@ class _Step1UploadPhotoState extends State<Step1UploadPhoto> {
                 ),
               ),
             ),
-            bottomNavigationBar: StepUtilities.stepOnlineRegister(
-              size: size,
-              title: LanguageGlobalVar.VERIFICATION_IDENTITY.tr,
-              onPressed: (){
-                regolController.postStepOne(
-                  country: nationallyController.text,
-                  idType: idTypeController.text,
-                  idTypeNumber: idTypeNumber.text,
-                  appFotoIdentitas: idPhoto.value,
-                  appFotoTerbaru: idPhotoSelfie.value
-                );
-                // Get.to(() => const Step2StoredData());
-              },
-              progressEnd: 4,
-              progressStart: 1
+            bottomNavigationBar: Obx(
+              () => StepUtilities.stepOnlineRegister(
+                size: size,
+                title: LanguageGlobalVar.VERIFICATION_IDENTITY.tr,
+                onPressed: regolController.isLoading.value ? null : (){
+                  if(idTypeController.text == "Nationaly Identification Card") idTypeController.text = "KTP";
+                  regolController.postStepOne(
+                    country: nationallyController.text,
+                    idType: idTypeController.text,
+                    idTypeNumber: idTypeNumber.text,
+                    appFotoIdentitas: idPhoto.value,
+                    appFotoTerbaru: idPhotoSelfie.value
+                  ).then((result){
+                    Get.to(() => const Step2StoredData());
+                  });
+                },
+                progressEnd: 4,
+                progressStart: 1
+              ),
             ),
           ),
         ),
