@@ -32,20 +32,36 @@ class _CreateRealState extends State<CreateReal> {
   @override
   void initState() {
     super.initState();
-    regolController.getProducts().then((result){
-      if(!result){
-        CustomAlert.alertError();
-      }else{
-        productController.text = regolController.productModels.value!.response[0].type!.toUpperCase();
-        selectedIndex(0);
-        selectedType(true);
-      }
-    });
 
+    /** Fetch progressAccount */
+    regolController.isLoading(true);
     regolController.progressAccount().then((result){
-      if(!result){
-        CustomAlert.alertError();
-      }
+
+      /** Fetch products */
+      regolController.getProducts().then((result){
+        if(!result){
+          CustomAlert.alertError();
+          return false;
+        }
+
+        /** Assign account type to productController */
+        if(regolController.accountModel.value?.type != null){
+          productController.text = regolController.accountModel.value?.type.toString() ?? "";
+          int index = regolController.productModels.value?.response.indexWhere((element) => element.type?.toUpperCase() == regolController.accountModel.value?.type?.toUpperCase()) ?? -1;
+          if(index != -1){
+            selectedIndex(index);
+            selectedType(true);
+            
+            int index2 = regolController.productModels.value?.response[index].products?.indexWhere((element2) => element2.suffix == regolController.accountModel.value?.typeAcc) ?? -1;
+            if(index2 != -1){
+              accountTypeSuffix(regolController.productModels.value?.response[index].products?[index2].suffix);
+              selectedRadio(index2 + 1);
+            }
+          }
+        }
+
+        regolController.isLoading(false);
+      });
     });
   }
 
@@ -129,7 +145,7 @@ class _CreateRealState extends State<CreateReal> {
             child: Obx(
               () => DefaultButton.defaultElevatedButton(
                 onPressed: regolController.isLoading.value ? null : (){
-                  regolController.postStepZero(accountType: accountTypeSuffix.value).then((result){
+                  regolController.postStepZero(accountSuffix: accountTypeSuffix.value, accountType: productController.text).then((result){
                     if(result){
                       Get.to(() => const Step1UploadPhoto());
                     }else{

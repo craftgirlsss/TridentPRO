@@ -15,18 +15,16 @@ class RegolController extends GetxController {
   // Create Demo Trading API
   Future<bool> getProducts() async {
     try {
-      isLoading(true);
       Map<String, dynamic> result = await authService.get("regol/product");
-      isLoading(false);
       if (result['statusCode'] != 200) {
         return false;
       }
+
       // print(result);
       productModels(ProductModels.fromJson(result));
       responseMessage(result['message']);
       return true;
     } catch (e) {
-      isLoading(false);
       responseMessage(e.toString());
       return false;
     }
@@ -34,19 +32,21 @@ class RegolController extends GetxController {
 
   Future<bool> progressAccount() async {
     try {
+      /** Fetch data from api */
       Map<String, dynamic> result = await authService.get("regol/progressAccount");
-      if(result['statusCode'] != 200) {
+      if(result['status'] != true) {
         return false;
       }
-      
-      result['response']['id'] = int.parse(result['response']['id']);
-      result['response']['type'] = int.parse(result['response']['type']);
-      result['response']['type_acc'] = int.parse(result['response']['type_acc']);
+
+      /** Convert response api to accountModel */
       AccountModel account = AccountModel.fromJson(result['response']);
-      accountModel(account);
 
       /** Insert account to database update on duplicate key */
-      await databaseService.insertAccount(account);
+      await databaseService.insertAccount(account.toJson());
+    
+      /** Assign response api to AccountModel value */
+      accountModel(account);
+
       return true;
     
     } catch (e) {
@@ -56,18 +56,23 @@ class RegolController extends GetxController {
   }
 
   // Create Demo Trading API
-  Future<bool> postStepZero({String? accountType}) async {
+  Future<bool> postStepZero({String? accountType, String? accountSuffix}) async {
     try {
       isLoading(true);
       Map<String, dynamic> result = await authService.post("regol/accountType", {
-        'account-type' : accountType
+        'account-type' : accountSuffix
       });
 
       isLoading(false);
       if (result['statusCode'] != 200) {
         return false;
       }
+
+      /** Assign new value to Database */
       responseMessage(result['message']);
+      accountModel.value?.type = accountType;
+      accountModel.value?.typeAcc = accountSuffix;
+      
       return true;
     } catch (e) {
       isLoading(false);
