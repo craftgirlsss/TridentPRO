@@ -21,11 +21,11 @@ class _RealSectionState extends State<RealSection> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return RefreshIndicator(
+      color: CustomColor.defaultColor,
       onRefresh: () async {},
       child: Obx(
         (){
-          print(tradingController.tradingAccountModels.value?.response.real);
-          if(tradingController.tradingAccountModels.value?.response.real == null){
+          if(tradingController.tradingAccountModels.value?.response.real?.length == 0){
             return SizedBox(
               width: double.infinity,
               height: double.maxFinite,

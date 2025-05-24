@@ -30,8 +30,10 @@ class _SplashscreenState extends State<Splashscreen> {
   void initState() {
     super.initState();
     getLoggedIn().then((loggedIn) async {
+      print(loggedIn);
       if(loggedIn){
         Map<String, dynamic> result = await authService.get("profile/info");
+        print(result);
         if(result['statusCode'] == 200){
           Get.offAll(() => const Mainpage());
         }else{

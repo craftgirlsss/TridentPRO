@@ -20,7 +20,8 @@ class HomeController extends GetxController {
       return response['success'] ?? false;
 
     } catch (e) {
-      throw e;
+      print(e.toString());
+      return false;
     }
   }
 }

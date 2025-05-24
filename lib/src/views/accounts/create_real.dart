@@ -35,6 +35,10 @@ class _CreateRealState extends State<CreateReal> {
     regolController.getProducts().then((result){
       if(!result){
         CustomAlert.alertError();
+      }else{
+        productController.text = regolController.productModels.value!.response[0].type!.toUpperCase();
+        selectedIndex(0);
+        selectedType(true);
       }
     });
 

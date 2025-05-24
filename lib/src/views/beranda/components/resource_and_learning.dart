@@ -73,22 +73,34 @@ class ResourceCard extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.asset(item.imagePath, height: 100, width: double.infinity, fit: BoxFit.cover),
-            ),
-            const SizedBox(height: 8),
-            Text(item.title, style: TextStyle(fontWeight: FontWeight.bold)),
-            const SizedBox(height: 4),
-            Text(item.description, style: TextStyle(color: Colors.grey[700])),
-            const Spacer(),
-            OutlinedButton(
-              onPressed: () {},
-              style: OutlinedButton.styleFrom(
-                side: BorderSide(color: CustomColor.defaultColor)
+            Expanded(
+              child: Column(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.asset(item.imagePath, height: 100, width: double.infinity, fit: BoxFit.cover),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(item.title, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 13)),
+                  const SizedBox(height: 4),
+                  Text(item.description, style: GoogleFonts.inter(color: Colors.grey[700], fontSize: 12), maxLines: 2),
+                ],
               ),
-              child: Text(item.action, textAlign: TextAlign.center, style: GoogleFonts.inter(color: CustomColor.defaultColor)),
+            ),
+            Center(
+              child: SizedBox(
+                height: 30,
+                child: OutlinedButton(
+                  onPressed: () {},
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
+                    side: BorderSide(color: CustomColor.defaultColor)
+                  ),
+                  child: Text(item.action, textAlign: TextAlign.center, style: GoogleFonts.inter(color: CustomColor.defaultColor, fontSize: 12, fontWeight: FontWeight.bold)),
+                ),
+              ),
             ),
           ],
         ),

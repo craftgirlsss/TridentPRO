@@ -178,16 +178,18 @@ class _TradeState extends State<Trade> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: Colors.black45)),
+          Text(label, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: Colors.black45, fontSize: 13)),
           SizedBox(height: 8),
-          Text(amount, style: GoogleFonts.inter(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black)),
+          Flexible(child: Text(amount, style: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black), maxLines: 1)),
           SizedBox(height: 8),
-          Row(
-            children: [
-              Icon(Icons.trending_up, color: changeColor, size: 16),
-              SizedBox(width: 4),
-              Text(change, style: TextStyle(color: changeColor)),
-            ],
+          Expanded(
+            child: Row(
+              children: [
+                Icon(Icons.trending_up, color: changeColor, size: 16),
+                SizedBox(width: 4),
+                Text(change, style: TextStyle(color: changeColor)),
+              ],
+            ),
           ),
         ],
       ),
