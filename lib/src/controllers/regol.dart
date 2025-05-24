@@ -131,4 +131,130 @@ class RegolController extends GetxController {
       return false;
     }
   }
+
+  // Create Demo Trading API
+  Future<bool> postStepFour({String? emergencyName, String? emergencyRelation, String? emergencyContact, String? emergencyAddress, String? postalCode}) async {
+    try {
+      isLoading(true);
+      Map<String, dynamic> result = await authService.post("regol/apr_pihak_darurat", {
+        'app_darurat_nama': emergencyName,
+        'app_darurat_hubungan': emergencyRelation,
+        'app_darurat_telepon': emergencyContact,
+        'app_darurat_alamat': emergencyAddress,
+        'app_darurat_kodepos': postalCode
+      });
+
+      isLoading(false);
+      if (result['statusCode'] != 200) {
+        return false;
+      }
+      responseMessage(result['message']);
+      return true;
+    } catch (e) {
+      isLoading(false);
+      responseMessage(e.toString());
+      return false;
+    }
+  }
+
+
+  // Create Demo Trading API
+  Future<bool> postStepFive({String? investmentGoal}) async {
+    try {
+      isLoading(true);
+      Map<String, dynamic> result = await authService.post("regol/apr_tujuan_investasi", {
+        'app_tujuan_investasi': investmentGoal
+      });
+
+      isLoading(false);
+      if (result['statusCode'] != 200) {
+        return false;
+      }
+      responseMessage(result['message']);
+      return true;
+    } catch (e) {
+      isLoading(false);
+      responseMessage(e.toString());
+      return false;
+    }
+  }
+
+  // Create Demo Trading API
+  Future<bool> postStepSix({String? experience, String? companyName}) async {
+    try {
+      isLoading(true);
+      Map<String, dynamic> result = await authService.post("regol/apr_pengalaman_investasi", {
+        'app_pengalaman_investasi': experience,
+        'nama_perusahaan': companyName ?? "-"
+      });
+
+      isLoading(false);
+      if (result['statusCode'] != 200) {
+        return false;
+      }
+      responseMessage(result['message']);
+      return true;
+    } catch (e) {
+      isLoading(false);
+      responseMessage(e.toString());
+      return false;
+    }
+  }
+
+
+  // Create Demo Trading API
+  Future<bool> postStepSeven({String? experience}) async {
+    try {
+      isLoading(true);
+      Map<String, dynamic> result = await authService.post("regol/apr_pengalaman_investasi", {
+        'app_pengalaman_investasi': experience,
+      });
+
+      isLoading(false);
+      if (result['statusCode'] != 200) {
+        return false;
+      }
+      responseMessage(result['message']);
+      return true;
+    } catch (e) {
+      isLoading(false);
+      responseMessage(e.toString());
+      return false;
+    }
+  }
+
+  // Create Demo Trading API
+  Future<bool> postStepEight({
+    String? jobName,
+    String? companyName,
+    String? bidangUsaha,
+    String? position,
+    String? longTime,
+    String? address,
+    String? longTimeOldJob
+  }) async {
+    try {
+      isLoading(true);
+      Map<String, dynamic> result = await authService.post("regol/apr_informasi_pekerjaan", {
+        'nama_pekerjaan': jobName,
+        'nama_perusahaan': companyName,
+        'bidang_usaha': bidangUsaha,
+        'jabatan_pekerjaan': position,
+        'lama_bekerja': '${longTime ?? 0} tahun',
+        'alamat_kantor': address,
+        'lama_bekerja_sebelumnya': '${longTimeOldJob ?? 0} tahun'
+      });
+
+      isLoading(false);
+      if (result['statusCode'] != 200) {
+        return false;
+      }
+      responseMessage(result['message']);
+      return true;
+    } catch (e) {
+      isLoading(false);
+      responseMessage(e.toString());
+      return false;
+    }
+  }
 }

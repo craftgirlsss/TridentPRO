@@ -20,6 +20,7 @@ class _OnboardingState extends State<Onboarding> {
   PageController pageController = PageController();
   @override
   Widget build(BuildContext context) {
+    FocusManager.instance.primaryFocus?.unfocus();
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: SizedBox(
@@ -68,11 +69,13 @@ class _OnboardingState extends State<Onboarding> {
                         ),
                       ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 24.0),
-                      child: Text(LanguageGlobalVar.INTRODUCTION_TEXT.tr, style: GoogleFonts.inter(fontSize: 24, fontWeight: FontWeight.bold)),
+                    Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 24.0),
+                        child: Text(LanguageGlobalVar.INTRODUCTION_TEXT.tr, style: GoogleFonts.inter(fontSize: 24, fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis, maxLines: 2),
+                      ),
                     ),
-                    Text(LanguageGlobalVar.DESCRIPTIVE_TEXT.tr, style: GoogleFonts.inter(fontSize: 16, color: CustomColor.textThemeLightSoftColor), overflow: TextOverflow.ellipsis, maxLines: 3)
+                    Flexible(child: Text(LanguageGlobalVar.DESCRIPTIVE_TEXT.tr, style: GoogleFonts.inter(fontSize: 16, color: CustomColor.textThemeLightSoftColor), overflow: TextOverflow.ellipsis, maxLines: 3))
                   ],
                 ),
               ),

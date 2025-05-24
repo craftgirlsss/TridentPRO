@@ -9,8 +9,10 @@ import 'package:tridentpro/src/components/containers/utilities.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/components/textfields/descriptive_textfield.dart';
 import 'package:tridentpro/src/components/textfields/name_textfield.dart';
+import 'package:tridentpro/src/components/textfields/number_textfield.dart';
 import 'package:tridentpro/src/components/textfields/phone_textfield.dart';
 import 'package:tridentpro/src/components/textfields/void_textfield.dart';
+import 'package:tridentpro/src/controllers/regol.dart';
 import 'package:tridentpro/src/controllers/utilities.dart';
 import 'package:tridentpro/src/helpers/variables/global_variables.dart';
 import 'package:tridentpro/src/views/accounts/step_5_investment_goal.dart';
@@ -35,11 +37,13 @@ class _Step4EmergencyContact extends State<Step4EmergencyContact> {
   TextEditingController cityController = TextEditingController();
   TextEditingController zipController = TextEditingController();
 
-  RxBool showProvince = false.obs;
+  RxBool showProvince = true.obs;
   RxBool showCity = false.obs;
-  RxBool isIndonesia = false.obs;
+  RxBool showVillage = false.obs;
+  RxBool isIndonesia = true.obs;
 
   UtilitiesController utilitiesController = Get.put(UtilitiesController());
+  RegolController regolController = Get.find();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -112,26 +116,26 @@ class _Step4EmergencyContact extends State<Step4EmergencyContact> {
                       PhoneTextField(controller: phoneController, fieldName: "Emergency Contact Phone Number", hintText: "Emergency Contact Phone Number", labelText: "Emergency Contact Phone Number"),
                       DescriptiveTextField(controller: addressController, fieldName: "Emergency Contact Address", hintText: "Emergency Contact Address", labelText: "Emergency Contact Address"),
 
-                      // Country
-                      Obx(
-                        () => VoidTextField(controller: countryController, fieldName: utilitiesController.isLoading.value ? "Getting Country" : "Nationaly Emergency Contact", hintText: "Nationaly Emergency Contact", labelText:  utilitiesController.isLoading.value ? "Getting Country..." : "Nationaly Emergency Contact", onPressed: () async {
-                          CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Choose Emergency Contact Nationaly", children: List.generate(utilitiesController.countryModels.value?.data.length ?? 0, (i){
-                            return ListTile(
-                              onTap: (){
-                                Navigator.pop(context);
-                                countryController.text = utilitiesController.countryModels.value?.data[i].name ?? "Unknown Name";
-                                utilitiesController.selectedCountry(countryController.text);
-                                showProvince(true);
-                                showCity(false);
-                                provinceController.clear();
-                                cityController.clear();
-                                countryController.text == "Indonesia" || countryController.text == "indonesia" ? isIndonesia(true) : isIndonesia(false);
-                              },
-                              title: Text(utilitiesController.countryModels.value?.data[i].name ?? "Unknonwn Country Name", style: GoogleFonts.inter()),
-                            );
-                          }));
-                        }),
-                      ),
+                      // // Country
+                      // Obx(
+                      //   () => VoidTextField(controller: countryController, fieldName: utilitiesController.isLoading.value ? "Getting Country" : "Nationaly Emergency Contact", hintText: "Nationaly Emergency Contact", labelText:  utilitiesController.isLoading.value ? "Getting Country..." : "Nationaly Emergency Contact", onPressed: () async {
+                      //     CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Choose Emergency Contact Nationaly", children: List.generate(utilitiesController.countryModels.value?.data.length ?? 0, (i){
+                      //       return ListTile(
+                      //         onTap: (){
+                      //           Navigator.pop(context);
+                      //           countryController.text = utilitiesController.countryModels.value?.data[i].name ?? "Unknown Name";
+                      //           utilitiesController.selectedCountry(countryController.text);
+                      //           showProvince(true);
+                      //           showCity(false);
+                      //           provinceController.clear();
+                      //           cityController.clear();
+                      //           countryController.text == "Indonesia" || countryController.text == "indonesia" ? isIndonesia(true) : isIndonesia(false);
+                      //         },
+                      //         title: Text(utilitiesController.countryModels.value?.data[i].name ?? "Unknonwn Country Name", style: GoogleFonts.inter()),
+                      //       );
+                      //     }));
+                      //   }),
+                      // ),
 
                       // Province
                       Obx(
@@ -232,21 +236,86 @@ class _Step4EmergencyContact extends State<Step4EmergencyContact> {
                         }) : const SizedBox(),
                       ),
 
-                      PhoneTextField(controller: zipController, fieldName: "Zip Code", hintText: "Input Zip Code", labelText: "Zip Code"),
+
+                      // // City
+                      // Obx(
+                      //   () => showVillage.value ? VoidTextField(controller: cityController, fieldName: "Village", hintText: "Select Village Emergency Contact", labelText: utilitiesController.isLoadingCity.value ? "Getting Village..." : "Select Village", onPressed: () async {
+                      //     if(isIndonesia.value){
+                      //       utilitiesController.getCityRaja().then((result){
+                      //         if(result){
+                      //           CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Choose Emergency Contact Village", children: List.generate(utilitiesController.kabupatenRajaModels.value?.rajaongkir.results?.length ?? 0, (i){
+                      //             return ListTile(
+                      //               onTap: (){
+                      //                 Navigator.pop(context);
+                      //                 cityController.text = utilitiesController.kabupatenRajaModels.value?.rajaongkir.results?[i].cityName ?? "Unknown Kabupaten Name";
+                      //                 utilitiesController.selectedCity(utilitiesController.kabupatenRajaModels.value?.rajaongkir.results?[i].cityId);
+                      //                 showCity(true);
+                      //               },
+                      //               title: Text(utilitiesController.kabupatenRajaModels.value?.rajaongkir.results?[i].cityName ?? "Unknown Province Name", style: GoogleFonts.inter()),
+                      //             );
+                      //           }));
+                      //         }else{
+                      //           CustomAlert.alertError(
+                      //             onTap: (){ Get.back(); },
+                      //             message: utilitiesController.responseMessage.value
+                      //           );
+                      //         }
+                      //       });
+                      //     }else{
+                      //       utilitiesController.getCity(provinceName: utilitiesController.selectedProvince.value).then((result){
+                      //         if(result){
+                      //           CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Choose Emergency Contact Village", children: List.generate(utilitiesController.provinceModels.value?.data.states?.length ?? 0, (i){
+                      //             return ListTile(
+                      //               onTap: (){
+                      //                 Navigator.pop(context);
+                      //                 cityController.text = utilitiesController.cityModels.value?.data[i] ?? "Unknown Province Name";
+                      //                 utilitiesController.selectedCity(provinceController.text);
+                      //               },
+                      //               title: Text(utilitiesController.cityModels.value?.data[i] ?? "Unknown Province Name", style: GoogleFonts.inter()),
+                      //             );
+                      //           }));
+                      //         }else{
+                      //           CustomAlert.alertError(
+                      //             onTap: (){ Get.back(); },
+                      //             message: utilitiesController.responseMessage.value
+                      //           );
+                      //         }
+                      //       });
+                      //     }
+                      //   }) : const SizedBox(),
+                      // ),
+
+                      NumberTextField(controller: zipController, fieldName: "Zip Code", hintText: "Input Zip Code", labelText: "Zip Code", maxLength: 4),
                     ]
                 ),
               ],
             ),
           ),
         ),
-        bottomNavigationBar: StepUtilities.stepOnlineRegister(
-          size: size,
-          title: "Emergency Contact",
-          onPressed: (){
-            Get.to(() => const Step5InvestmentGoal());
-          },
-          progressEnd: 4,
-          progressStart: 4
+        bottomNavigationBar: Obx(
+          () => StepUtilities.stepOnlineRegister(
+            size: size,
+            title: regolController.isLoading.value ? "Uploading..." : "Emergency Contact",
+            onPressed: regolController.isLoading.value ? null : (){
+              if(_formKey.currentState!.validate()){
+                regolController.postStepFour(
+                  emergencyAddress: addressController.text,
+                  emergencyContact: phoneController.text,
+                  emergencyName: nameController.text,
+                  emergencyRelation: relationController.text,
+                  postalCode: zipController.text
+                ).then((result){
+                  if(result){
+                    Get.to(() => const Step5InvestmentGoal());
+                  }else{
+                    CustomAlert.alertError(message: regolController.responseMessage.value);
+                  }
+                });
+              }
+            },
+            progressEnd: 4,
+            progressStart: 4
+          ),
         ),
       ),
     );

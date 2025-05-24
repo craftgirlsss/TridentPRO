@@ -47,7 +47,7 @@ class _SplashscreenState extends State<Splashscreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: CustomColor.defaultColor,
+      backgroundColor: Colors.white,
       body: SizedBox(
         width: size.width,
         height: size.height,
@@ -55,7 +55,7 @@ class _SplashscreenState extends State<Splashscreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset('assets/images/ic_launcher.png', width: size.width / 2),
+            Image.asset('assets/icons/ic_launcher.png', width: size.width / 2),
           ],
         ),
       ),

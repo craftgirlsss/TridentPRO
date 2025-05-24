@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
 import 'package:tridentpro/src/components/containers/utilities.dart';
@@ -10,6 +11,7 @@ import 'package:tridentpro/src/components/textfields/descriptive_textfield.dart'
 import 'package:tridentpro/src/components/textfields/name_textfield.dart';
 import 'package:tridentpro/src/components/textfields/phone_textfield.dart';
 import 'package:tridentpro/src/components/textfields/void_textfield.dart';
+import 'package:tridentpro/src/controllers/regol.dart';
 import 'package:tridentpro/src/helpers/variables/global_variables.dart';
 import 'package:tridentpro/src/views/accounts/step_12_bank_information.dart';
 import 'components/step_position.dart';
@@ -32,6 +34,8 @@ class _Step11JobHistory extends State<Step11JobHistory> {
   TextEditingController durationOfLastWorkController = TextEditingController();
   TextEditingController currentAddressOffice = TextEditingController();
   TextEditingController officePhoneContact = TextEditingController();
+
+  RegolController regolController = Get.find();
 
   @override
   void dispose() {
@@ -95,25 +99,43 @@ class _Step11JobHistory extends State<Step11JobHistory> {
                     ]
                 ),
                 UtilitiesWidget.titleContent(
-                    title: "Last Job Information",
-                    subtitle: "Tell me a little about your last job",
-                    children: [
-                      PhoneTextField(controller: durationOfWorkController, fieldName: "Lama Bekerja (Tahun)", hintText: "Lama Bekerja (Tahun)", labelText: "Lama Bekerja (Tahun)"),
-                    ]
+                  title: "Last Job Information",
+                  subtitle: "Tell me a little about your last job",
+                  children: [
+                    PhoneTextField(controller: durationOfLastWorkController, fieldName: "Lama Bekerja (Tahun)", hintText: "Lama Bekerja (Tahun)", labelText: "Lama Bekerja (Tahun)"),
+                  ]
                 )
               ],
             ),
           ),
         ),
-        bottomNavigationBar: StepUtilities.stepOnlineRegister(
+        bottomNavigationBar: Obx(
+          () => StepUtilities.stepOnlineRegister(
             size: size,
-            title: "Your Job Experience",
-            onPressed: (){
-              Get.to(() => const Step12BankInformation());
+            title: regolController.isLoading.value ? "Uploading..." : "Your Job Experience",
+            onPressed: regolController.isLoading.value ? null : (){
+              if(_formKey.currentState!.validate()){
+                regolController.postStepEight(
+                  companyName: businessNameController.text,
+                  position: yourJobCategoryController.text,
+                  address: currentAddressOffice.text,
+                  jobName: categoryBusinessNameController.text,
+                  longTime: durationOfWorkController.text,
+                  longTimeOldJob: durationOfLastWorkController.text,
+                  bidangUsaha: categoryBusinessNameController.text
+                ).then((result){
+                  if(result){
+                    Get.to(() => const Step12BankInformation());
+                  }else{
+                    CustomAlert.alertError(message: regolController.responseMessage.value);
+                  }
+                });
+              }
             },
             progressEnd: 4,
             currentAllPageStatus: 3,
             progressStart: 1
+          ),
         ),
       ),
     );

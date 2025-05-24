@@ -34,27 +34,35 @@ class NewsCard {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Earn Cashback!",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24
-                    )
+                  Flexible(
+                    child: Text("Earn Cashback!",
+                      style: GoogleFonts.inter(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18
+                      ),
+                      maxLines: 2,
+                    ),
                   ),
-                  SizedBox(height: 8),
-                  Text(
-                    "Join ForexGuru and get 10% cashback\nwhen you fund your account today!",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  SizedBox(height: 2),
+                  Flexible(
+                    child: Text(
+                      "Join ForexGuru and get 10% cashback\nwhen you fund your account today!",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.inter(color: Colors.white, fontSize: 14),
+                      maxLines: 2,
+                    ),
                   ),
                   SizedBox(height: 16),
-                  ElevatedButton.icon(
-                    onPressed: () {},
-                    icon: Icon(Icons.arrow_forward, color: Colors.white),
-                    label: Text("Register", style: GoogleFonts.inter(color: Colors.white)),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: CustomColor.defaultColor,
-                      foregroundColor: Colors.teal,
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {},
+                      icon: Icon(Icons.arrow_forward, color: Colors.white),
+                      label: Text("Register", style: GoogleFonts.inter(color: Colors.white)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: CustomColor.defaultColor,
+                        foregroundColor: Colors.teal,
+                      ),
                     ),
                   )
                 ],

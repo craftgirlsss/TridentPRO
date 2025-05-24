@@ -6,6 +6,7 @@ import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/helpers/variables/global_variables.dart';
+import 'package:tridentpro/src/views/accounts/step_11_job_history.dart';
 import 'package:tridentpro/src/views/accounts/step_9_other_income.dart';
 import 'components/step_position.dart';
 
@@ -54,13 +55,13 @@ class _Step8IncomeRange extends State<Step8IncomeRange> {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: Obx(
-                          () => RadioListTile(
+                      () => RadioListTile(
                         enableFeedback: true,
                         toggleable: false,
                         selected: false,
                         selectedTileColor: CustomColor.defaultColor,
                         shape: StadiumBorder(
-                            side: BorderSide(color: CustomColor.defaultColor)
+                          side: BorderSide(color: CustomColor.defaultColor)
                         ),
                         title: Text(GlobalVariable.incomePerYear[index]),
                         value: index + 1,
@@ -80,11 +81,11 @@ class _Step8IncomeRange extends State<Step8IncomeRange> {
           size: size,
           title: "Annual Income Range",
           onPressed: (){
-            Get.to(() => const Step8OtherIncomeRange());
+            Get.to(() => const Step11JobHistory());
           },
-          progressEnd: 6,
+          progressEnd: 3,
           currentAllPageStatus: 2,
-          progressStart: 4
+          progressStart: 3
         ),
       ),
     );
