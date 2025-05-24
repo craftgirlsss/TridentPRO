@@ -90,7 +90,6 @@ class AuthService extends GetxController {
       http.StreamedResponse response = await request.send();
       String responseString = await response.stream.bytesToString();
       Map<String, dynamic> respBody = jsonDecode(responseString);
-      print(respBody);
 
       if (response.statusCode == 300) {
         if(maxReload > 3) {
@@ -126,7 +125,6 @@ class AuthService extends GetxController {
   }
 
   Future<Map<String, dynamic>> get(String url, {int maxReload = 0}) async {
-    print(accessToken);
     try {
       await init();
       headers['Authorization'] = 'Bearer $accessToken';
@@ -158,7 +156,6 @@ class AuthService extends GetxController {
       }
 
       Map<String, dynamic> respBody = jsonDecode(response.body);
-      print(respBody);
       return {
         'status': respBody['status'],
         'statusCode': response.statusCode,

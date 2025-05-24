@@ -36,6 +36,15 @@ class _Step1UploadPhotoState extends State<Step1UploadPhoto> {
   RxBool isLoading = false.obs;
 
   @override
+  void initState() {
+    super.initState();
+
+    idTypeController.text = regolController.accountModel.value?.idType ?? "";
+    idTypeNumber.text = regolController.accountModel.value?.idNumber ?? "";
+    nationallyController.text = regolController.accountModel.value?.country ?? "";
+  }
+
+  @override
   void dispose() {
     nationallyController.dispose();
     idTypeController.dispose();

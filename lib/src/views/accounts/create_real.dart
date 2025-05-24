@@ -37,6 +37,12 @@ class _CreateRealState extends State<CreateReal> {
         CustomAlert.alertError();
       }
     });
+
+    regolController.progressAccount().then((result){
+      if(!result){
+        CustomAlert.alertError();
+      }
+    });
   }
 
   @override

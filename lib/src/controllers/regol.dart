@@ -1,12 +1,16 @@
 import 'package:get/get.dart';
+import 'package:tridentpro/src/models/databases/account.dart';
 import 'package:tridentpro/src/models/trades/product_models.dart';
 import 'package:tridentpro/src/service/auth_service.dart';
+import 'package:tridentpro/src/service/database_service.dart';
 
 class RegolController extends GetxController {
   AuthService authService = Get.find();
   RxString responseMessage = "".obs;
   RxBool isLoading = false.obs;
   Rxn<ProductModels> productModels = Rxn<ProductModels>();
+  DatabaseService databaseService = DatabaseService.instance;
+  Rxn<AccountModel> accountModel = Rxn<AccountModel>();
 
   // Create Demo Trading API
   Future<bool> getProducts() async {
@@ -17,7 +21,7 @@ class RegolController extends GetxController {
       if (result['statusCode'] != 200) {
         return false;
       }
-      print(result);
+      // print(result);
       productModels(ProductModels.fromJson(result));
       responseMessage(result['message']);
       return true;
@@ -25,6 +29,29 @@ class RegolController extends GetxController {
       isLoading(false);
       responseMessage(e.toString());
       return false;
+    }
+  }
+
+  Future<bool> progressAccount() async {
+    try {
+      Map<String, dynamic> result = await authService.get("regol/progressAccount");
+      if(result['statusCode'] != 200) {
+        return false;
+      }
+      
+      result['response']['id'] = int.parse(result['response']['id']);
+      result['response']['type'] = int.parse(result['response']['type']);
+      result['response']['type_acc'] = int.parse(result['response']['type_acc']);
+      AccountModel account = AccountModel.fromJson(result['response']);
+      accountModel(account);
+
+      /** Insert account to database update on duplicate key */
+      await databaseService.insertAccount(account);
+      return true;
+    
+    } catch (e) {
+      responseMessage("progressAccount error: $e");
+      throw Exception("progressAccount error: $e");
     }
   }
 
