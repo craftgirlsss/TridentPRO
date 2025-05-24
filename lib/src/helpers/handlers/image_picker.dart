@@ -6,7 +6,8 @@ class CustomImagePicker {
     try {
       final ImagePicker picker = ImagePicker();
       final XFile? imagePicked = await picker.pickImage(
-        source: ImageSource.camera,
+        source: ImageSource.gallery,
+        // source: ImageSource.camera,
         imageQuality: 100,
       );
 

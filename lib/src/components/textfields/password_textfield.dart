@@ -46,7 +46,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
           autofillHints: const [AutofillHints.password],
           keyboardAppearance: Brightness.dark,
           validator: (value){
-            RegExp regex=RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~/]).{8,}$');
+            // RegExp regex=RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~/]).{8,}$');
             var passNonNullValue = value ?? "";
             if(passNonNullValue.isEmpty){
               return ("Mohon inputkan kata sandi");
@@ -54,9 +54,9 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
             else if(passNonNullValue.length < 8){
               return ("Kata sandi kurang dari 8 karakter");
             }
-            else if(!regex.hasMatch(passNonNullValue)){
-              return ("Kata sandi tidak terdapat huruf kapital, huruf kecil, angka atau simbol");
-            }
+            // else if(!regex.hasMatch(passNonNullValue)){
+            //   return ("Kata sandi tidak terdapat huruf kapital, huruf kecil, angka atau simbol");
+            // }
             return null;
           },
           decoration: InputDecoration(

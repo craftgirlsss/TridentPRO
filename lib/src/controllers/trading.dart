@@ -7,6 +7,7 @@ import 'package:tridentpro/src/helpers/variables/global_variables.dart';
 import 'package:tridentpro/src/models/trades/ohlc_models.dart';
 import 'package:tridentpro/src/models/trades/product_models.dart';
 import 'package:tridentpro/src/models/trades/trading_account_models.dart';
+import 'package:tridentpro/src/service/auth_service.dart';
 
 class OHLCDataModel {
   DateTime? date;
@@ -26,6 +27,7 @@ class TradingController extends GetxController {
   Rxn<ProductModels> productModels = Rxn<ProductModels>();
   TwoFactoryAuth twoFactoryAuth = Get.find();
   AuthController authController = Get.find();
+  AuthService authService = AuthService();
 
   // Status Order API Driver
   Future<bool> getMarket({String? market}) async {
@@ -53,10 +55,8 @@ class TradingController extends GetxController {
         }
         responseMessage(result['message']);
         return true;
-      }else if(response.statusCode == 300){
-        responseMessage(result['message']);
-        twoFactoryAuth.refreshTokenizer();
       }
+
       responseMessage(result['message']);
       return false;
     } catch (e) {
@@ -70,24 +70,16 @@ class TradingController extends GetxController {
   Future<bool> getTradingAccount() async {
     try {
       isLoading(true);
-      http.Response response = await http.post(
-        Uri.tryParse("${GlobalVariable.mainURL}/account/info")!,
-        headers: {
-          "Authorization": "Bearer ${twoFactoryAuth.accessToken}",
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      );
-      var result = jsonDecode(response.body);
+      Map<String, dynamic> result = await authService.post("account/info", {});
       isLoading(false);
-      if (response.statusCode == 200) {
-        tradingAccountModels(TradingAccountModels.fromJson(result));
+      if (result['statusCode'] == 200) {
+        tradingAccountModels(TradingAccountModels.fromJson(result['response']));
         return true;
-      }else if(response.statusCode == 300){
-        responseMessage(result['message']);
-        twoFactoryAuth.refreshTokenizer();
       }
+
       responseMessage(result['message']);
       return false;
+
     } catch (e) {
       isLoading(false);
       responseMessage(e.toString());
@@ -99,21 +91,13 @@ class TradingController extends GetxController {
   Future<bool> createDemo() async {
     try {
       isLoading(true);
-      http.Response response = await http.post(
-          Uri.tryParse("${GlobalVariable.mainURL}/regol/createDemo")!,
-          headers: {
-            "Authorization": "Bearer ${twoFactoryAuth.accessToken}",
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-      );
-      var result = jsonDecode(response.body);
+      Map<String, dynamic> result = await authService.post("regol/createDemo", {});
+      
       isLoading(false);
-      if (response.statusCode == 200) {
+      if (result['statusCode'] == 200) {
         return true;
-      }else if(response.statusCode == 300){
-        responseMessage(result['message']);
-        twoFactoryAuth.refreshTokenizer();
       }
+      
       responseMessage(result['message']);
       return false;
     } catch (e) {
@@ -127,18 +111,11 @@ class TradingController extends GetxController {
   Future<bool> getProducts() async {
     try {
       isLoading(true);
-      http.Response response = await http.post(
-          Uri.tryParse("${GlobalVariable.mainURL}/regol/createDemo")!,
-          headers: {
-            "Authorization": "Bearer ${twoFactoryAuth.accessToken}",
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-      );
-      var result = jsonDecode(response.body);
+      Map<String, dynamic> result = await authService.get("regol/product");
       isLoading(false);
-      if (response.statusCode == 200) {
+      if (result['statusCode'] == 200) {
         return true;
-      }else if(response.statusCode == 300){
+      }else if(result['statusCode'] == 300){
         responseMessage(result['message']);
         twoFactoryAuth.refreshTokenizer();
       }
