@@ -43,6 +43,7 @@ class LanguageGlobalVar {
   static const String FEMALE = "Pria";
   static const String ID_CARD = "KTP";
   static const String TAX_CARD = "NPWP";
+  static const String TAX_CARD_NUMBER = "Nomor NPWP";
   static const String MARITAL_STATUS = "Status Pernikahan";
   static const String FAMILY_INFORMATION = "Informasi Keluarga";
   static const String MARRIED = "Menikah";
@@ -58,7 +59,7 @@ class LanguageGlobalVar {
   static const String PASSWORD_NOT_THE_SAME = "Password not the same";
   static const String NATIONALY = "Nationaly";
   static const String CHOOSE_NATIONALY = "Choose your Nationaly";
-  static const String ID_TYPE = "ID_TYPE";
+  static const String ID_TYPE = "ID Type";
   static const String CHOOSE_YOUR_ID_TYPE = "Choose your ID Type";
   static const String SELFIE_WITH_ID = "Selfie with ID Card";
   static const String ID_CARD_PHOTO = "ID Card Photo";

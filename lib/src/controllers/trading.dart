@@ -3,9 +3,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:tridentpro/src/controllers/2_factory_auth.dart';
 import 'package:tridentpro/src/controllers/authentication.dart';
-import 'package:tridentpro/src/helpers/variables/global_variables.dart';
 import 'package:tridentpro/src/models/trades/ohlc_models.dart';
-import 'package:tridentpro/src/models/trades/product_models.dart';
 import 'package:tridentpro/src/models/trades/trading_account_models.dart';
 import 'package:tridentpro/src/service/auth_service.dart';
 
@@ -24,7 +22,6 @@ class TradingController extends GetxController {
   Rxn<OHLCModels> ohlcModels = Rxn<OHLCModels>();
   RxList<OHLCDataModel> ohlcData = <OHLCDataModel>[].obs;
   Rxn<TradingAccountModels> tradingAccountModels = Rxn<TradingAccountModels>();
-  Rxn<ProductModels> productModels = Rxn<ProductModels>();
   TwoFactoryAuth twoFactoryAuth = Get.find();
   AuthController authController = Get.find();
   AuthService authService = AuthService();
@@ -97,7 +94,6 @@ class TradingController extends GetxController {
       if (result['statusCode'] == 200) {
         return true;
       }
-      
       responseMessage(result['message']);
       return false;
     } catch (e) {
@@ -106,26 +102,4 @@ class TradingController extends GetxController {
       return false;
     }
   }
-
-  // Create Demo Trading API
-  Future<bool> getProducts() async {
-    try {
-      isLoading(true);
-      Map<String, dynamic> result = await authService.get("regol/product");
-      isLoading(false);
-      if (result['statusCode'] == 200) {
-        return true;
-      }else if(result['statusCode'] == 300){
-        responseMessage(result['message']);
-        twoFactoryAuth.refreshTokenizer();
-      }
-      responseMessage(result['message']);
-      return false;
-    } catch (e) {
-      isLoading(false);
-      responseMessage(e.toString());
-      return false;
-    }
-  }
-
 }

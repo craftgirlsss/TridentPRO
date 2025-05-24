@@ -3,7 +3,8 @@ import 'package:tridentpro/src/components/languages/language_variable.dart';
 
 final List<IdentityCardType> idTypeList = [
   IdentityCardType(LanguageGlobalVar.ID_CARD.tr),
-  IdentityCardType(LanguageGlobalVar.TAX_CARD.tr)
+  IdentityCardType("Passport")
+  // IdentityCardType(LanguageGlobalVar.TAX_CARD.tr)
 ];
 
 class IdentityCardType {

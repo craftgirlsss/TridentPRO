@@ -10,7 +10,8 @@ class NameTextField extends StatefulWidget {
   final bool? readOnly;
   final String? fieldName;
   final TextEditingController? controller;
-  const NameTextField({super.key, this.hintText, this.labelText, this.controller, this.readOnly, this.fieldName});
+  final bool? useValidator;
+  const NameTextField({super.key, this.hintText, this.labelText, this.controller, this.readOnly, this.fieldName, this.useValidator});
 
   @override
   State<NameTextField> createState() => _NameTextFieldState();
@@ -34,10 +35,13 @@ class _NameTextFieldState extends State<NameTextField> {
           style: GoogleFonts.inter(),
           cursorColor: CustomColor.defaultColor,
           validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Mohon isikan ${widget.fieldName}';
-            }else if(!isName.value){
-              return 'Mohon isikan ${widget.fieldName} yang benar';
+            if(widget.useValidator != null){
+              if (value == null || value.isEmpty) {
+                return 'Mohon isikan ${widget.fieldName}';
+              }else if(!isName.value){
+                return 'Mohon isikan ${widget.fieldName} yang benar';
+              }
+              return null;
             }
             return null;
           },

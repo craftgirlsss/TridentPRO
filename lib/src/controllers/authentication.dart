@@ -77,7 +77,7 @@ class AuthController extends GetxController {
         responseMessage.value = result['message'];
         return true;
       }
-      responseMessage.value = result['message'];
+      responseMessage.value = result['message']['data']['id'];
       return false;
     } catch (e) {
       isLoading(false);

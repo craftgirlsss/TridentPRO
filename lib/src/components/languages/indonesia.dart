@@ -43,6 +43,7 @@ class IndonesiaLanguage {
     LanguageGlobalVar.MEN: LanguageGlobalVar.MEN,
     LanguageGlobalVar.FEMALE: LanguageGlobalVar.FEMALE,
     LanguageGlobalVar.TAX_CARD: LanguageGlobalVar.TAX_CARD,
+    LanguageGlobalVar.TAX_CARD_NUMBER: LanguageGlobalVar.TAX_CARD_NUMBER,
     LanguageGlobalVar.ID_CARD: LanguageGlobalVar.ID_CARD,
     LanguageGlobalVar.DIVORCED: LanguageGlobalVar.DIVORCED,
     LanguageGlobalVar.MARRIED: LanguageGlobalVar.MARRIED,
