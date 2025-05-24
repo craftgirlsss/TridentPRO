@@ -29,8 +29,8 @@ class DatabaseService {
     await db.execute('''
       CREATE TABLE IF NOT EXISTS account (
         id INTEGER PRIMARY KEY,
-        type INTEGER DEFAULT NULL,
-        typeAcc INTEGER DEFAULT NULL,
+        type TEXT DEFAULT NULL,
+        typeAcc TEXT DEFAULT NULL,
         country TEXT DEFAULT NULL,
         idType TEXT DEFAULT NULL,
         idNumber TEXT DEFAULT NULL,
@@ -72,10 +72,10 @@ class DatabaseService {
     }
   }
 
-  Future<void> insertAccount(AccountModel account) async {
+  Future<void> insertAccount(Map<String, dynamic> account) async {
     try {
       final db = await database;
-      await db.insert('account', Map.from(account.toJson()), conflictAlgorithm: ConflictAlgorithm.replace);
+      await db.insert('account', account, conflictAlgorithm: ConflictAlgorithm.replace);
       
     } catch (e) {
       throw Exception("insertAccount error: $e");

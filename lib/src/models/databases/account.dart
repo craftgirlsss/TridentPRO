@@ -1,31 +1,31 @@
 class AccountModel {
-  final int? id;
-  final int? type;
-  final int? typeAcc;
-  final String? country;
-  final String? idType;
-  final String? idNumber;
-  final String? appFotoIdentitas;
-  final String? appFotoTerbaru;
-  final String? npwp;
-  final String? dateOfBirth;
-  final String? placeOfBirth;
-  final String? gender;
-  final String? province;
-  final String? city;
-  final String? district;
-  final String? village;
-  final String? address;
-  final String? postalCode;
-  final String? motherName;
-  final String? phoneHome;
-  final String? faxHome;
-  final String? phoneNumber;
-  final String? drrtName;
-  final String? drrtStatus;
-  final String? drrtPhone;
-  final String? drrtAddress;
-  final String? drrtPostalCode;
+  int? id;
+  String? type;
+  String? typeAcc;
+  String? country;
+  String? idType;
+  String? idNumber;
+  String? appFotoIdentitas;
+  String? appFotoTerbaru;
+  String? npwp;
+  String? dateOfBirth;
+  String? placeOfBirth;
+  String? gender;
+  String? province;
+  String? city;
+  String? district;
+  String? village;
+  String? address;
+  String? postalCode;
+  String? motherName;
+  String? phoneHome;
+  String? faxHome;
+  String? phoneNumber;
+  String? drrtName;
+  String? drrtStatus;
+  String? drrtPhone;
+  String? drrtAddress;
+  String? drrtPostalCode;
 
   AccountModel({
     this.id,
