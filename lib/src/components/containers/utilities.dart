@@ -35,7 +35,10 @@ class UtilitiesWidget {
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: Colors.black12),
           color: CustomColor.backgroundIcon,
-          image: urlPhoto == null ? null : DecorationImage(image: FileImage(File(urlPhoto)), fit: BoxFit.cover)
+          image: (urlPhoto != null && urlPhoto.isNotEmpty) ? DecorationImage(
+            image: FileImage(File(urlPhoto)), 
+            fit: BoxFit.cover
+          ) : null
         ),
         child: Center(
           child: Column(
