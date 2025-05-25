@@ -12,6 +12,7 @@ class GlobalVariable {
   static final List<String> maritalIndoVersion = ["Tidak Kawin", "Kawin", "Janda", "Duda"];
   static final List<String> relation = [LanguageGlobalVar.FATHER.tr, LanguageGlobalVar.MOTHER.tr, LanguageGlobalVar.YOUNR_BROTHER.tr, LanguageGlobalVar.BROTHER.tr];
   static final List<String> jobList = ["Government Employees", "Staff", "Supervisor", "Director", "Manager", "Housewife"];
+  static final List<String> jobListIndo = ["Swasta", "Wirahusaha", "Ibu RT", "Profesional", "ASN", "Mahasiswa", "Pegawai BUMN", "Lainnya"];
   static final List<String> investmentGoal = ["Hedging", "Speculation", "Gain", "Other"];
   static final List<String> investmentGoalIndonesia = ["Lindungi Nilai", "Gain", "Spekulasi", "Lainnya"];
   static final List<String> jenisTabungan = ["Giro", "Tabungan"];

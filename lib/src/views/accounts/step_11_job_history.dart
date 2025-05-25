@@ -37,6 +37,7 @@ class _Step11JobHistory extends State<Step11JobHistory> {
   TextEditingController durationOfLastWorkController = TextEditingController();
   TextEditingController currentAddressOffice = TextEditingController();
   TextEditingController officePhoneContact = TextEditingController();
+  TextEditingController faxController = TextEditingController();
 
   RegolController regolController = Get.find();
 
@@ -49,6 +50,7 @@ class _Step11JobHistory extends State<Step11JobHistory> {
     durationOfWorkController.dispose();
     durationOfLastWorkController.dispose();
     officePhoneContact.dispose();
+    faxController.dispose();
     currentAddressOffice.dispose();
     super.dispose();
   }
@@ -85,29 +87,30 @@ class _Step11JobHistory extends State<Step11JobHistory> {
                     subtitle: "Tell me a little about your current job",
                     children: [
                       VoidTextField(controller: yourJobCategoryController, fieldName: "Your Current Job", hintText: "Your Current Job", labelText: "Your Current Job", onPressed: () async {
-                        CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Choose your current job", children: List.generate(GlobalVariable.jobList.length, (i){
+                        CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Choose your current job", children: List.generate(GlobalVariable.jobListIndo.length, (i){
                           return ListTile(
                             onTap: (){
                               Navigator.pop(context);
-                              yourJobCategoryController.text = GlobalVariable.jobList[i];
+                              yourJobCategoryController.text = GlobalVariable.jobListIndo[i];
                             },
-                            title: Text(GlobalVariable.jobList[i], style: GoogleFonts.inter()),
+                            title: Text(GlobalVariable.jobListIndo[i], style: GoogleFonts.inter()),
                           );
                         }));
                       }),
                       NameTextField(controller: businessNameController, fieldName: "Company Name", hintText: "Company Name", labelText: "Company Name"),
                       NameTextField(controller: categoryBusinessNameController, fieldName: "Bidang Usaha", hintText: "Input nama bidang usaha", labelText: "Nama Bidang Usaha"),
                       NameTextField(controller: jobPositionController, fieldName: "Job Position", hintText: "Job Position", labelText: "Job Position"),
-                      NumberTextField(controller: durationOfWorkController, fieldName: "Lama Bekerja (Tahun)", hintText: "Lama Bekerja (Tahun)", labelText: "Lama Bekerja (Tahun)", maxLength: 0),
+                      NumberTextField(controller: durationOfWorkController, fieldName: "Lama Bekerja", hintText: "Lama Bekerja", labelText: "Lama Bekerja", maxLength: 0),
                       DescriptiveTextField(controller: currentAddressOffice, fieldName: "Current Address Office", hintText: "Current Address Office", labelText: "Current Address Office"),
-                      PhoneTextField(controller: officePhoneContact, fieldName: "Office Phone Contact", hintText: "Office Phone Contact)", labelText: "Office Phone Contact"),
+                      PhoneTextField(controller: officePhoneContact, fieldName: "Office Phone Contact", hintText: "Office Phone Contact", labelText: "Office Phone Contact (Optional)"),
+                      PhoneTextField(controller: faxController, fieldName: "Office Fax", hintText: "Office Fax", labelText: "Office Fax (Optional)"),
                     ]
                 ),
                 UtilitiesWidget.titleContent(
                   title: "Last Job Information",
                   subtitle: "Tell me a little about your last job",
                   children: [
-                    NumberTextField(controller: durationOfLastWorkController, fieldName: "Lama Bekerja (Tahun)", hintText: "Lama Bekerja (Tahun)", labelText: "Lama Bekerja (Tahun)", maxLength: 0),
+                    NumberTextField(controller: durationOfLastWorkController, fieldName: "Lama Bekerja", hintText: "Lama Bekerja", labelText: "Lama Bekerja", maxLength: 0),
                   ]
                 )
               ],

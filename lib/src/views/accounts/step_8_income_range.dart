@@ -4,7 +4,10 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
+import 'package:tridentpro/src/components/containers/utilities.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
+import 'package:tridentpro/src/components/textfields/descriptive_textfield.dart';
+import 'package:tridentpro/src/components/textfields/number_textfield.dart';
 import 'package:tridentpro/src/helpers/variables/global_variables.dart';
 import 'package:tridentpro/src/views/accounts/step_11_job_history.dart';
 import 'components/step_position.dart';
@@ -18,7 +21,21 @@ class Step8IncomeRange extends StatefulWidget {
 
 class _Step8IncomeRange extends State<Step8IncomeRange> {
 
+  TextEditingController lokasiRumah = TextEditingController();
+  TextEditingController nilaiNJOP = TextEditingController();
+  TextEditingController depositoBank = TextEditingController();
+  TextEditingController lainnya = TextEditingController();
+
   RxInt selectedValue = 1.obs;
+
+  @override
+  void dispose() {
+    lokasiRumah.dispose();
+    nilaiNJOP.dispose();
+    depositoBank.dispose();
+    lainnya.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +50,7 @@ class _Step8IncomeRange extends State<Step8IncomeRange> {
             actions: [
               CupertinoButton(
                 onPressed: (){},
-                child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
+                child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
               )
             ]
         ),
@@ -73,6 +90,24 @@ class _Step8IncomeRange extends State<Step8IncomeRange> {
                   );
                 },
               ),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: UtilitiesWidget.titleContent(
+                  title: "Daftar Kekayaan",
+                  subtitle: "Input semua daftar kekayaan yang anda miliki",
+                  children: [
+                    DescriptiveTextField(
+                      controller: lokasiRumah,
+                      labelText: "Lokasi Rumah",
+                      hintText: "Input Lokasi Rumah",
+                    ),
+                    NumberTextField(controller: nilaiNJOP, fieldName: "Nilai NJOP", hintText: "Nilai NJOP", labelText: "Nilai NJOP"),
+                    NumberTextField(controller: depositoBank, fieldName: "Deposito Bank", hintText: "Deposito Bank", labelText: "Deposito Bank"),
+                    NumberTextField(controller: nilaiNJOP, fieldName: "Lainnya (Optional)", hintText: "Lainnya (Optional)", labelText: "Lainnya (Optional)"),
+                  ]
+                ),
+              )
             ],
           ),
         ),
