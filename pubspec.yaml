@@ -46,7 +46,13 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/json/
+    - assets/fonts/
 
+
+  fonts:
+    - family: OCRA
+      fonts:
+        - asset: assets/fonts/OCRA-Alternate.otf
   # fonts:
   #   - family: Schyler
   #     fonts:

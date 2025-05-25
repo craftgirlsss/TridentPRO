@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
+import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/components/containers/utilities.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/components/painters/loading_water.dart';
@@ -38,7 +39,6 @@ class _Step1UploadPhotoState extends State<Step1UploadPhoto> {
   @override
   void initState() {
     super.initState();
-
     idTypeController.text = regolController.accountModel.value?.idType ?? "";
     idTypeNumber.text = regolController.accountModel.value?.idNumber ?? "";
     nationallyController.text = regolController.accountModel.value?.country ?? "";
@@ -67,7 +67,7 @@ class _Step1UploadPhotoState extends State<Step1UploadPhoto> {
               actions: [
                 CupertinoButton(
                   onPressed: (){},
-                  child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
+                  child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
                 )
               ]
             ),

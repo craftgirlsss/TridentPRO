@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
+import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/components/containers/utilities.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/components/textfields/name_textfield.dart';
@@ -62,14 +63,14 @@ class _Step12BankInformation extends State<Step12BankInformation> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: CustomAppBar.defaultAppBar(
-            autoImplyLeading: true,
-            title: "Bank Information",
-            actions: [
-              CupertinoButton(
-                onPressed: (){},
-                child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
-              )
-            ]
+          autoImplyLeading: true,
+          title: "Bank Information",
+          actions: [
+            CupertinoButton(
+              onPressed: (){},
+              child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
+            )
+          ]
         ),
         body: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -79,46 +80,46 @@ class _Step12BankInformation extends State<Step12BankInformation> {
             child: Column(
               children: [
                 UtilitiesWidget.titleContent(
-                    title: "Bank Information",
-                    subtitle: "Please give the bank account details on your name that will be used with withdrawal of funds",
-                    children: [
-                      VoidTextField(controller: currencyController, fieldName: "Currency Type", hintText: "Currency Type", labelText: "Currency Type", onPressed: () async {
-                        CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Choose your bank currency type", children: List.generate(currencyCodes.length, (i){
-                          return ListTile(
-                            onTap: (){
-                              Navigator.pop(context);
-                              currencyController.text = currencyCodes[i].code;
-                            },
-                            title: Text("${currencyCodes[i].code} - ${currencyCodes[i].name}", style: GoogleFonts.inter()),
-                          );
-                        }));
-                      }),
-                      VoidTextField(controller: bankNameController, fieldName: "Bank Name", hintText: "Bank Name", labelText: "Bank Name", onPressed: () async {
-                        CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Choose your bank currency type", children: List.generate(resultBank.length, (i){
-                          return ListTile(
-                            onTap: (){
-                              Navigator.pop(context);
-                              bankNameController.text = resultBank[i]['Name'];
-                            },
-                            title: Text("${resultBank[i]['Name']}", style: GoogleFonts.inter()),
-                          );
-                        }));
-                      }),
-                      NameTextField(controller: cityController, fieldName: "City", hintText: "City", labelText: "City"),
-                      NameTextField(controller: rootController, fieldName: "Cabang", hintText: "Cabang", labelText: "Cabang"),
-                      VoidTextField(controller: jenisRekening, fieldName: "Jenis Rekening", hintText: "Jenis Rekening", labelText: "Jenis Rekening", onPressed: () async {
-                        CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Choose your saving bank type", children: List.generate(GlobalVariable.jenisTabungan.length, (i){
-                          return ListTile(
-                            onTap: (){
-                              Navigator.pop(context);
-                              jenisRekening.text = GlobalVariable.jenisTabungan[i];
-                            },
-                            title: Text(GlobalVariable.jenisTabungan[i], style: GoogleFonts.inter()),
-                          );
-                        }));
-                      }),
-                      PhoneTextField(controller: nomorRekening, fieldName: "Nomor Rekening", hintText: "Nomor Rekening", labelText: "Nomor Rekening"),
-                    ]
+                  title: "Bank Information",
+                  subtitle: "Please give the bank account details on your name that will be used with withdrawal of funds",
+                  children: [
+                    VoidTextField(controller: currencyController, fieldName: "Currency Type", hintText: "Currency Type", labelText: "Currency Type", onPressed: () async {
+                      CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Choose your bank currency type", children: List.generate(currencyCodes.length, (i){
+                        return ListTile(
+                          onTap: (){
+                            Navigator.pop(context);
+                            currencyController.text = currencyCodes[i].code;
+                          },
+                          title: Text("${currencyCodes[i].code} - ${currencyCodes[i].name}", style: GoogleFonts.inter()),
+                        );
+                      }));
+                    }),
+                    VoidTextField(controller: bankNameController, fieldName: "Bank Name", hintText: "Bank Name", labelText: "Bank Name", onPressed: () async {
+                      CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Choose your bank currency type", children: List.generate(resultBank.length, (i){
+                        return ListTile(
+                          onTap: (){
+                            Navigator.pop(context);
+                            bankNameController.text = resultBank[i]['Name'];
+                          },
+                          title: Text("${resultBank[i]['Name']}", style: GoogleFonts.inter()),
+                        );
+                      }));
+                    }),
+                    NameTextField(controller: cityController, fieldName: "City", hintText: "City", labelText: "City"),
+                    NameTextField(controller: rootController, fieldName: "Cabang", hintText: "Cabang", labelText: "Cabang"),
+                    VoidTextField(controller: jenisRekening, fieldName: "Jenis Rekening", hintText: "Jenis Rekening", labelText: "Jenis Rekening", onPressed: () async {
+                      CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Choose your saving bank type", children: List.generate(GlobalVariable.jenisTabungan.length, (i){
+                        return ListTile(
+                          onTap: (){
+                            Navigator.pop(context);
+                            jenisRekening.text = GlobalVariable.jenisTabungan[i];
+                          },
+                          title: Text(GlobalVariable.jenisTabungan[i], style: GoogleFonts.inter()),
+                        );
+                      }));
+                    }),
+                    PhoneTextField(controller: nomorRekening, fieldName: "Nomor Rekening", hintText: "Nomor Rekening", labelText: "Nomor Rekening"),
+                  ]
                 ),
               ],
             ),

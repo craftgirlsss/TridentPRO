@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
@@ -61,8 +60,7 @@ class _MarketDetailState extends State<MarketDetail> {
           children: [
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-              child: Flexible(
-                child: Row(
+              child: Row(
                   children: [
                     Row(
                       children: [
@@ -118,7 +116,7 @@ class _MarketDetailState extends State<MarketDetail> {
                   ],
                 ),
               ),
-            ),
+
             // End of Tool Section
 
             // Chart Section

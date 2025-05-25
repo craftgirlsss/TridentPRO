@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
+import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/components/containers/utilities.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/components/painters/loading_water.dart';
@@ -81,7 +82,7 @@ class _Step2StoredData extends State<Step2StoredData> {
               actions: [
                 CupertinoButton(
                   onPressed: (){},
-                  child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
+                  child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
                 )
               ]
             ),

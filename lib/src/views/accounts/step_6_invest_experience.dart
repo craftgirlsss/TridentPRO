@@ -11,7 +11,6 @@ import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/components/textfields/name_textfield.dart';
 import 'package:tridentpro/src/controllers/regol.dart';
 import 'package:tridentpro/src/helpers/variables/global_variables.dart';
-import 'package:tridentpro/src/views/accounts/step_7_balance_sources.dart';
 import 'package:tridentpro/src/views/accounts/step_8_income_range.dart';
 
 import 'components/step_position.dart';
@@ -49,7 +48,7 @@ class _Step6InvestmentExperience extends State<Step6InvestmentExperience> {
           actions: [
             CupertinoButton(
               onPressed: (){},
-              child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
+              child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
             )
           ]
         ),

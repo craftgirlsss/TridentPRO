@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
+import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/components/containers/utilities.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/components/textfields/descriptive_textfield.dart';
@@ -86,7 +87,7 @@ class _Step4EmergencyContact extends State<Step4EmergencyContact> {
             actions: [
               CupertinoButton(
                 onPressed: (){},
-                child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
+                child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
               )
             ]
         ),

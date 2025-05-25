@@ -44,7 +44,7 @@ class _Step5InvestmentGoal extends State<Step5InvestmentGoal> {
             actions: [
               CupertinoButton(
                 onPressed: (){},
-                child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
+                child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
               )
             ]
         ),

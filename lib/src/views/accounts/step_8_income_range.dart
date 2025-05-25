@@ -7,7 +7,6 @@ import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/helpers/variables/global_variables.dart';
 import 'package:tridentpro/src/views/accounts/step_11_job_history.dart';
-import 'package:tridentpro/src/views/accounts/step_9_other_income.dart';
 import 'components/step_position.dart';
 
 class Step8IncomeRange extends StatefulWidget {

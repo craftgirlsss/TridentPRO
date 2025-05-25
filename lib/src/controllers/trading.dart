@@ -38,6 +38,7 @@ class TradingController extends GetxController {
         },
       );
       var result = jsonDecode(response.body);
+      print(result);
       isLoading(false);
       if (response.statusCode == 200) {
         ohlcModels(OHLCModels.fromJson(result));
