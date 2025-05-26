@@ -160,6 +160,8 @@ class RegolController extends GetxController {
         'app_nomor_fax': faxNumber
       });
 
+      print(result);
+
       isLoading(false);
       if (result['status'] != true) {
         return false;
@@ -300,26 +302,45 @@ class RegolController extends GetxController {
   }
 
 
-  Future<bool> postStepNinePernyataanSimulasi({String? appFotoTerbaru, String? appFotoIdentitas, required String country, required String idType, required String idTypeNumber}) async {
+  Future<bool> postStepNinePernyataanSimulasi({
+    String? appProvince,
+    String? appCity,
+    String? appDistrict,
+    String? appVillage,
+    String? appZipcode,
+    String? appRT,
+    String? appRW,
+    String? appAddress,
+    String? appAgree,
+    String? urlPhoto
+    }) async {
     try {
+      Map<String, String> file = {};
       isLoading(true);
       Map<String, String> body = {
-        'country': country,
-        'id_type': idType,
-        'number': idTypeNumber,
+        'app_province': appProvince!,
+        'app_city': appCity!,
+        'app_district': appDistrict!,
+        'app_village': appVillage!,
+        'app_zipcode': appZipcode!,
+        'app_rt': appRT!,
+        'app_rw': appRW!,
+        'app_address': appAddress!,
+        'app_agree': appAgree!,
       };
 
-      Map<String, String> file = {};
-      if(appFotoTerbaru != null) {
-        file['app_foto_terbaru'] = appFotoTerbaru;
+      if(urlPhoto != null) {
+        file['app_demofile'] = urlPhoto;
       }
 
-      if(appFotoIdentitas != null) {
-        file['app_foto_identitas'] = appFotoIdentitas;
-      }
 
-      await authService.multipart("regol/pernyataan_simulasi", body, file);
+      var result = await authService.multipart("regol/pernyataan_simulasi", body, file);
       isLoading(false);
+      responseMessage(result['message']);
+      if(result['status'] == false){
+        return false;
+      }
+      print(result);
       return true;
 
     } catch (e) {

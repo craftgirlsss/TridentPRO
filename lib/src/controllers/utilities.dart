@@ -198,7 +198,6 @@ class UtilitiesController extends GetxController {
   // Province API
   Future<bool> getProvinceAPI() async {
     try {
-      isLoading(true);
       Map<String, dynamic> result = await authService.get("regol/getProvince");
 
       isLoading(false);
@@ -218,12 +217,10 @@ class UtilitiesController extends GetxController {
   // Kabupaten API
   Future<bool> getKabupatenAPI() async {
     try {
-      isLoading(true);
       Map<String, dynamic> result = await authService.post("regol/getRegency", {
         "province" : selectedProvinceID.value
       });
 
-      isLoading(false);
       if (result['status'] != true) {
         return false;
       }
@@ -231,7 +228,6 @@ class UtilitiesController extends GetxController {
       responseMessage(result['message']);
       return true;
     } catch (e) {
-      isLoading(false);
       responseMessage(e.toString());
       return false;
     }
@@ -240,14 +236,12 @@ class UtilitiesController extends GetxController {
   // Kecamatan API
   Future<bool> getKecamatanAPI() async {
     try {
-      isLoading(true);
       Map<String, dynamic> result = await authService.post("regol/getDistrict", {
         "regency" : selectedKabupatenID.value
       });
 
       print(result);
 
-      isLoading(false);
       if (result['status'] != true) {
         return false;
       }
@@ -255,7 +249,6 @@ class UtilitiesController extends GetxController {
       responseMessage(result['message']);
       return true;
     } catch (e) {
-      isLoading(false);
       responseMessage(e.toString());
       return false;
     }
@@ -264,12 +257,10 @@ class UtilitiesController extends GetxController {
   // Desa API
   Future<bool> getDesaAPI() async {
     try {
-      isLoading(true);
       Map<String, dynamic> result = await authService.post("regol/getVillages", {
         "district" : selectedKecamatanID.value
       });
 
-      isLoading(false);
       if (result['status'] != true) {
         return false;
       }
@@ -277,7 +268,6 @@ class UtilitiesController extends GetxController {
       responseMessage(result['message']);
       return true;
     } catch (e) {
-      isLoading(false);
       responseMessage(e.toString());
       return false;
     }

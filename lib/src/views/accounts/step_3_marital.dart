@@ -41,6 +41,7 @@ class _Step3Marital extends State<Step3Marital> {
   @override 
   void initState() {
     super.initState();
+    print(regolController.accountModel.value?.wifeName);
     maritalStatusController.text = regolController.accountModel.value?.maritalStatus ?? "";
     motherNameController.text = regolController.accountModel.value?.motherName ?? "";
     phoneHomeController.text = regolController.accountModel.value?.phoneHome ?? "";
@@ -48,6 +49,9 @@ class _Step3Marital extends State<Step3Marital> {
     wifeHusbandName.text = regolController.accountModel.value?.wifeName ?? "";
     if(maritalStatusController.text.toLowerCase() == "tidak kawin"){
       showNameWifeOrHusband(false);
+    }else{
+      wifeHusbandName.text = regolController.accountModel.value?.wifeName ?? "-";
+      showNameWifeOrHusband(true);
     }
   }
 

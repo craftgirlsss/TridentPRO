@@ -28,6 +28,8 @@ class AccountModel {
   String? drrtPhone;
   String? drrtAddress;
   String? drrtPostalCode;
+  String? rt;
+  String? rw;
 
   AccountModel({
     this.id,
@@ -49,6 +51,8 @@ class AccountModel {
     this.address,
     this.postalCode,
     this.maritalStatus,
+    this.rt,
+    this.rw,
     this.wifeName,
     this.motherName,
     this.phoneHome,
@@ -79,6 +83,8 @@ class AccountModel {
       city: json['city'],
       district: json['district'],
       village: json['village'],
+      rt: json['rt'],
+      rw: json['rw'],
       address: json['address'],
       postalCode: json['postal_code'],
       maritalStatus: json['marital_status'],
@@ -126,6 +132,8 @@ class AccountModel {
       'drrtPhone': drrtPhone,
       'drrtAddress': drrtAddress,
       'drrtPostalCode': drrtPostalCode,
+      'rt' : rt,
+      'rw' : rw
     };
   }
 }
