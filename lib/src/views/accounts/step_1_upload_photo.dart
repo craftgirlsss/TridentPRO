@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
@@ -39,7 +40,6 @@ class _Step1UploadPhotoState extends State<Step1UploadPhoto> {
   @override
   void initState() {
     super.initState();
-    print(regolController.accountModel.value?.country);
     idTypeController.text = regolController.accountModel.value?.idType ?? "";
     idTypeNumber.text = regolController.accountModel.value?.idNumber ?? "";
     nationallyController.text = regolController.accountModel.value?.country ?? "";
@@ -136,12 +136,12 @@ class _Step1UploadPhotoState extends State<Step1UploadPhoto> {
                     appFotoIdentitas: idPhoto.value,
                     appFotoTerbaru: idPhotoSelfie.value
                   ).then((result){
-                    if(result){
-                      print("BERHASIL");
-                      Get.to(() => const Step2StoredData());
-                    }else{
-                      print("GAGAL");
+                    if(!result){
+                      CustomAlert.alertError(message: regolController.responseMessage.value);
+                      return false;
                     }
+
+                    Get.to(() => const Step2StoredData());
                   });
                 },
                 progressEnd: 4,
