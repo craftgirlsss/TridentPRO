@@ -17,6 +17,8 @@ class AccountModel {
   String? village;
   String? address;
   String? postalCode;
+  String? maritalStatus;
+  String? wifeName;
   String? motherName;
   String? phoneHome;
   String? faxHome;
@@ -46,6 +48,8 @@ class AccountModel {
     this.village,
     this.address,
     this.postalCode,
+    this.maritalStatus,
+    this.wifeName,
     this.motherName,
     this.phoneHome,
     this.faxHome,
@@ -77,6 +81,8 @@ class AccountModel {
       village: json['village'],
       address: json['address'],
       postalCode: json['postal_code'],
+      maritalStatus: json['marital_status'],
+      wifeName: json['wife_name'],
       motherName: json['mother_name'],
       phoneHome: json['phone_home'],
       faxHome: json['fax_home'],
@@ -109,6 +115,8 @@ class AccountModel {
       'village': village,
       'address': address,
       'postalCode': postalCode,
+      'maritalStatus': maritalStatus,
+      'wifeName': wifeName,
       'motherName': motherName,
       'phoneHome': phoneHome,
       'faxHome': faxHome,
