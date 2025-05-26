@@ -21,6 +21,14 @@ class _PhoneTextFieldState extends State<PhoneTextField> {
   RxBool isLoading = false.obs;
 
   @override
+  void initState() {
+    super.initState();
+    if((widget.controller?.text.length ?? 0) > 9){
+      isPhone(true);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
