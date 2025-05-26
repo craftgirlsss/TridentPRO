@@ -9,7 +9,7 @@ class RegolController extends GetxController {
   RxString responseMessage = "".obs;
   RxBool isLoading = false.obs;
   Rxn<ProductModels> productModels = Rxn<ProductModels>();
-  DatabaseService databaseService = DatabaseService.instance;
+  // DatabaseService databaseService = DatabaseService.instance;
   Rxn<AccountModel> accountModel = Rxn<AccountModel>();
 
   // Create Demo Trading API
@@ -41,8 +41,8 @@ class RegolController extends GetxController {
       /** Convert response api to accountModel */
       AccountModel account = AccountModel.fromJson(result['response']);
 
-      /** Insert account to database update on duplicate key */
-      await databaseService.insertAccount(account.toJson());
+      // /** Insert account to database update on duplicate key */
+      // await databaseService.insertAccount(account.toJson());
     
       /** Assign response api to AccountModel value */
       accountModel(account);
@@ -100,8 +100,17 @@ class RegolController extends GetxController {
         file['app_foto_identitas'] = appFotoIdentitas;
       }
 
-      await authService.multipart("regol/verifikasiIdentitas", body, file);
+      Map<String, dynamic> result = await authService.multipart("regol/verifikasiIdentitas", body, file);
       isLoading(false);
+      responseMessage(result['message']);
+      if(result['status'] != true) {
+        return false;
+      }
+
+      accountModel.value?.idType = idType;
+      accountModel.value?.idNumber = idTypeNumber;
+      accountModel.value?.country = country;
+
       return true;
       
     } catch (e) {
