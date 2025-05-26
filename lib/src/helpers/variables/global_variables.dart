@@ -6,6 +6,7 @@ class GlobalVariable {
   static final x_api_key = "fewAHdSkx28301294cKSnczdAs";
   static final namaPerusahaan = "PT. TridentPRO Berjangka Futures";
   static final List<String> gender = [LanguageGlobalVar.MEN.tr, LanguageGlobalVar.FEMALE.tr];
+  static final List<String> genderIndo = ["Laki-laki", "Perempuan"];
   static final List<String> investExperienceEng = ["Yes", "No"];
   static final List<String> investExperienceIndo = ["Ya", "Tidak"];
   static final List<String> marital = [LanguageGlobalVar.SINGLE.tr, LanguageGlobalVar.MARRIED.tr, LanguageGlobalVar.DIVORCED.tr];
@@ -20,6 +21,8 @@ class GlobalVariable {
   static final List<String> investmentExperience = ["I Never Invest", "I Have Tried Investing", "I Know What I'm Doing", "I Have Invested Many Times"];
   static final List<String> balanceSources = ["Salary", "Business", "Partner", "Parent", "Inheritance", "Investment", "Property", "Savings", "Other"];
   static final List<String> incomePerYear = ["Between 100 - 250 jt Rupiah", "Between 250 - 500 jt Rupiah", "Above 500 jt Rupiah"];
+  static final List<String> incomePerYearIndo = ["Antara 100 - 250 jt Rupiah", "Antara 250 - 500 jt Rupiah", "Diatas 500 jt Rupiah"];
   static final List<String> otherIncomePerYear = ["Between 100 - 250 jt Rupiah", "Between 250 - 500 jt Rupiah", "Above 500 jt Rupiah", "Not Have"];
   static final List<String> totalAssets = ["< 1 Billion Rupiah", "1 - 5 Billion Rupiah", "> 5 Billion Rupiah"];
+  static final List<String> listSupportedDocuments = ["Cover Buku Tabungan (recommended)", "Tagihan Kartu Kredit", "Tagihan Listrik / Air", "Scan Kartu NPWP", "Rekening Koran Bank", "PBB / BPJS", "Lainnya"];
 }

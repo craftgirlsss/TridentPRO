@@ -16,7 +16,7 @@ class RegolController extends GetxController {
   Future<bool> getProducts() async {
     try {
       Map<String, dynamic> result = await authService.get("regol/product");
-      if (result['statusCode'] != 200) {
+      if (result['status'] != true) {
         return false;
       }
 
@@ -64,7 +64,7 @@ class RegolController extends GetxController {
       });
 
       isLoading(false);
-      if (result['statusCode'] != 200) {
+      if (result['status'] != true) {
         return false;
       }
 
@@ -127,9 +127,10 @@ class RegolController extends GetxController {
       });
 
       isLoading(false);
-      if (result['statusCode'] != 200) {
+      if (result['status'] != true) {
         return false;
       }
+      print(result);
       responseMessage(result['message']);
       return true;
     } catch (e) {
@@ -152,7 +153,7 @@ class RegolController extends GetxController {
       });
 
       isLoading(false);
-      if (result['statusCode'] != 200) {
+      if (result['status'] != true) {
         return false;
       }
       responseMessage(result['message']);
@@ -177,7 +178,7 @@ class RegolController extends GetxController {
       });
 
       isLoading(false);
-      if (result['statusCode'] != 200) {
+      if (result['status'] != true) {
         return false;
       }
       responseMessage(result['message']);
@@ -199,7 +200,7 @@ class RegolController extends GetxController {
       });
 
       isLoading(false);
-      if (result['statusCode'] != 200) {
+      if (result['status'] != true) {
         return false;
       }
       responseMessage(result['message']);
@@ -221,7 +222,7 @@ class RegolController extends GetxController {
       });
 
       isLoading(false);
-      if (result['statusCode'] != 200) {
+      if (result['status'] != true) {
         return false;
       }
       responseMessage(result['message']);
@@ -243,7 +244,7 @@ class RegolController extends GetxController {
       });
 
       isLoading(false);
-      if (result['statusCode'] != 200) {
+      if (result['status'] != true) {
         return false;
       }
       responseMessage(result['message']);
@@ -278,11 +279,41 @@ class RegolController extends GetxController {
       });
 
       isLoading(false);
-      if (result['statusCode'] != 200) {
+      if (result['status'] != true) {
         return false;
       }
       responseMessage(result['message']);
       return true;
+    } catch (e) {
+      isLoading(false);
+      responseMessage(e.toString());
+      return false;
+    }
+  }
+
+
+  Future<bool> postStepNinePernyataanSimulasi({String? appFotoTerbaru, String? appFotoIdentitas, required String country, required String idType, required String idTypeNumber}) async {
+    try {
+      isLoading(true);
+      Map<String, String> body = {
+        'country': country,
+        'id_type': idType,
+        'number': idTypeNumber,
+      };
+
+      Map<String, String> file = {};
+      if(appFotoTerbaru != null) {
+        file['app_foto_terbaru'] = appFotoTerbaru;
+      }
+
+      if(appFotoIdentitas != null) {
+        file['app_foto_identitas'] = appFotoIdentitas;
+      }
+
+      await authService.multipart("regol/pernyataan_simulasi", body, file);
+      isLoading(false);
+      return true;
+
     } catch (e) {
       isLoading(false);
       responseMessage(e.toString());

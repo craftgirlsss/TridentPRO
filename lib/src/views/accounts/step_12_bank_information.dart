@@ -14,7 +14,6 @@ import 'package:tridentpro/src/components/textfields/void_textfield.dart';
 import 'package:tridentpro/src/helpers/handlers/json_file_reader.dart';
 import 'package:tridentpro/src/helpers/variables/countrycurrency.dart';
 import 'package:tridentpro/src/helpers/variables/global_variables.dart';
-import 'package:tridentpro/src/views/accounts/step_13_perselisihan.dart';
 import 'package:tridentpro/src/views/accounts/step_17_dokumen_pendukung.dart';
 import 'components/step_position.dart';
 
@@ -138,12 +137,16 @@ class _Step12BankInformation extends State<Step12BankInformation> {
                           }));
                         }),
                         PhoneTextField(controller: nomorRekening, fieldName: "Nomor Rekening", hintText: "Nomor Rekening", labelText: "Nomor Rekening"),
-                        Obx(
-                          () => CustomOutlinedButton.defaultOutlinedButton(
-                            onPressed: (){
-                              addedBank.value = !addedBank.value;
-                            },
-                            title: addedBank.value ? "Hapus Bank" : "Tambah Bank"
+                        SizedBox(
+                          height: 40,
+                          width: size.width / 1.7,
+                          child: Obx(
+                            () => CustomOutlinedButton.defaultOutlinedButton(
+                              onPressed: (){
+                                addedBank.value = !addedBank.value;
+                              },
+                              title: addedBank.value ? "Hapus Bank" : "Tambah Informasi Bank"
+                            ),
                           ),
                         ),
                       ]

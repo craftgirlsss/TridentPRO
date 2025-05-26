@@ -66,7 +66,7 @@ class _Step8IncomeRange extends State<Step8IncomeRange> {
                 shrinkWrap: true,
                 physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.all(16.0),
-                itemCount: GlobalVariable.incomePerYear.length,
+                itemCount: GlobalVariable.incomePerYearIndo.length,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
@@ -79,7 +79,7 @@ class _Step8IncomeRange extends State<Step8IncomeRange> {
                         shape: StadiumBorder(
                           side: BorderSide(color: CustomColor.defaultColor)
                         ),
-                        title: Text(GlobalVariable.incomePerYear[index]),
+                        title: Text(GlobalVariable.incomePerYearIndo[index]),
                         value: index + 1,
                         groupValue: selectedValue.value,
                         onChanged: (value) {

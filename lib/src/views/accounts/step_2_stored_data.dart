@@ -138,12 +138,12 @@ class _Step2StoredData extends State<Step2StoredData> {
                         }),
                         NameTextField(controller: placeBirthController, fieldName: LanguageGlobalVar.BIRTH_PLACE.tr, hintText: LanguageGlobalVar.BIRTH_PLACE.tr, labelText: LanguageGlobalVar.BIRTH_PLACE.tr),
                         VoidTextField(controller: genderController, fieldName: LanguageGlobalVar.GENDER.tr, hintText: LanguageGlobalVar.GENDER.tr, labelText: LanguageGlobalVar.GENDER.tr, onPressed: (){
-                          CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, isScrolledController: false, title: LanguageGlobalVar.CHOOSE_YOUR_GENDER.tr, children: List.generate(GlobalVariable.gender.length, (i){
+                          CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, isScrolledController: false, title: LanguageGlobalVar.CHOOSE_YOUR_GENDER.tr, children: List.generate(GlobalVariable.genderIndo.length, (i){
                             return ListTile(
-                              title: Text(GlobalVariable.gender[i], style: GoogleFonts.inter()),
+                              title: Text(GlobalVariable.genderIndo[i], style: GoogleFonts.inter()),
                               onTap: (){
                                 Navigator.pop(context);
-                                genderController.text = GlobalVariable.gender[i];
+                                genderController.text = GlobalVariable.genderIndo[i];
                               },
                             );
                           }));
@@ -167,15 +167,7 @@ class _Step2StoredData extends State<Step2StoredData> {
                 // print(genderController.text);
                 // print(taxController.text);
                 if(_formKey.currentState!.validate()){
-                  String? gender = genderController.text;
-                  if(gender == "Male"){
-                    gender == "laki-laki";
-                  }else if(gender == "Female"){
-                    gender == "perempuan";
-                  }else{
-                    gender = "-";
-                  }
-                  regolController.postStepTwo(birthPlace: dateBirthController.text, dateOfBirth: dateFormatted, gender: gender, taxNumber: taxController.text, name: nameController.text, phone: phoneController.text, phoneCode: selectedPhone.value).then((result){
+                  regolController.postStepTwo(birthPlace: dateBirthController.text, dateOfBirth: dateFormatted, gender: genderController.text, taxNumber: taxController.text, name: nameController.text, phone: phoneController.text, phoneCode: selectedPhone.value).then((result){
                     if(result){
                       Get.to(() => const Step3Marital());
                     }else{

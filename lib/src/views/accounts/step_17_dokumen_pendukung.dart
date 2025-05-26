@@ -3,14 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
+import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/components/containers/utilities.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/components/painters/loading_water.dart';
+import 'package:tridentpro/src/components/textfields/void_textfield.dart';
 import 'package:tridentpro/src/controllers/regol.dart';
 import 'package:tridentpro/src/helpers/handlers/image_picker.dart';
+import 'package:tridentpro/src/helpers/variables/global_variables.dart';
 import 'package:tridentpro/src/views/accounts/step_13_perselisihan.dart';
 import 'package:tridentpro/src/views/accounts/step_2_stored_data.dart';
+import 'components/checklist_statement.dart';
 import 'components/step_position.dart';
 
 class Step17UploadPhoto extends StatefulWidget {
@@ -23,30 +27,25 @@ class Step17UploadPhoto extends StatefulWidget {
 class _Step17UploadPhotoState extends State<Step17UploadPhoto> {
 
   final _formKey = GlobalKey<FormState>();
-  TextEditingController nationallyController = TextEditingController();
-  TextEditingController idTypeController = TextEditingController();
-  TextEditingController idTypeNumber = TextEditingController();
+  TextEditingController documentFirstName = TextEditingController();
+  TextEditingController documentSecondName = TextEditingController();
   RegolController regolController = Get.put(RegolController());
 
-  RxString idPhoto = "".obs;
-  RxString idPhotoSelfie = "".obs;
-  RxString idPhotoPendukung = "".obs;
-  RxString idPhotoPendukungLainnya = "".obs;
+  RxString documentFirstURL = "".obs;
+  RxString documentSecondURL = "".obs;
   RxBool isLoading = false.obs;
+  RxBool accepted = false.obs;
+
 
   @override
   void initState() {
     super.initState();
-    idTypeController.text = regolController.accountModel.value?.idType ?? "";
-    idTypeNumber.text = regolController.accountModel.value?.idNumber ?? "";
-    nationallyController.text = regolController.accountModel.value?.country ?? "";
   }
 
   @override
   void dispose() {
-    nationallyController.dispose();
-    idTypeController.dispose();
-    idTypeNumber.dispose();
+    documentFirstName.dispose();
+    documentSecondName.dispose();
     super.dispose();
   }
 
@@ -77,35 +76,44 @@ class _Step17UploadPhotoState extends State<Step17UploadPhoto> {
                 child: Column(
                   children: [
                     UtilitiesWidget.titleContent(
-                      // title: LanguageGlobalVar.TITLE_REGOL_PAGE_1.tr,
                       subtitle: LanguageGlobalVar.SUBTITLE_REGOL_PAGE_1.tr,
                       title: "Dokumen Pendukung",
                       children: [
+                        // Document First
+                        VoidTextField(controller: documentFirstName, fieldName: "Dokumen Pendukung 1", hintText: "Dokumen Pendukung 1", labelText: "Dokumen Pendukung 1", onPressed: () async {
+                          CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Pilih Jenis Dokumen Pendukung 1 untuk disubmit", children: List.generate(GlobalVariable.listSupportedDocuments.length, (i){
+                            return ListTile(
+                              onTap: (){
+                                Navigator.pop(context);
+                                documentFirstName.text = GlobalVariable.listSupportedDocuments[i];
+                              },
+                              title: Text("${GlobalVariable.listSupportedDocuments[i]} - ${GlobalVariable.listSupportedDocuments[i]}", style: GoogleFonts.inter()),
+                            );
+                          }));
+                        }),
                         Obx(
-                          () => isLoading.value ? const SizedBox() : UtilitiesWidget.uploadPhoto(title: "(cover buku tabungan (recommended), tagihan kartu kredit, tagihan listrik / air, scan kartu npwp, rekening koran bank, pbb / bpjs, lainnya", onPressed: () async {
-                            idPhoto.value = await CustomImagePicker.pickImageFromCameraAndReturnUrl();
+                          () => isLoading.value ? const SizedBox() : UtilitiesWidget.uploadPhoto(title: "Upload Foto", onPressed: () async {
+                            documentFirstURL.value = await CustomImagePicker.pickImageFromCameraAndReturnUrl();
                             },
-                            urlPhoto: idPhoto.value
+                            urlPhoto: documentFirstURL.value
                           ),
                         ),
+
+                        const SizedBox(height: 20),
+
+                        // Document Second
                         Obx(
-                          () => isLoading.value ? const SizedBox() : UtilitiesWidget.uploadPhoto(title: "Pendukung (required)", urlPhoto: idPhotoSelfie.value, onPressed: () async {
-                            idPhotoSelfie.value = await CustomImagePicker.pickImageFromCameraAndReturnUrl();
-                            }
-                          )
+                          () => isLoading.value ? const SizedBox() : UtilitiesWidget.uploadPhoto(title: "Upload Foto", onPressed: () async {
+                            documentSecondURL.value = await CustomImagePicker.pickImageFromCameraAndReturnUrl();
+                          },
+                            urlPhoto: documentSecondURL.value
+                          ),
                         ),
-                        Obx(
-                          () => isLoading.value ? const SizedBox() : UtilitiesWidget.uploadPhoto(title: "Pendukung (required)", urlPhoto: idPhotoSelfie.value, onPressed: () async {
-                              idPhotoPendukung.value = await CustomImagePicker.pickImageFromCameraAndReturnUrl();
-                            }
-                          )
-                        ),
-                        Obx(
-                          () => isLoading.value ? const SizedBox() : UtilitiesWidget.uploadPhoto(title: "Pendukung Lainnya (required)", urlPhoto: idPhotoSelfie.value, onPressed: () async {
-                              idPhotoPendukungLainnya.value = await CustomImagePicker.pickImageFromCameraAndReturnUrl();
-                            }
-                          )
-                        ),
+
+                        checklistStatement(
+                          accepted: accepted.value
+                        )
+
                       ]
                     ),
                   ],
@@ -117,16 +125,7 @@ class _Step17UploadPhotoState extends State<Step17UploadPhoto> {
                 size: size,
                 title: LanguageGlobalVar.VERIFICATION_IDENTITY.tr,
                 onPressed: regolController.isLoading.value ? null : (){
-                  if(idTypeController.text == "Nationaly Identification Card") idTypeController.text = "KTP";
-                  regolController.postStepOne(
-                    country: nationallyController.text,
-                    idType: idTypeController.text,
-                    idTypeNumber: idTypeNumber.text,
-                    appFotoIdentitas: idPhoto.value,
-                    appFotoTerbaru: idPhotoSelfie.value
-                  ).then((result){
                     Get.to(() => const Step13PenyelesaianPerselisihan());
-                  });
                 },
                 progressEnd: 4,
                 progressStart: 3

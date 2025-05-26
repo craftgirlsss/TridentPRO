@@ -17,14 +17,14 @@ import 'package:tridentpro/src/helpers/variables/id_type.dart' show idTypeList;
 import 'package:tridentpro/src/views/accounts/step_2_stored_data.dart';
 import 'components/step_position.dart';
 
-class Step1UploadPhoto extends StatefulWidget {
-  const Step1UploadPhoto({super.key});
+class Step18PrenyataanSimulasi extends StatefulWidget {
+  const Step18PrenyataanSimulasi({super.key});
 
   @override
-  State<Step1UploadPhoto> createState() => _Step1UploadPhotoState();
+  State<Step18PrenyataanSimulasi> createState() => _Step18PrenyataanSimulasiState();
 }
 
-class _Step1UploadPhotoState extends State<Step1UploadPhoto> {
+class _Step18PrenyataanSimulasiState extends State<Step18PrenyataanSimulasi> {
 
   final _formKey = GlobalKey<FormState>();
   TextEditingController nationallyController = TextEditingController();
@@ -106,7 +106,7 @@ class _Step1UploadPhotoState extends State<Step1UploadPhoto> {
                             );
                           }));
                         },
-                          controller: idTypeController, fieldName: LanguageGlobalVar.ID_TYPE.tr, hintText: LanguageGlobalVar.ID_TYPE.tr, labelText: LanguageGlobalVar.ID_TYPE.tr
+                            controller: idTypeController, fieldName: LanguageGlobalVar.ID_TYPE.tr, hintText: LanguageGlobalVar.ID_TYPE.tr, labelText: LanguageGlobalVar.ID_TYPE.tr
                         ),
                         NumberTextField(controller: idTypeNumber, fieldName: LanguageGlobalVar.ID_TYPE_NUMBER.tr, hintText: LanguageGlobalVar.ID_TYPE_NUMBER.tr, labelText: LanguageGlobalVar.ID_TYPE_NUMBER.tr, maxLength: 14),
                         Obx(
@@ -116,8 +116,10 @@ class _Step1UploadPhotoState extends State<Step1UploadPhoto> {
                         ),
                         Obx(
                           () => isLoading.value ? const SizedBox() : UtilitiesWidget.uploadPhoto(title: "Foto Selfie", urlPhoto: idPhotoSelfie.value, onPressed: () async {
-                            idPhotoSelfie.value = await CustomImagePicker.pickImageFromCameraAndReturnUrl();
-                          })),
+                              idPhotoSelfie.value = await CustomImagePicker.pickImageFromCameraAndReturnUrl();
+                            }
+                          )
+                        ),
                       ]
                     ),
                   ],
@@ -125,27 +127,28 @@ class _Step1UploadPhotoState extends State<Step1UploadPhoto> {
               ),
             ),
             bottomNavigationBar: Obx(
-              () => StepUtilities.stepOnlineRegister(
-                size: size,
-                title: LanguageGlobalVar.VERIFICATION_IDENTITY.tr,
-                onPressed: regolController.isLoading.value ? null : (){
-                  regolController.postStepOne(
-                    country: nationallyController.text,
-                    idType: idTypeController.text,
-                    idTypeNumber: idTypeNumber.text,
-                    appFotoIdentitas: idPhoto.value,
-                    appFotoTerbaru: idPhotoSelfie.value
-                  ).then((result){
-                    if(result){
-                      print("BERHASIL");
-                      Get.to(() => const Step2StoredData());
-                    }else{
-                      print("GAGAL");
-                    }
-                  });
-                },
-                progressEnd: 4,
-                progressStart: 1
+                  () => StepUtilities.stepOnlineRegister(
+                  size: size,
+                  title: LanguageGlobalVar.VERIFICATION_IDENTITY.tr,
+                  onPressed: regolController.isLoading.value ? null : (){
+                    if(idTypeController.text == "Nationaly Identification Card") idTypeController.text = "KTP";
+                    regolController.postStepOne(
+                        country: nationallyController.text,
+                        idType: idTypeController.text,
+                        idTypeNumber: idTypeNumber.text,
+                        appFotoIdentitas: idPhoto.value,
+                        appFotoTerbaru: idPhotoSelfie.value
+                    ).then((result){
+                      if(result){
+                        print("BERHASIL");
+                        Get.to(() => const Step2StoredData());
+                      }else{
+                        print("GAGAL");
+                      }
+                    });
+                  },
+                  progressEnd: 4,
+                  progressStart: 1
               ),
             ),
           ),

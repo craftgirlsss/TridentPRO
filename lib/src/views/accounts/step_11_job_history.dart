@@ -10,7 +10,6 @@ import 'package:tridentpro/src/components/containers/utilities.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/components/textfields/descriptive_textfield.dart';
 import 'package:tridentpro/src/components/textfields/name_textfield.dart';
-import 'package:tridentpro/src/components/textfields/number_textfield.dart';
 import 'package:tridentpro/src/components/textfields/phone_textfield.dart';
 import 'package:tridentpro/src/components/textfields/void_textfield.dart';
 import 'package:tridentpro/src/controllers/regol.dart';
@@ -97,11 +96,11 @@ class _Step11JobHistory extends State<Step11JobHistory> {
                           );
                         }));
                       }),
-                      NameTextField(controller: businessNameController, fieldName: "Company Name", hintText: "Company Name", labelText: "Company Name"),
+                      NameTextField(controller: businessNameController, fieldName: "Nama Perusahaan", hintText: "Nama Perusahaan", labelText: "Nama Perusahaan"),
                       NameTextField(controller: categoryBusinessNameController, fieldName: "Bidang Usaha", hintText: "Input nama bidang usaha", labelText: "Nama Bidang Usaha"),
                       NameTextField(controller: jobPositionController, fieldName: "Job Position", hintText: "Job Position", labelText: "Job Position"),
-                      NumberTextField(controller: durationOfWorkController, fieldName: "Lama Bekerja", hintText: "Lama Bekerja", labelText: "Lama Bekerja", maxLength: 0),
-                      DescriptiveTextField(controller: currentAddressOffice, fieldName: "Current Address Office", hintText: "Current Address Office", labelText: "Current Address Office"),
+                      NameTextField(controller: durationOfWorkController, fieldName: "Lama Bekerja", hintText: "Lama Bekerja", labelText: "Lama Bekerja"),
+                      DescriptiveTextField(controller: currentAddressOffice, fieldName: "Alamat Pekerjaan Saat Ini", hintText: "Alamat Pekerjaan Saat Ini", labelText: "Alamat Pekerjaan Saat Ini"),
                       PhoneTextField(controller: officePhoneContact, fieldName: "Office Phone Contact", hintText: "Office Phone Contact", labelText: "Office Phone Contact (Optional)"),
                       PhoneTextField(controller: faxController, fieldName: "Office Fax", hintText: "Office Fax", labelText: "Office Fax (Optional)"),
                     ]
@@ -110,7 +109,7 @@ class _Step11JobHistory extends State<Step11JobHistory> {
                   title: "Last Job Information",
                   subtitle: "Tell me a little about your last job",
                   children: [
-                    NumberTextField(controller: durationOfLastWorkController, fieldName: "Lama Bekerja", hintText: "Lama Bekerja", labelText: "Lama Bekerja", maxLength: 0),
+                    NameTextField(controller: durationOfLastWorkController, fieldName: "Lama Bekerja", hintText: "Lama Bekerja", labelText: "Lama Bekerja"),
                   ]
                 )
               ],
