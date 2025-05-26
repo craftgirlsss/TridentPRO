@@ -52,6 +52,10 @@ class _Step2StoredData extends State<Step2StoredData> {
     emailController.text = authController.personalModel.value?.response.personalDetail.email ?? "-";
     phoneController.text = authController.personalModel.value?.response.personalDetail.phone ?? "-";
     nameController.text = authController.personalModel.value?.response.personalDetail.name ?? "-";
+    taxController.text = regolController.accountModel.value?.npwp ?? "-";
+    dateBirthController.text = regolController.accountModel.value?.dateOfBirth ?? "-";
+    placeBirthController.text = regolController.accountModel.value?.placeOfBirth ?? "-";
+    genderController.text = regolController.accountModel.value?.gender ?? "-";
   }
 
   @override
@@ -168,11 +172,16 @@ class _Step2StoredData extends State<Step2StoredData> {
                 // print(taxController.text);
                 if(_formKey.currentState!.validate()){
                   regolController.postStepTwo(birthPlace: dateBirthController.text, dateOfBirth: dateFormatted, gender: genderController.text, taxNumber: taxController.text, name: nameController.text, phone: phoneController.text, phoneCode: selectedPhone.value).then((result){
-                    if(result){
-                      Get.to(() => const Step3Marital());
-                    }else{
+                    if(!result){
                       CustomAlert.alertError(message: regolController.responseMessage.value);
+                      return false;
                     }
+
+                    regolController.accountModel.value?.placeOfBirth = placeBirthController.text;
+                    regolController.accountModel.value?.dateOfBirth = dateFormatted;
+                    regolController.accountModel.value?.gender = genderController.text;
+                    regolController.accountModel.value?.npwp = taxController.text;
+                    Get.to(() => const Step3Marital());
                   });
                 }
               },
