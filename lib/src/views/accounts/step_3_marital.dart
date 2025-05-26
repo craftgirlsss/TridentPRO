@@ -38,6 +38,18 @@ class _Step3Marital extends State<Step3Marital> {
   // Init Class Controller Trading
   RegolController regolController = Get.find();
 
+  @override 
+  void initState() {
+    super.initState();
+    maritalStatusController.text = regolController.accountModel.value?.maritalStatus ?? "";
+    motherNameController.text = regolController.accountModel.value?.motherName ?? "";
+    phoneHomeController.text = regolController.accountModel.value?.phoneHome ?? "";
+    faxController.value = TextEditingValue(text: regolController.accountModel.value?.faxHome ?? "");
+    wifeHusbandName.text = regolController.accountModel.value?.wifeName ?? "";
+    if(maritalStatusController.text.toLowerCase() == "tidak kawin"){
+      showNameWifeOrHusband(false);
+    }
+  }
 
   @override
   void dispose() {
@@ -86,10 +98,10 @@ class _Step3Marital extends State<Step3Marital> {
                               onTap: (){
                                 Navigator.pop(context);
                                 maritalStatusController.text = GlobalVariable.maritalIndoVersion[i];
-                                if(maritalStatusController.text == "Kawin"){
-                                  showNameWifeOrHusband(true);
-                                }else{
+                                if(maritalStatusController.text.toLowerCase() == "Tidak Kawin"){
                                   showNameWifeOrHusband(false);
+                                }else{
+                                  showNameWifeOrHusband(true);
                                 }
                               }
                             );
@@ -115,15 +127,24 @@ class _Step3Marital extends State<Step3Marital> {
               size: size,
               title: "Marital Status",
               onPressed: (){
-                if(_formKey.currentState!.validate()){
-                  regolController.postStepThree(faxNumber: faxController.text, maritalStatus: maritalStatusController.text, motherName: motherNameController.text, phoneHome: phoneHomeController.text, wifeName: wifeHusbandName.text).then((result){
-                    if(result){
-                      Get.to(() => const Step4EmergencyContact());
-                    }
-                  });
-                }else{
-                  CustomAlert.alertError(message: regolController.responseMessage.value);
+                if(!_formKey.currentState!.validate()){
+                  CustomAlert.alertError(message: "Please fill all the fields");
+                  return false;
                 }
+
+                regolController.postStepThree(faxNumber: faxController.text, maritalStatus: maritalStatusController.text, motherName: motherNameController.text, phoneHome: phoneHomeController.text, wifeName: wifeHusbandName.text).then((result){
+                  if(!result){
+                    CustomAlert.alertError(message: regolController.responseMessage.value);
+                    return false;
+                  }
+
+                  regolController.accountModel.value?.maritalStatus = maritalStatusController.text;
+                  regolController.accountModel.value?.motherName = motherNameController.text;
+                  regolController.accountModel.value?.phoneHome = phoneHomeController.text;
+                  regolController.accountModel.value?.faxHome = faxController.text;
+                  regolController.accountModel.value?.wifeName = wifeHusbandName.text;
+                  Get.to(() => const Step4EmergencyContact());
+                });
               },
               progressEnd: 4,
               progressStart: 3
