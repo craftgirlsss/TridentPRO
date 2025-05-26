@@ -2,19 +2,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/components/containers/utilities.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/components/painters/loading_water.dart';
+import 'package:tridentpro/src/components/textfields/descriptive_textfield.dart';
 import 'package:tridentpro/src/components/textfields/number_textfield.dart';
 import 'package:tridentpro/src/components/textfields/void_textfield.dart';
+import 'package:tridentpro/src/controllers/2_factory_auth.dart';
 import 'package:tridentpro/src/controllers/regol.dart';
+import 'package:tridentpro/src/controllers/utilities.dart';
 import 'package:tridentpro/src/helpers/handlers/image_picker.dart';
-import 'package:tridentpro/src/helpers/variables/countries.dart';
-import 'package:tridentpro/src/helpers/variables/id_type.dart' show idTypeList;
-import 'package:tridentpro/src/views/accounts/step_2_stored_data.dart';
+import 'package:tridentpro/src/views/accounts/components/checklist_statement.dart';
 import 'components/step_position.dart';
 
 class Step18PrenyataanSimulasi extends StatefulWidget {
@@ -26,30 +29,43 @@ class Step18PrenyataanSimulasi extends StatefulWidget {
 
 class _Step18PrenyataanSimulasiState extends State<Step18PrenyataanSimulasi> {
 
+  UtilitiesController utilitiesController = Get.put(UtilitiesController());
   final _formKey = GlobalKey<FormState>();
-  TextEditingController nationallyController = TextEditingController();
-  TextEditingController idTypeController = TextEditingController();
-  TextEditingController idTypeNumber = TextEditingController();
+  TextEditingController provinceController = TextEditingController();
+  TextEditingController kabupatenController = TextEditingController();
+  TextEditingController kecamatanController = TextEditingController();
+  TextEditingController desaController = TextEditingController();
+  TextEditingController zipController = TextEditingController();
+  TextEditingController rtController = TextEditingController();
+  TextEditingController rwController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
   RegolController regolController = Get.put(RegolController());
+  TwoFactoryAuth twoFactoryAuth = Get.find();
 
-  RxString idPhoto = "".obs;
-  RxString idPhotoSelfie = "".obs;
+  RxString simulasiAkunDemoURL = "".obs;
   RxBool isLoading = false.obs;
+  RxBool selectedStatement = false.obs;
 
   @override
   void initState() {
     super.initState();
-    print(regolController.accountModel.value?.country);
-    idTypeController.text = regolController.accountModel.value?.idType ?? "";
-    idTypeNumber.text = regolController.accountModel.value?.idNumber ?? "";
-    nationallyController.text = regolController.accountModel.value?.country ?? "";
+    utilitiesController.getProvinceAPI().then((result){
+      if(!result){
+        CustomAlert.alertError(message: utilitiesController.responseMessage.value);
+      }
+    });
   }
 
   @override
   void dispose() {
-    nationallyController.dispose();
-    idTypeController.dispose();
-    idTypeNumber.dispose();
+    provinceController.dispose();
+    kabupatenController.dispose();
+    kecamatanController.dispose();
+    desaController.dispose();
+    zipController.dispose();
+    rtController.dispose();
+    rwController.dispose();
+    addressController.dispose();
     super.dispose();
   }
 
@@ -67,7 +83,11 @@ class _Step18PrenyataanSimulasiState extends State<Step18PrenyataanSimulasi> {
               title: LanguageGlobalVar.PERSONAL_INFORMATION.tr,
               actions: [
                 CupertinoButton(
-                  onPressed: (){},
+                  onPressed: () async {
+                    SharedPreferences prefs = await SharedPreferences.getInstance();
+                    String? results = prefs.getString('accessToken');
+                    print(results);
+                  },
                   child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
                 )
               ]
@@ -80,75 +100,187 @@ class _Step18PrenyataanSimulasiState extends State<Step18PrenyataanSimulasi> {
                 child: Column(
                   children: [
                     UtilitiesWidget.titleContent(
-                      title: LanguageGlobalVar.TITLE_REGOL_PAGE_1.tr,
-                      subtitle: LanguageGlobalVar.SUBTITLE_REGOL_PAGE_1.tr,
+                      title: "Informasi Alamat",
+                      subtitle: "Isi semua form yang ada dibawah ini untuk dapat melanjutkan proses pembuatan akun real.",
                       children: [
-                        const SizedBox(height: 10),
-                        VoidTextField(controller: nationallyController, fieldName: LanguageGlobalVar.NATIONALY.tr, hintText: LanguageGlobalVar.CHOOSE_NATIONALY.tr, labelText: LanguageGlobalVar.NATIONALY.tr, onPressed: (){
-                          CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: LanguageGlobalVar.CHOOSE_NATIONALY.tr, children: List.generate(countryList.length, (i){
+                        // Province
+                        VoidTextField(controller: provinceController, fieldName: "Provinsi", hintText: "Provinsi", labelText: "Provinsi", onPressed: (){
+                          CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Pilih Provinsi Anda", children: List.generate(utilitiesController.provinceModelAPI.value?.response?.length ?? 0, (i){
                             return ListTile(
+                              title: Text(utilitiesController.provinceModelAPI.value?.response?[i].name ?? "-", style: GoogleFonts.inter()),
                               onTap: (){
                                 Navigator.pop(context);
-                                nationallyController.text = countryList[i].name;
+                                provinceController.text = utilitiesController.provinceModelAPI.value?.response?[i].name ?? "-";
+                                utilitiesController.selectedProvinceID(utilitiesController.provinceModelAPI.value?.response?[i].code);
+                                utilitiesController.getKabupatenAPI().then((result){
+                                  if(result){
+                                    kabupatenController.text = utilitiesController.kabupatenModelAPI.value?.response?[0].name ?? "-";
+                                  }
+                                });
                               },
-                              title: Text(countryList[i].name, style: GoogleFonts.inter()),
                             );
                           }));
                         }),
-                        VoidTextField(onPressed: (){
-                          CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: LanguageGlobalVar.CHOOSE_YOUR_ID_TYPE.tr, isScrolledController: false, children: List.generate(idTypeList.length, (i){
-                            return ListTile(
-                              onTap: (){
-                                Navigator.pop(context);
-                                idTypeController.text = idTypeList[i].name;
-                              },
-                              title: Text(idTypeList[i].name, style: GoogleFonts.inter()),
-                            );
-                          }));
-                        },
-                            controller: idTypeController, fieldName: LanguageGlobalVar.ID_TYPE.tr, hintText: LanguageGlobalVar.ID_TYPE.tr, labelText: LanguageGlobalVar.ID_TYPE.tr
-                        ),
-                        NumberTextField(controller: idTypeNumber, fieldName: LanguageGlobalVar.ID_TYPE_NUMBER.tr, hintText: LanguageGlobalVar.ID_TYPE_NUMBER.tr, labelText: LanguageGlobalVar.ID_TYPE_NUMBER.tr, maxLength: 14),
+
+                        // Kabupaten
                         Obx(
-                          () => isLoading.value ? const SizedBox() : UtilitiesWidget.uploadPhoto(title: "Foto KTP", onPressed: () async {
-                            idPhoto.value = await CustomImagePicker.pickImageFromCameraAndReturnUrl();
-                          }, urlPhoto: idPhoto.value),
+                          () => utilitiesController.selectedProvinceID.value == "" ? const SizedBox() : VoidTextField(controller: kabupatenController, fieldName: "Kabupaten", hintText: "Kabupaten", labelText: "Kabupaten", onPressed: (){
+                            CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Pilih Kabupaten Anda", children: List.generate(utilitiesController.kabupatenModelAPI.value?.response?.length ?? 0, (i){
+                              return ListTile(
+                                title: Text(utilitiesController.kabupatenModelAPI.value?.response?[i].name ?? "-", style: GoogleFonts.inter()),
+                                onTap: (){
+                                  Navigator.pop(context);
+                                  kabupatenController.text = utilitiesController.kabupatenModelAPI.value?.response?[i].name ?? "-";
+                                  utilitiesController.selectedKabupatenID(utilitiesController.kabupatenModelAPI.value?.response?[i].code);
+                                  utilitiesController.getKecamatanAPI().then((result){
+                                    if(result){
+                                      kecamatanController.text = utilitiesController.kecamatanModelAPI.value?.response?[0].name ?? "-";
+                                    }
+                                  });
+                                },
+                              );
+                            }));
+                          }),
                         ),
+
+
+                        // Kecamatan
                         Obx(
-                          () => isLoading.value ? const SizedBox() : UtilitiesWidget.uploadPhoto(title: "Foto Selfie", urlPhoto: idPhotoSelfie.value, onPressed: () async {
-                              idPhotoSelfie.value = await CustomImagePicker.pickImageFromCameraAndReturnUrl();
-                            }
-                          )
+                          () => utilitiesController.selectedKabupatenID.value == "" ? const SizedBox() : VoidTextField(controller: kecamatanController, fieldName: "Kecamatan", hintText: "Kecamatan", labelText: "Kecamatan", onPressed: (){
+                            CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Pilih Kecamatan Anda", children: List.generate(utilitiesController.kecamatanModelAPI.value?.response?.length ?? 0, (i){
+                              return ListTile(
+                                title: Text(utilitiesController.kecamatanModelAPI.value?.response?[i].name ?? "-", style: GoogleFonts.inter()),
+                                onTap: (){
+                                  Navigator.pop(context);
+                                  kecamatanController.text = utilitiesController.kecamatanModelAPI.value?.response?[i].name ?? "-";
+                                  utilitiesController.selectedKecamatanID(utilitiesController.kecamatanModelAPI.value?.response?[i].code);
+                                  utilitiesController.getDesaAPI().then((result){
+                                    if(result){
+                                      desaController.text = utilitiesController.desaModelAPI.value?.response?[0].village ?? "-";
+                                    }
+                                  });
+                                },
+                              );
+                            }));
+                          }),
                         ),
+
+                        // Desa
+                        Obx(
+                          () => utilitiesController.selectedKecamatanID.value == "" ? const SizedBox() : VoidTextField(controller: desaController, fieldName: "Desa", hintText: "Desa", labelText: "Desa", onPressed: (){
+                            utilitiesController.getDesaAPI().then((result){
+                              if(result){
+                                CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Pilih Desa Anda", children: List.generate(utilitiesController.desaModelAPI.value?.response?.length ?? 0, (i){
+                                  return ListTile(
+                                    title: Text(utilitiesController.desaModelAPI.value?.response?[i].village ?? "-", style: GoogleFonts.inter()),
+                                    onTap: (){
+                                      Navigator.pop(context);
+                                      desaController.text = utilitiesController.desaModelAPI.value?.response?[i].village ?? "-";
+                                      utilitiesController.selectedDesaID(utilitiesController.desaModelAPI.value?.response?[i].code);
+                                      zipController.text = utilitiesController.desaModelAPI.value?.response?[i].postalCode ?? "0";
+                                    },
+                                  );
+                                }));
+                              }else{
+                                CustomAlert.alertError(message: utilitiesController.responseMessage.value);
+                              }
+                            });
+                          }),
+                        ),
+                        Obx(() => utilitiesController.selectedDesaID.value == "" ? const SizedBox() : NumberTextField(controller: zipController, hintText: "Kode Pos", labelText: "Kode Pos", maxLength: 4, fieldName: "Alamat Lengkap")),
+                        Obx(
+                          () => utilitiesController.selectedDesaID.value == "" ? const SizedBox() : Row(
+                            children: [
+                              Expanded(child: NumberTextField(controller: rtController, hintText: "RT", labelText: "RT", maxLength: 1, fieldName: "RT")),
+                              const SizedBox(width: 10.0),
+                              Expanded(child: NumberTextField(controller: rwController, hintText: "RW", labelText: "RW", maxLength: 1, fieldName: "RW",)),
+                            ],
+                          ),
+                        ),
+
+                        Obx(() => utilitiesController.selectedDesaID.value == "" ? const SizedBox() : DescriptiveTextField(controller: addressController, hintText: "Alamat Lengkap", labelText: "Alamat Lengkap", fieldName: "Alamat Lengkap")),
                       ]
                     ),
+
+                    UtilitiesWidget.titleContent(
+                      title: "Pernyataan Simulasi",
+                      subtitle: "Unggah foto simulasi penggunaan akun DEMO yang telah anda buat.",
+                      children: [
+                        Obx(
+                          () => isLoading.value ? const SizedBox() : UtilitiesWidget.uploadPhoto(title: "Simulasi Akun Demo", onPressed: () async {
+                            simulasiAkunDemoURL(await CustomImagePicker.pickImageFromCameraAndReturnUrl());
+                          }, urlPhoto: simulasiAkunDemoURL.value),
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text("Dengan mengisi kolom “YA” di bawah ini, saya menyatakan bahwa semua informasi dan semua dokumen yang saya lampirkan dalam APLIKASI PEMBUKAAN REKENING TRANSAKSI SECARA ELEKTRONIK ONLINE adalah benar dan tepat, Saya akan bertanggung jawab penuh apabila dikemudian hari terjadi sesuatu hal sehubungan dengan ketidakbenaran data yang saya berikan.", textAlign: TextAlign.justify, style: GoogleFonts.inter(color: Colors.black54)),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Obx(
+                                  () => Row(
+                                    children: [
+                                      Checkbox(
+                                        fillColor: WidgetStatePropertyAll(Colors.white),
+                                        checkColor: CustomColor.defaultColor,
+                                        side: WidgetStateBorderSide.resolveWith((Set<MaterialState> states) {
+                                          if (states.contains(MaterialState.selected)) {
+                                            return const BorderSide(color: Colors.black45); // tetap tampil meski dicentang
+                                          }
+                                          return const BorderSide(color: Colors.black45); // tidak dicentang
+                                        }),
+                                        value: selectedStatement.value == true ? true : false,
+                                        onChanged: (value) => selectedStatement.value = !selectedStatement.value,
+                                      ),
+
+                                      Text("YA")
+                                    ],
+                                  ),
+                                ),
+                                Obx(
+                                  () => Row(
+                                    children: [
+                                      Checkbox(
+                                        fillColor: WidgetStatePropertyAll(Colors.white),
+                                        checkColor: CustomColor.defaultColor,
+                                        side: WidgetStateBorderSide.resolveWith((Set<MaterialState> states) {
+                                          if (states.contains(MaterialState.selected)) {
+                                            return const BorderSide(color: Colors.black45); // tetap tampil meski dicentang
+                                          }
+                                          return const BorderSide(color: Colors.black45); // tidak dicentang
+                                        }),
+                                        value: selectedStatement.value == false ? true : false,
+                                        onChanged: (value) => selectedStatement.value = !selectedStatement.value,
+                                      ),
+                                      Text("TIDAK")
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        )
+                      ]
+                    )
                   ],
                 ),
               ),
             ),
             bottomNavigationBar: Obx(
-                  () => StepUtilities.stepOnlineRegister(
-                  size: size,
-                  title: LanguageGlobalVar.VERIFICATION_IDENTITY.tr,
-                  onPressed: regolController.isLoading.value ? null : (){
-                    if(idTypeController.text == "Nationaly Identification Card") idTypeController.text = "KTP";
-                    regolController.postStepOne(
-                        country: nationallyController.text,
-                        idType: idTypeController.text,
-                        idTypeNumber: idTypeNumber.text,
-                        appFotoIdentitas: idPhoto.value,
-                        appFotoTerbaru: idPhotoSelfie.value
-                    ).then((result){
-                      if(result){
-                        print("BERHASIL");
-                        Get.to(() => const Step2StoredData());
-                      }else{
-                        print("GAGAL");
-                      }
-                    });
-                  },
-                  progressEnd: 4,
-                  progressStart: 1
+              () => StepUtilities.stepOnlineRegister(
+                size: size,
+                title: LanguageGlobalVar.VERIFICATION_IDENTITY.tr,
+                onPressed: regolController.isLoading.value ? null : (){
+                  if(_formKey.currentState!.validate()){
+                    if(simulasiAkunDemoURL.value == "" || selectedStatement.value == false){
+                      CustomAlert.alertError(message: "Mohon untuk isi gambar atau pilih pernyataan YA terlebih dahulu.");
+                    }
+                  }
+                },
+                progressEnd: 4,
+                progressStart: 1
               ),
             ),
           ),

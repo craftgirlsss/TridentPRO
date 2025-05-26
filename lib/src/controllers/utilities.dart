@@ -1,12 +1,18 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:tridentpro/src/helpers/variables/global_variables.dart';
 import 'package:tridentpro/src/models/utilities/city_models.dart';
 import 'package:tridentpro/src/models/utilities/country_models.dart';
+import 'package:tridentpro/src/models/utilities/desa_models_api.dart';
+import 'package:tridentpro/src/models/utilities/kabupaten_models_api.dart';
 import 'package:tridentpro/src/models/utilities/kabupaten_raja_models.dart';
+import 'package:tridentpro/src/models/utilities/kecamatan_models_api.dart';
 import 'package:tridentpro/src/models/utilities/kecamatan_raja_models.dart';
 import 'package:tridentpro/src/models/utilities/province_models.dart';
+import 'package:tridentpro/src/models/utilities/province_models_api.dart';
 import 'package:tridentpro/src/models/utilities/province_raja_models.dart';
+import 'package:tridentpro/src/service/auth_service.dart';
 
 class UtilitiesController extends GetxController {
   RxBool isLoading = false.obs;
@@ -17,6 +23,8 @@ class UtilitiesController extends GetxController {
   RxString selectedProvince = "".obs;
   RxString selectedCity = "".obs;
 
+  AuthService authService = Get.find();
+
   Rxn<CountryModels> countryModels = Rxn<CountryModels>();
   Rxn<ProvinceModels> provinceModels = Rxn<ProvinceModels>();
   Rxn<CityModels> cityModels = Rxn<CityModels>();
@@ -25,6 +33,16 @@ class UtilitiesController extends GetxController {
   Rxn<ProvinceRajaModels> provinceRajaModels = Rxn<ProvinceRajaModels>();
   Rxn<KabupatenRajaModels> kabupatenRajaModels = Rxn<KabupatenRajaModels>();
   Rxn<KecamatanRajaModels> kecamatanRajaModels = Rxn<KecamatanRajaModels>();
+
+
+  Rxn<ProvinceModelsAPI> provinceModelAPI = Rxn<ProvinceModelsAPI>();
+  Rxn<KabupatenModelsAPI> kabupatenModelAPI = Rxn<KabupatenModelsAPI>();
+  Rxn<KecamatanModelsAPI> kecamatanModelAPI = Rxn<KecamatanModelsAPI>();
+  Rxn<DesaModelsAPI> desaModelAPI = Rxn<DesaModelsAPI>();
+  RxString selectedProvinceID = "".obs;
+  RxString selectedKabupatenID = "".obs;
+  RxString selectedKecamatanID = "".obs;
+  RxString selectedDesaID = "".obs;
 
   Future<bool> getCountry() async {
     try {
@@ -173,6 +191,94 @@ class UtilitiesController extends GetxController {
     } catch (e) {
       isLoadingCity(false);
       responseMessage.value = e.toString();
+      return false;
+    }
+  }
+
+  // Province API
+  Future<bool> getProvinceAPI() async {
+    try {
+      isLoading(true);
+      Map<String, dynamic> result = await authService.get("regol/getProvince");
+
+      isLoading(false);
+      if (result['status'] != true) {
+        return false;
+      }
+      provinceModelAPI(ProvinceModelsAPI.fromJson(result));
+      responseMessage(result['message']);
+      return true;
+    } catch (e) {
+      isLoading(false);
+      responseMessage(e.toString());
+      return false;
+    }
+  }
+
+  // Kabupaten API
+  Future<bool> getKabupatenAPI() async {
+    try {
+      isLoading(true);
+      Map<String, dynamic> result = await authService.post("regol/getRegency", {
+        "province" : selectedProvinceID.value
+      });
+
+      isLoading(false);
+      if (result['status'] != true) {
+        return false;
+      }
+      kabupatenModelAPI(KabupatenModelsAPI.fromJson(result));
+      responseMessage(result['message']);
+      return true;
+    } catch (e) {
+      isLoading(false);
+      responseMessage(e.toString());
+      return false;
+    }
+  }
+
+  // Kecamatan API
+  Future<bool> getKecamatanAPI() async {
+    try {
+      isLoading(true);
+      Map<String, dynamic> result = await authService.post("regol/getDistrict", {
+        "regency" : selectedKabupatenID.value
+      });
+
+      print(result);
+
+      isLoading(false);
+      if (result['status'] != true) {
+        return false;
+      }
+      kecamatanModelAPI(KecamatanModelsAPI.fromJson(result));
+      responseMessage(result['message']);
+      return true;
+    } catch (e) {
+      isLoading(false);
+      responseMessage(e.toString());
+      return false;
+    }
+  }
+
+  // Desa API
+  Future<bool> getDesaAPI() async {
+    try {
+      isLoading(true);
+      Map<String, dynamic> result = await authService.post("regol/getVillages", {
+        "district" : selectedKecamatanID.value
+      });
+
+      isLoading(false);
+      if (result['status'] != true) {
+        return false;
+      }
+      desaModelAPI(DesaModelsAPI.fromJson(result));
+      responseMessage(result['message']);
+      return true;
+    } catch (e) {
+      isLoading(false);
+      responseMessage(e.toString());
       return false;
     }
   }

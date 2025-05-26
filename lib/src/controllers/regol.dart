@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:tridentpro/src/models/databases/account.dart';
 import 'package:tridentpro/src/models/trades/product_models.dart';
 import 'package:tridentpro/src/service/auth_service.dart';
-import 'package:tridentpro/src/service/database_service.dart';
 
 class RegolController extends GetxController {
   AuthService authService = Get.find();

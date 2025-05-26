@@ -22,6 +22,14 @@ class _NumberTextFieldState extends State<NumberTextField> {
   RxBool isLoading = false.obs;
 
   @override
+  void initState() {
+    super.initState();
+    if((widget.controller?.text.length ?? 0) > 0){
+      isNumber(true);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),

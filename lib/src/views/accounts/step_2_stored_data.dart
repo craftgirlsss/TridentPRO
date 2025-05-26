@@ -16,6 +16,7 @@ import 'package:tridentpro/src/components/textfields/void_textfield.dart';
 import 'package:tridentpro/src/controllers/authentication.dart';
 import 'package:tridentpro/src/controllers/regol.dart';
 import 'package:tridentpro/src/helpers/variables/global_variables.dart';
+import 'package:tridentpro/src/views/accounts/step_18_pernyataan_simulasi.dart';
 import 'package:tridentpro/src/views/accounts/step_3_marital.dart';
 
 import 'components/step_position.dart';
@@ -181,7 +182,7 @@ class _Step2StoredData extends State<Step2StoredData> {
                     regolController.accountModel.value?.dateOfBirth = dateFormatted;
                     regolController.accountModel.value?.gender = genderController.text;
                     regolController.accountModel.value?.npwp = taxController.text;
-                    Get.to(() => const Step3Marital());
+                    Get.to(() => const Step18PrenyataanSimulasi());
                   });
                 }
               },
