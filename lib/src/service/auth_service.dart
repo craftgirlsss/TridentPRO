@@ -80,9 +80,8 @@ class AuthService extends GetxController {
       request.headers.addAll(headers);
       request.fields.addAll(body);
 
-      
       for(var key in file.keys) {
-        if(file[key] != null) {
+        if(file[key] != "" && file[key] != null) {
           request.files.add(await http.MultipartFile.fromPath(key, file[key]!));
         }
       }
@@ -120,7 +119,7 @@ class AuthService extends GetxController {
       };
 
     } catch (e) {
-      throw Exception(e);
+      throw "authService multipart error: $e";
     }
   }
 
