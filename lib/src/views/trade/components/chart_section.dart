@@ -109,14 +109,20 @@ DateTimeAxis buildDateTimeAxis({
 
 
 class TradingProperty {
-  static RxDouble volume = 1.0.obs;
+  static RxDouble volumeInit = 0.01.obs;
+  static RxDouble volumeMin = 0.00.obs;
+  static RxDouble volumeMax = 100.0.obs;
 
   static void incrementLot() {
-    volume.value += 0.01;
+    if((volumeInit.value + 0.01) <= volumeMax.value) {
+      volumeInit.value += 0.01;
+    }
   }
 
   static void decrementLot() {
-    if (volume.value > 0.01) volume.value -= 0.01;
+    if((volumeInit.value - 0.01) >= volumeMin.value) {
+      volumeInit.value -= 0.01;
+    }
   }
 
   // WebSocket Connector
@@ -305,7 +311,7 @@ class TradingProperty {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text('Volume', style: TextStyle(fontSize: 12)),
-              Obx(() => Text(volume.value.toStringAsFixed(2), style: TextStyle(fontWeight: FontWeight.bold))),
+              Obx(() => Text(volumeInit.value.toStringAsFixed(2), style: TextStyle(fontWeight: FontWeight.bold))),
             ],
           ),
           Expanded(child: IconButton(onPressed: incrementLot, icon: Icon(Icons.add))),
