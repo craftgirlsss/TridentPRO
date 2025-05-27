@@ -70,7 +70,7 @@ class CustomAlert {
     );
   }
 
-  static alertDialogCustomInfo({Function()? onTap, String? message, String? title, String? textButton}){
+  static alertDialogCustomInfo({Function()? onTap, String? message, String? title, String? textButton, bool? moreThanOneButton}){
     return Get.defaultDialog(
         backgroundColor: CupertinoColors.lightBackgroundGray,
         radius: 30,
@@ -78,25 +78,37 @@ class CustomAlert {
         title: "",
         content: Column(
           children: [
-            const Icon(CupertinoIcons.info, size: 60, color: Colors.white70),
+            const Icon(CupertinoIcons.info, size: 60, color: Colors.black87),
             const SizedBox(height: 10),
-            Text(title ?? "Berhasil", style: const TextStyle(color: Colors.white70, fontSize: 18, fontWeight: FontWeight.bold),),
+            Text(title ?? "Berhasil", style: const TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold),),
             const SizedBox(height: 5),
-            Text(message ?? "Berhasil", style: const TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: Colors.white38), textAlign: TextAlign.center)
+            Text(message ?? "Berhasil", style: const TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: Colors.black54), textAlign: TextAlign.center)
           ],
         ),
         actions: [
+          moreThanOneButton != null || moreThanOneButton == true ? SizedBox(
+            width: 120,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                shape: const StadiumBorder(),
+                elevation: 5,
+                backgroundColor: Colors.red
+              ),
+              onPressed: (){Get.back();},
+              child: Text("Tidak", style: GoogleFonts.inter(color: Colors.white
+              ))),
+          ) : const SizedBox(),
           SizedBox(
             width: 120,
             child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    shape: const StadiumBorder(),
-                    elevation: 5,
-                    backgroundColor: Colors.green
-                ),
-                onPressed: onTap,
-                child: Text(textButton ?? "Lanjutkan", style: GoogleFonts.inter(color: Colors.white
-                ))),
+              style: ElevatedButton.styleFrom(
+                shape: const StadiumBorder(),
+                elevation: 5,
+                backgroundColor: Colors.green
+              ),
+              onPressed: onTap,
+              child: Text(textButton ?? "Lanjutkan", style: GoogleFonts.inter(color: Colors.white
+              ))),
           ),
         ]
     );

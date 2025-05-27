@@ -4,10 +4,13 @@ import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/controllers/home.dart';
 import 'package:tridentpro/src/models/auth/profile.dart';
+import 'package:tridentpro/src/views/authentications/onboarding.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -38,7 +41,21 @@ class _SettingsState extends State<Settings> {
         title: "Settings",
         actions: [
           CupertinoButton(
-            onPressed: (){},
+            onPressed: (){
+              CustomAlert.alertDialogCustomInfo(
+                message: "Apakah anda yakin keluar dari aplikasi?",
+                moreThanOneButton: true,
+                onTap: () async {
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  prefs.remove('accessToken');
+                  prefs.remove('refreshToken');
+                  prefs.remove('loggedIn');
+                  Get.offAll(() => const Onboarding());
+                },
+                title: "Keluar",
+                textButton: "Ya"
+              );
+            },
             child: Icon(MingCute.exit_line, color: CustomColor.defaultColor),
           )
         ]
