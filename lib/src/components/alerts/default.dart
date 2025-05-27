@@ -70,7 +70,7 @@ class CustomAlert {
     );
   }
 
-  static alertDialogCustomInfo({Function()? onTap, String? message, String? title, String? textButton, bool? moreThanOneButton}){
+  static alertDialogCustomInfo({Function()? onTap, String? message, String? title, String? textButton, bool? moreThanOneButton, Color? colorPositiveButton}){
     return Get.defaultDialog(
         backgroundColor: CupertinoColors.lightBackgroundGray,
         radius: 30,
@@ -104,7 +104,7 @@ class CustomAlert {
               style: ElevatedButton.styleFrom(
                 shape: const StadiumBorder(),
                 elevation: 5,
-                backgroundColor: Colors.green
+                backgroundColor: colorPositiveButton ?? Colors.green
               ),
               onPressed: onTap,
               child: Text(textButton ?? "Lanjutkan", style: GoogleFonts.inter(color: Colors.white
