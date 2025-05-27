@@ -135,6 +135,19 @@ class TradingController extends GetxController {
     }
   }
 
+  Future<Map<String, dynamic>> addTradingAccount({required String accountId}) async {
+    try {
+      Map<String, dynamic> result = await authService.post("market/account/add", {
+        'account_id': accountId
+      });
+
+      return result;
+      
+    } catch (e) {
+      throw Exception("addTradingAccount error: $e");
+    }
+  }
+
   Future<Map<String, dynamic>> executionOrder({required String symbol, required String type, required String login, required String lot, String? price = "0.00"}) async {
     try {
       Map<String, dynamic> result = await authService.post('market/execution/open', {
