@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:tridentpro/src/components/alerts/default.dart';
+import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/controllers/home.dart';
 import 'package:tridentpro/src/controllers/trading.dart';
@@ -22,16 +24,32 @@ class _TradeState extends State<Trade> {
   TradingController tradingController = Get.put(TradingController());
   RxBool isLoading = false.obs;
   RxList<Map<String, dynamic>> accountTrading = <Map<String, dynamic>>[].obs;
+  RxList<Map<String, dynamic>> unAddedAccountTrading = <Map<String, dynamic>>[].obs;
 
+  Future<void> loadTradingAccount() async {
+    tradingController.isLoading(true);
+    accountTrading.value = await tradingController.getTradingAccountV2().then((result) => result);
+    tradingController.isLoading(false);
+  }
+  
   @override
   void initState() {
     super.initState();
     () async {
-      tradingController.isLoading(true);
-      await tradingController.getTradingAccountV2().then((result) {
-          accountTrading.value = result;
+      await loadTradingAccount();
+      await tradingController.getTradingAccount().then((result) {
+        if(result) {
+          tradingController.tradingAccountModels.value?.response.real?.forEach((element) {
+            if(accountTrading.where((e) => e['login'].toString() == element.login.toString()).isEmpty) {
+              unAddedAccountTrading.add({
+                'id': element.id,
+                'login': element.login,
+                'balance': element.balance,
+              });
+            }
+          });
+        }
       });
-      tradingController.isLoading(false);
     }();
   }
 
@@ -96,7 +114,44 @@ class _TradeState extends State<Trade> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Text("Trade Account", style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 24.0, color: CustomColor.textThemeDarkSoftColor)),
+                Row(
+                  children: [
+                    Text("Akun Trading", style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 24.0, color: CustomColor.textThemeDarkSoftColor)),
+                    Spacer(),
+                    FloatingActionButton(
+                      shape: CircleBorder(),
+                      backgroundColor: CustomColor.defaultColor,
+                      mini: true,
+                      child: Icon(Icons.add),
+                      onPressed: (){
+                        CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Tambah Akun Trading", children: 
+                          List.generate(unAddedAccountTrading.length, (index) {
+                            return ListTile(
+                              title: Text('- ${unAddedAccountTrading[index]['login']}', style: GoogleFonts.inter(color: CustomColor.textThemeLightColor)),
+                              onTap: () async {
+                                CustomAlert.alertDialogCustomInfo(title: "Tambah Akun Trading", message: "Apakah anda yakin ingin menambahkan akun trading ini?", textButton: "Tambah", onTap: () async { 
+                                  Get.back();
+                                  await tradingController.addTradingAccount(accountId: unAddedAccountTrading[index]['id']).then((result) {
+                                    if(result['status'] != true) {
+                                      CustomAlert.alertError(message: result['message']);
+                                      return false;
+                                    }
+
+                                    Get.back();
+                                    unAddedAccountTrading.removeAt(index);
+                                    CustomAlert.alertDialogCustomSuccess(message: "Akun trading berhasil ditambahkan", onTap: (() { Get.back(); }));
+                                  });
+                                  await loadTradingAccount();
+                                });
+                              },
+                            );
+                          }),
+                        );
+                      },
+                    )
+                  ]
+                ),
+                const SizedBox(height: 10),
                 Obx(() => tradingController.isLoading.value 
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
