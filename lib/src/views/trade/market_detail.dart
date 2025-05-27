@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -6,13 +8,14 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
+import 'package:tridentpro/src/components/painters/loading_water.dart';
 import 'package:tridentpro/src/controllers/trading.dart';
 import 'package:tridentpro/src/views/trade/components/chart_section.dart';
 import 'package:get/get.dart';
 
 class MarketDetail extends StatefulWidget {
-  final String? marketName;
-  const MarketDetail({super.key, this.marketName});
+  final int login;
+  const MarketDetail({super.key, required this.login});
 
   @override
   State<MarketDetail> createState() => _MarketDetailState();
@@ -22,10 +25,15 @@ class _MarketDetailState extends State<MarketDetail> {
   TimeFrame selectedTf = TimeFrame.h1;
   TrackballBehavior? _trackballBehavior;
   List<OHLCDataModel>? _chartData;
-  late CartesianChartAnnotation _priceBox;
-  TradingController tradingController = Get.put(TradingController());
+  CartesianChartAnnotation? _priceBox;
+  CartesianChartAnnotation? _priceBoxSell;
+  TradingController tradingController = Get.find();
   RxBool showMarket = false.obs;
   RxString activeSymbol = "Loading...".obs;
+  RxDouble symbolSpread = 0.0.obs;
+  RxDouble lastPriceOpen = 0.0.obs;
+  // RxDouble lastPriceOpen = 0.0.obs;
+  Timer? _timer;
 
   Future<void> reloadMarket({String? timeframe}) async {
     await tradingController.getMarket(market: activeSymbol.value, timeframe: timeframe).then((result){
@@ -36,15 +44,37 @@ class _MarketDetailState extends State<MarketDetail> {
         );
 
         _chartData = tradingController.ohlcData;
+        lastPriceOpen.value = tradingController.ohlcData.last.close ?? 0.0;
+        symbolSpread.value = double.parse(tradingController.symbols.where((e) => e['symbol'] == activeSymbol.value).first['digits'].toString());
+        // int multiplier = tradingController.symbols.where((e) => e['symbol'] == activeSymbol.value).first['digits'];
+        // String pad = "1".padRight(multiplier, '0');
+        // // symbolSpread.value = 1.toRadixString(1);
+        
+        // String test = "1".padRight(5, '0');
+        // print(test);
+        // print(symbolSpread.value);
+        // lastPriceOpen.value = tradingController.ohlcData.last.open ?? 0.0;
+
+        /** Pricebox Buy */
         _priceBox = CartesianChartAnnotation(
-          widget: TradingProperty.buildPriceBox(tradingController.ohlcData.last.open ?? 0),
+          widget: TradingProperty.buildPriceBox(lastPriceOpen.value, Colors.green),
           coordinateUnit: CoordinateUnit.point,
           region: AnnotationRegion.chart,
           x: tradingController.ohlcData.last.date,
-          y: tradingController.ohlcData.last.open,
+          y: lastPriceOpen.value,
           horizontalAlignment: ChartAlignment.near
         );
-          
+
+        /** Pricebox Sell */
+        _priceBoxSell = CartesianChartAnnotation(
+          widget: TradingProperty.buildPriceBox(lastPriceOpen.value + symbolSpread.value, Colors.red),
+          coordinateUnit: CoordinateUnit.point,
+          region: AnnotationRegion.chart,
+          x: tradingController.ohlcData.last.date,
+          y: lastPriceOpen.value + symbolSpread.value,
+          horizontalAlignment: ChartAlignment.near
+        );
+
         showMarket(true);
       }
     });
@@ -62,145 +92,160 @@ class _MarketDetailState extends State<MarketDetail> {
       });
 
       await reloadMarket();
+      _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+        reloadMarket();
+      });
       tradingController.isLoading(false);
     });
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _chartData?.clear();
+    _timer?.cancel();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: CustomAppBar.defaultAppBar(title: widget.marketName, autoImplyLeading: true),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-              child: Row(
-                  children: [
-                    Row(
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: CustomAppBar.defaultAppBar(title: widget.login.toString(), autoImplyLeading: true),
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+                  child: Row(
                       children: [
-                        GestureDetector(
-                          onTap: (){
-                            CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Market Symbols", children: List.generate(tradingController.symbols.length, (i){
-                              return ListTile(
-                                title: Text(tradingController.symbols[i]['symbol'], style: GoogleFonts.inter(color: CustomColor.textThemeLightColor)),
-                                onTap: () async {
-                                  Get.back();
-                                  activeSymbol.value = await tradingController.symbols[i]['symbol'];
-                                  await reloadMarket();
+                        Row(
+                          children: [
+                            GestureDetector(
+                              onTap: (){
+                                CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Market Symbols", children: List.generate(tradingController.symbols.length, (i){
+                                  return ListTile(
+                                    title: Text(tradingController.symbols[i]['symbol'], style: GoogleFonts.inter(color: CustomColor.textThemeLightColor)),
+                                    onTap: () async {
+                                      Get.back();
+                                      activeSymbol.value = await tradingController.symbols[i]['symbol'];
+                                      await reloadMarket();
+                                    },
+                                  );
+                                }));
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFF5F6FA),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Obx(() => Text(activeSymbol.value, style: GoogleFonts.inter(color: CustomColor.textThemeLightColor))),
+                                    Icon(Icons.keyboard_arrow_down, color: CustomColor.textThemeLightSoftColor),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            DropdownButton<TimeFrame>(
+                              borderRadius: BorderRadius.circular(10),
+                              elevation: 1,
+                              padding: EdgeInsets.zero,
+                              icon: Visibility (visible:false, child: Icon(Icons.arrow_downward)),
+                              underline: SizedBox(),
+                              value: selectedTf,
+                              items: TimeFrame.values.map((tf) => DropdownMenuItem(
+                                value: tf,
+                                child: Text(tf.name.toUpperCase(), style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
+                              )).toList(),
+                              onChanged: (tf) {
+                                  reloadMarket(timeframe: tf?.name.toUpperCase());
+                                  setState(() {
+                                    selectedTf = tf!;
+                                  });
                                 },
-                              );
-                            }));
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF5F6FA),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Row(
-                              children: [
-                                Obx(() => Text(activeSymbol.value, style: GoogleFonts.inter(color: CustomColor.textThemeLightColor))),
-                                Icon(Icons.keyboard_arrow_down, color: CustomColor.textThemeLightSoftColor),
-                              ],
-                            ),
-                          ),
+                              ),
+                            // Container(
+                            //   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            //   decoration: BoxDecoration(
+                            //     color: const Color(0xFFF5F6FA),
+                            //     borderRadius: BorderRadius.circular(8),
+                            //   ),
+                            //   child: Text('H1', style: GoogleFonts.inter(color: CustomColor.textThemeLightColor)),
+                            // ),
+                          ],
                         ),
-                        const SizedBox(width: 8),
-                        DropdownButton<TimeFrame>(
-                          borderRadius: BorderRadius.circular(10),
-                          elevation: 1,
-                          padding: EdgeInsets.zero,
-                          icon: Visibility (visible:false, child: Icon(Icons.arrow_downward)),
-                          underline: SizedBox(),
-                          value: selectedTf,
-                          items: TimeFrame.values.map((tf) => DropdownMenuItem(
-                            value: tf,
-                            child: Text(tf.name.toUpperCase(), style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
-                          )).toList(),
-                          onChanged: (tf) {
-                              reloadMarket(timeframe: tf?.name.toUpperCase());
-                              setState(() {
-                                selectedTf = tf!;
-                              });
-                            },
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TradingProperty.iconButton(AntDesign.function_outline, (){}),
+                              TradingProperty.iconButton(Icons.edit, (){}),
+                              TradingProperty.iconButton(Icons.layers, (){}),
+                              TradingProperty.iconButton(Icons.tune, (){}),
+                              TradingProperty.iconButton(Icons.fullscreen, (){}),
+                            ],
                           ),
-                        // Container(
-                        //   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        //   decoration: BoxDecoration(
-                        //     color: const Color(0xFFF5F6FA),
-                        //     borderRadius: BorderRadius.circular(8),
-                        //   ),
-                        //   child: Text('H1', style: GoogleFonts.inter(color: CustomColor.textThemeLightColor)),
-                        // ),
+                        )
                       ],
                     ),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          TradingProperty.iconButton(AntDesign.function_outline, (){}),
-                          TradingProperty.iconButton(Icons.edit, (){}),
-                          TradingProperty.iconButton(Icons.layers, (){}),
-                          TradingProperty.iconButton(Icons.tune, (){}),
-                          TradingProperty.iconButton(Icons.fullscreen, (){}),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-
-            // End of Tool Section
-
-            // Chart Section
-            Obx(
-              () => tradingController.isLoading.value ? Container(
-                width: size.width,
-                height: size.height / 1.35,
-                decoration: BoxDecoration(border: Border.all(color: CustomColor.textThemeDarkSoftColor)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(color: CustomColor.defaultColor),
-                    const SizedBox(height: 10),
-                    Text("Getting Market", style: GoogleFonts.inter())
-                  ],
-                ),
-              ) : showMarket.value ? Container(
-                width: size.width,
-                height: size.height / 1.4,
-                decoration: BoxDecoration(border: Border.all(color: CustomColor.textThemeDarkSoftColor)),
-                child: Obx(() => buildHiloOpenClose(maximumPrice: tradingController.maxPrice.value, minimumPrice: tradingController.minPrice.value))
-              ) : const SizedBox(),
-            )
-            // End of Chart Section
-          ],
+                  ),
+        
+                // End of Tool Section
+        
+                // Chart Section
+                Obx(
+                  () => tradingController.isLoading.value ? Container(
+                    width: size.width,
+                    height: size.height / 1.35,
+                    decoration: BoxDecoration(border: Border.all(color: CustomColor.textThemeDarkSoftColor)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(color: CustomColor.defaultColor),
+                        const SizedBox(height: 10),
+                        Text("Getting Market", style: GoogleFonts.inter())
+                      ],
+                    ),
+                  ) : showMarket.value ? Container(
+                    width: size.width,
+                    height: size.height / 1.4,
+                    decoration: BoxDecoration(border: Border.all(color: CustomColor.textThemeDarkSoftColor)),
+                    child: Obx(() => buildHiloOpenClose(maximumPrice: tradingController.maxPrice.value, minimumPrice: tradingController.minPrice.value))
+                  ) : const SizedBox(),
+                )
+                // End of Chart Section
+              ],
+            ),
+          ),
+        
+          bottomNavigationBar: Container(
+            padding: EdgeInsets.symmetric(vertical: 16.0,  horizontal: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Obx(() => TradingProperty.sellButton(onPressed: (){}, price: lastPriceOpen.value)),
+                SizedBox(width: 8),
+                TradingProperty.lotButton(),
+                SizedBox(width: 8),
+                Obx(() => TradingProperty.buyButton(onPressed: (){}, price: lastPriceOpen.value))
+              ],
+            ),
+          ),
         ),
-      ),
-
-      bottomNavigationBar: Container(
-        padding: EdgeInsets.symmetric(vertical: 16.0,  horizontal: 16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            TradingProperty.sellButton(onPressed: (){}, price: "0.000"),
-            SizedBox(width: 8),
-            TradingProperty.lotButton(),
-            SizedBox(width: 8),
-            TradingProperty.buyButton(onPressed: (){}, price: "0.000")
-          ],
-        ),
-      ),
+        Obx(() => tradingController.isLoading.value ? LoadingWater() : const SizedBox())
+      ],
     );
   }
 
   /// Returns the cartesian High-low-open-close chart.
   SfCartesianChart buildHiloOpenClose({double? minimumPrice, double? maximumPrice, DateTime? dateMax, DateTime? dateMin}) {
     return SfCartesianChart(
-      annotations: <CartesianChartAnnotation>[_priceBox],
+      annotations: <CartesianChartAnnotation>[_priceBox!, _priceBoxSell!],
       plotAreaBorderWidth: 0,
       zoomPanBehavior: TradingProperty.zoomPan,
       // primaryXAxis: buildDateTimeAxis(tf: selectedTf),
@@ -219,11 +264,5 @@ class _MarketDetailState extends State<MarketDetail> {
       series: TradingProperty.buildHiloOpenCloseSeriesAPI(chartData: _chartData),
       trackballBehavior: _trackballBehavior,
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _chartData?.clear();
   }
 }
