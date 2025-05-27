@@ -109,7 +109,6 @@ class TradingController extends GetxController {
 
       List<dynamic> rawList = result['response'];
       List<Map<String, dynamic>> json = rawList.map((e) => Map<String, dynamic>.from(e)).toList();
-      print(json);
       return json;
 
     } catch (e) {
@@ -133,6 +132,23 @@ class TradingController extends GetxController {
       isLoading(false);
       responseMessage(e.toString());
       return false;
+    }
+  }
+
+  Future<Map<String, dynamic>> executionOrder({required String symbol, required String type, required String login, required String lot, String? price = "0.00"}) async {
+    try {
+      Map<String, dynamic> result = await authService.post('market/execution/open', {
+        'login': login.toString(),
+        'symbol': symbol,
+        'operation': type,
+        'volume': lot,
+        'price': price
+      });
+
+      return result;
+      
+    } catch (e) {
+      throw Exception("executionOrder error: $e");
     }
   }
 }
