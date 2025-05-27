@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/controllers/home.dart';
 import 'package:tridentpro/src/controllers/trading.dart';
@@ -27,9 +26,13 @@ class _TradeState extends State<Trade> {
   @override
   void initState() {
     super.initState();
-    tradingController.getTradingAccountV2().then((result) {
-        accountTrading.value = result;
-    });
+    () async {
+      tradingController.isLoading(true);
+      await tradingController.getTradingAccountV2().then((result) {
+          accountTrading.value = result;
+      });
+      tradingController.isLoading(false);
+    }();
   }
 
   @override
@@ -94,8 +97,16 @@ class _TradeState extends State<Trade> {
                 ),
                 const SizedBox(height: 20),
                 Text("Trade Account", style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 24.0, color: CustomColor.textThemeDarkSoftColor)),
-                Obx(() {
-                  return ListView.builder(
+                Obx(() => tradingController.isLoading.value 
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(color: CustomColor.defaultColor),
+                        const SizedBox(height: 10),
+                      ],
+                    )
+                  : ListView.builder(
                     physics: const BouncingScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: accountTrading.length,
@@ -105,11 +116,11 @@ class _TradeState extends State<Trade> {
                       },
                       child: StockTile(
                         login: accountTrading[index]['login'].toString(),
-                        balance: accountTrading[index]['balance'],
+                        balance: double.parse(accountTrading[index]['balance'].toString()),
                       ),
                     )
-                  );
-                }),
+                  )
+                ),
                 const SizedBox(height: 20),
               ],
             ),
