@@ -67,7 +67,7 @@ class AuthService extends GetxController {
       };
 
     } catch (e) {
-      throw Exception(e);
+      throw Exception("authService post error: $e");
     }
   }
 
