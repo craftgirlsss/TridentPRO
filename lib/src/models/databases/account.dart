@@ -7,6 +7,8 @@ class AccountModel {
   String? idNumber;
   String? appFotoIdentitas;
   String? appFotoTerbaru;
+  String? appFotoPendukung;
+  String? appFotoPendukung2;
   String? npwp;
   String? dateOfBirth;
   String? placeOfBirth;
@@ -40,6 +42,8 @@ class AccountModel {
     this.idNumber,
     this.appFotoIdentitas,
     this.appFotoTerbaru,
+    this.appFotoPendukung,
+    this.appFotoPendukung2,
     this.npwp,
     this.dateOfBirth,
     this.placeOfBirth,
@@ -75,6 +79,8 @@ class AccountModel {
       idNumber: json['id_number'],
       appFotoIdentitas: json['app_foto_identitas'],
       appFotoTerbaru: json['app_foto_terbaru'],
+      appFotoPendukung: json['app_foto_pendukung'],
+      appFotoPendukung2: json['app_foto_pendukung_lainnya'],
       npwp: json['npwp'],
       dateOfBirth: json['date_of_birth'],
       placeOfBirth: json['place_of_birth'],
@@ -111,6 +117,8 @@ class AccountModel {
       'idNumber': idNumber,
       'appFotoIdentitas': appFotoIdentitas,
       'appFotoTerbaru': appFotoTerbaru,
+      'appFotoPendukung': appFotoPendukung,
+      'appFotoPendukung2': appFotoPendukung2,
       'npwp': npwp,
       'dateOfBirth': dateOfBirth,
       'placeOfBirth': placeOfBirth,
