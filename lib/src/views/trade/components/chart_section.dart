@@ -39,7 +39,7 @@ DateTimeAxis buildDateTimeAxis({
       return DateTimeAxis(
         intervalType: DateTimeIntervalType.minutes,
         interval: 30,
-        dateFormat: DateFormat('HH:mm'),
+        dateFormat: DateFormat('dd MMM HH'),
         minimum: min,
         maximum: max,
         majorGridLines: MajorGridLines(
@@ -54,13 +54,13 @@ DateTimeAxis buildDateTimeAxis({
         intervalType: DateTimeIntervalType.hours,
         interval: 1,
         dateFormat: DateFormat('HH:mm'),
-        minimum: min,
-        maximum: max,
-        majorGridLines: MajorGridLines(
-          width: 1,
-          dashArray: const [4, 2],
-          color: gridColor,
-        ),
+        // minimum: min,
+        // maximum: max,
+        // majorGridLines: MajorGridLines(
+        //   width: 0,
+        //   dashArray: const [4, 2],
+        //   color: gridColor,
+        // ),
       );
 
     case TimeFrame.h4:
@@ -109,7 +109,7 @@ DateTimeAxis buildDateTimeAxis({
 
 
 class TradingProperty {
-  static RxDouble volume = 0.01.obs;
+  static RxDouble volume = 1.0.obs;
 
   static void incrementLot() {
     volume.value += 0.01;
@@ -305,7 +305,7 @@ class TradingProperty {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text('Volume', style: TextStyle(fontSize: 12)),
-              Text(volume.value.toStringAsFixed(2), style: TextStyle(fontWeight: FontWeight.bold)),
+              Obx(() => Text(volume.value.toStringAsFixed(2), style: TextStyle(fontWeight: FontWeight.bold))),
             ],
           ),
           Expanded(child: IconButton(onPressed: incrementLot, icon: Icon(Icons.add))),

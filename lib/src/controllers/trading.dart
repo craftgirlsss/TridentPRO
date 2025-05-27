@@ -25,42 +25,57 @@ class TradingController extends GetxController {
   TwoFactoryAuth twoFactoryAuth = Get.find();
   AuthController authController = Get.find();
   AuthService authService = AuthService();
+  RxList symbols = [].obs;
+  RxDouble minPrice = 0.0.obs;
+  RxDouble maxPrice = 0.0.obs;
 
-  // Status Order API Driver
-  Future<bool> getMarket({String? market}) async {
+  Future<List<dynamic>> getSymbols({String? market}) async {
     try {
-      isLoading(true);
-      http.Response response = await http.get(
-        Uri.tryParse("https://api-tridentprofutures.techcrm.net/market/price-history?symbol=${market?.toUpperCase()}")!,
-        headers: {
-          'x-api-key': "fewAHdSkx28301294cKSnczdAs",
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-      );
-      var result = jsonDecode(response.body);
-      print(result);
-      isLoading(false);
-      if (response.statusCode == 200) {
-        ohlcModels(OHLCModels.fromJson(result));
-        for(int i = 0; i < ohlcModels.value!.response.length; i++){
-          ohlcData.add(OHLCDataModel(
-            close: ohlcModels.value!.response[i].close,
-            open: ohlcModels.value!.response[i].open,
-            high: ohlcModels.value!.response[i].high,
-            low: ohlcModels.value!.response[i].low,
-            date: DateTime.parse(ohlcModels.value!.response[i].date!),
-          ));
-        }
-        responseMessage(result['message']);
-        return true;
+      Map<String, dynamic> result = await authService.get("market/symbols");
+      if(result['status'] != true) {
+        return [];
+        // symbols(result['response']);
       }
 
-      responseMessage(result['message']);
-      return false;
+      List<dynamic> json = result['response'].map((e) => e as Map<String, dynamic>).toList();
+      symbols(json);
+      return symbols;
+
     } catch (e) {
-      isLoading(false);
-      responseMessage(e.toString());
-      return false;
+      throw Exception("getSymbols error: $e");
+    }
+  }
+  
+  // Status Order API Driver
+  Future<bool> getMarket({String? market, String? timeframe}) async {
+    try {
+      market = market ?? "-";
+      timeframe = timeframe ?? "H1";
+      Map<String, dynamic> result = await authService.get("market/price-history?symbol=$market&timeframe=$timeframe");
+      if(result['status'] != true) {
+        return false;
+      }
+
+      List<dynamic> json = result['response'].map((e) => e as Map<String, dynamic>).toList();
+      minPrice.value = 0.0;
+      maxPrice.value = 0.0;
+      for(var i in json) {
+        minPrice.value = (minPrice.value < double.parse(i['open'].toString()) && minPrice.value != 0.0) ? minPrice.value : double.parse(i['open'].toString());
+        maxPrice.value = maxPrice.value > double.parse(i['open'].toString()) ? maxPrice.value : double.parse(i['open'].toString());
+
+        ohlcData.add(OHLCDataModel(
+          date: DateTime.parse(i['date']), 
+          open: double.parse(i['open'].toString()), 
+          high: double.parse(i['high'].toString()), 
+          low: double.parse(i['low'].toString()), 
+          close: double.parse(i['close'].toString())
+        ));
+      }
+
+      return true;
+
+    } catch (e) {
+      throw Exception("getMarket error: $e");
     }
   }
 

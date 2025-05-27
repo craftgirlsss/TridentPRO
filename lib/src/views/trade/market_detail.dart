@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
+import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/controllers/trading.dart';
 import 'package:tridentpro/src/views/trade/components/chart_section.dart';
@@ -20,33 +22,47 @@ class _MarketDetailState extends State<MarketDetail> {
   TimeFrame selectedTf = TimeFrame.h1;
   TrackballBehavior? _trackballBehavior;
   List<OHLCDataModel>? _chartData;
-  // late CartesianChartAnnotation _priceBox;
+  late CartesianChartAnnotation _priceBox;
   TradingController tradingController = Get.put(TradingController());
   RxBool showMarket = false.obs;
+  RxString activeSymbol = "Loading...".obs;
+
+  Future<void> reloadMarket({String? timeframe}) async {
+    await tradingController.getMarket(market: activeSymbol.value, timeframe: timeframe).then((result){
+      if(result){
+        _trackballBehavior = TrackballBehavior(
+          enable: true,
+          activationMode: ActivationMode.singleTap,
+        );
+
+        _chartData = tradingController.ohlcData;
+        _priceBox = CartesianChartAnnotation(
+          widget: TradingProperty.buildPriceBox(tradingController.ohlcData.last.open ?? 0),
+          coordinateUnit: CoordinateUnit.point,
+          region: AnnotationRegion.chart,
+          x: tradingController.ohlcData.last.date,
+          y: tradingController.ohlcData.last.open,
+          horizontalAlignment: ChartAlignment.near
+        );
+          
+        showMarket(true);
+      }
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, (){
-      showMarket(false);
-      tradingController.getMarket(market: "EURUSD").then((result){
-        if(result){
-          _trackballBehavior = TrackballBehavior(
-            enable: true,
-            activationMode: ActivationMode.singleTap,
-          );
-          _chartData = tradingController.ohlcData;
-          // _priceBox = CartesianChartAnnotation(
-          //   widget: TradingProperty.buildPriceBox(0),
-          //   coordinateUnit: CoordinateUnit.point,
-          //   region: AnnotationRegion.chart,
-          //   x: tradingController.ohlcData.last.date,         // titik X candle terakhir
-          //   y: tradingController.ohlcData.last.close,
-          //   horizontalAlignment: ChartAlignment.near
-          // );
-          showMarket(true);
+    Future.delayed(Duration.zero, () async{
+      tradingController.isLoading(true);
+      await tradingController.getSymbols().then((result){
+        if(result.isNotEmpty ){
+          activeSymbol.value = result[0]['symbol'];
         }
       });
+
+      await reloadMarket();
+      tradingController.isLoading(false);
     });
   }
 
@@ -64,17 +80,31 @@ class _MarketDetailState extends State<MarketDetail> {
                   children: [
                     Row(
                       children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF5F6FA),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
-                            children: [
-                              Text('EURUSD', style: GoogleFonts.inter(color: CustomColor.textThemeLightColor)),
-                              Icon(Icons.keyboard_arrow_down, color: CustomColor.textThemeLightSoftColor),
-                            ],
+                        GestureDetector(
+                          onTap: (){
+                            CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Market Symbols", children: List.generate(tradingController.symbols.length, (i){
+                              return ListTile(
+                                title: Text(tradingController.symbols[i]['symbol'], style: GoogleFonts.inter(color: CustomColor.textThemeLightColor)),
+                                onTap: () async {
+                                  Get.back();
+                                  activeSymbol.value = await tradingController.symbols[i]['symbol'];
+                                  await reloadMarket();
+                                },
+                              );
+                            }));
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF5F6FA),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              children: [
+                                Obx(() => Text(activeSymbol.value, style: GoogleFonts.inter(color: CustomColor.textThemeLightColor))),
+                                Icon(Icons.keyboard_arrow_down, color: CustomColor.textThemeLightSoftColor),
+                              ],
+                            ),
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -89,7 +119,12 @@ class _MarketDetailState extends State<MarketDetail> {
                             value: tf,
                             child: Text(tf.name.toUpperCase(), style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
                           )).toList(),
-                          onChanged: (tf) => setState(() => selectedTf = tf!),
+                          onChanged: (tf) {
+                              reloadMarket(timeframe: tf?.name.toUpperCase());
+                              setState(() {
+                                selectedTf = tf!;
+                              });
+                            },
                           ),
                         // Container(
                         //   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -138,7 +173,7 @@ class _MarketDetailState extends State<MarketDetail> {
                 width: size.width,
                 height: size.height / 1.4,
                 decoration: BoxDecoration(border: Border.all(color: CustomColor.textThemeDarkSoftColor)),
-                child: buildHiloOpenClose(maximumPrice: 1.13938, minimumPrice: 1.10666)
+                child: Obx(() => buildHiloOpenClose(maximumPrice: tradingController.maxPrice.value, minimumPrice: tradingController.minPrice.value))
               ) : const SizedBox(),
             )
             // End of Chart Section
@@ -165,23 +200,21 @@ class _MarketDetailState extends State<MarketDetail> {
   /// Returns the cartesian High-low-open-close chart.
   SfCartesianChart buildHiloOpenClose({double? minimumPrice, double? maximumPrice, DateTime? dateMax, DateTime? dateMin}) {
     return SfCartesianChart(
-      // annotations: <CartesianChartAnnotation>[_priceBox],
+      annotations: <CartesianChartAnnotation>[_priceBox],
       plotAreaBorderWidth: 0,
       zoomPanBehavior: TradingProperty.zoomPan,
-      primaryXAxis: buildDateTimeAxis(tf: selectedTf),
+      // primaryXAxis: buildDateTimeAxis(tf: selectedTf),
+      primaryXAxis: DateTimeAxis(
+        intervalType: DateTimeIntervalType.minutes,
+        interval: 180,
+        dateFormat: DateFormat('dd MMM HH:mm'),
+      ),
       primaryYAxis: NumericAxis(
         opposedPosition: true,
-        minimum: minimumPrice ?? 60,
-        maximum: maximumPrice ?? 140,
-        interval: 3,
         borderColor: Colors.black12,
         labelFormat: r'${value}',
-        axisLine: AxisLine(width: 0),
-        majorGridLines: MajorGridLines(
-          width: 1,                        // ketebalan garis horizontal
-          dashArray: <double>[5, 3],       // pola putus-putus
-          color: Colors.black12,
-        ),
+        minimum: minimumPrice,
+        maximum: maximumPrice,
       ),
       series: TradingProperty.buildHiloOpenCloseSeriesAPI(chartData: _chartData),
       trackballBehavior: _trackballBehavior,
@@ -191,6 +224,6 @@ class _MarketDetailState extends State<MarketDetail> {
   @override
   void dispose() {
     super.dispose();
-    _chartData!.clear();
+    _chartData?.clear();
   }
 }
