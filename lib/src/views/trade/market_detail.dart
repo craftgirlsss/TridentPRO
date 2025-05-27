@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
@@ -79,6 +80,7 @@ class _MarketDetailState extends State<MarketDetail> {
       }
     });
   }
+  
 
   @override
   void initState() {
@@ -88,6 +90,9 @@ class _MarketDetailState extends State<MarketDetail> {
       await tradingController.getSymbols().then((result){
         if(result.isNotEmpty ){
           activeSymbol.value = result[0]['symbol'];
+          TradingProperty.volumeInit.value = double.parse(result[0]['volume_min'].toString());
+          TradingProperty.volumeMin.value = double.parse(result[0]['volume_min'].toString());
+          TradingProperty.volumeMax.value = double.parse(result[0]['volume_max'].toString());
         }
       });
 
@@ -130,6 +135,9 @@ class _MarketDetailState extends State<MarketDetail> {
                                     onTap: () async {
                                       Get.back();
                                       activeSymbol.value = await tradingController.symbols[i]['symbol'];
+                                      TradingProperty.volumeInit.value = double.parse(tradingController.symbols[i]['volume_min'].toString());
+                                      TradingProperty.volumeMin.value = double.parse(tradingController.symbols[i]['volume_min'].toString());
+                                      TradingProperty.volumeMax.value = double.parse(tradingController.symbols[i]['volume_max'].toString());
                                       await reloadMarket();
                                     },
                                   );
@@ -228,11 +236,39 @@ class _MarketDetailState extends State<MarketDetail> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Obx(() => TradingProperty.sellButton(onPressed: (){}, price: lastPriceOpen.value)),
+                Obx(() => TradingProperty.sellButton(price: lastPriceOpen.value, onPressed: (){
+                  CustomAlert.alertDialogCustomInfo(title: "Sell", message: "Apakah anda yakin ingin melanjutkan?", colorPositiveButton: Colors.red, onTap: () {
+                    Get.back();
+                    tradingController.executionOrder(symbol: activeSymbol.value, type: "sell", login: widget.login.toString(), lot: TradingProperty.volumeInit.value.toString()).then((result) {
+                      if(result['status'] != true){
+                        CustomAlert.alertError(message: result['message']);
+                        return false;
+                      }
+
+                      CustomAlert.alertDialogCustomSuccess(message: result['message'], onTap: () {
+                        Get.back();
+                      });
+                    });
+                  });
+                })),
                 SizedBox(width: 8),
                 TradingProperty.lotButton(),
                 SizedBox(width: 8),
-                Obx(() => TradingProperty.buyButton(onPressed: (){}, price: lastPriceOpen.value))
+                Obx(() => TradingProperty.buyButton(price: lastPriceOpen.value, onPressed: () {
+                  CustomAlert.alertDialogCustomInfo(title: "Buy", message: "Apakah anda yakin ingin melanjutkan?", onTap: () {
+                    Get.back();
+                    tradingController.executionOrder(symbol: activeSymbol.value, type: "buy", login: widget.login.toString(), lot: TradingProperty.volumeInit.value.toString()).then((result) {
+                      if(result['status'] != true){
+                        CustomAlert.alertError(message: result['message']);
+                        return false;
+                      }
+
+                      CustomAlert.alertDialogCustomSuccess(message: result['message'], onTap: () {
+                        Get.back();
+                      });
+                    });
+                  });
+                }))
               ],
             ),
           ),
