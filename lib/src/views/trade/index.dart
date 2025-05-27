@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
+import 'package:tridentpro/src/controllers/home.dart';
+import 'package:tridentpro/src/controllers/trading.dart';
 import 'package:tridentpro/src/views/trade/market_detail.dart';
 
 class Trade extends StatefulWidget {
@@ -17,49 +19,18 @@ class _TradeState extends State<Trade> {
 
   RxInt selectedCategory = 1.obs;
   TextEditingController searchController = TextEditingController();
+  HomeController homeController = Get.find();
+  TradingController tradingController = Get.put(TradingController());
   RxBool isLoading = false.obs;
-  List<Map<String, dynamic>> marketName = [
-    {
-      "market_name" : "BBCA",
-      "price" : 1.900,
-      "change_percent" : 0.55,
-      "ohlc" : [1, 3, 2, 4, 6, 5, 7, 4, 5, 3, 7].map((e) => e.toDouble()).toList()
-    },
-    {
-      "market_name" : "BBRI",
-      "price" : 3.380,
-      "change_percent" : 0.35,
-      "ohlc" : [1, 3, 2, 4, 6, 5, 7, 4, 5, 3, 7].map((e) => e.toDouble()).toList()
-    },
-    {
-      "market_name" : "BRIS",
-      "price" : 2.910,
-      "change_percent" : 0.73,
-      "ohlc" : [1, 3, 2, 4, 6, 5, 7, 4, 5, 3, 7].map((e) => e.toDouble()).toList()
-    },
-  ];
+  RxList<Map<String, dynamic>> accountTrading = <Map<String, dynamic>>[].obs;
 
-  List<Map<String, dynamic>> cryptoMarketName = [
-    {
-      "market_name" : "BTC",
-      "price" : 1.900,
-      "change_percent" : -0.55,
-      "ohlc" : [1, 3, 2, 4, 6, 5, 7, 4, 5, 3, 7].map((e) => e.toDouble()).toList()
-    },
-    {
-      "market_name" : "DOGE",
-      "price" : 3.380,
-      "change_percent" : 0.35,
-      "ohlc" : [1, 3, 2, 4, 6, 5, 7, 4, 5, 3, 7].map((e) => e.toDouble()).toList()
-    },
-    {
-      "market_name" : "ETH",
-      "price" : 2.910,
-      "change_percent" : -0.73,
-      "ohlc" : [1, 3, 2, 4, 6, 5, 7, 4, 5, 3, 7].map((e) => e.toDouble()).toList()
-    },
-  ];
-
+  @override
+  void initState() {
+    super.initState();
+    tradingController.getTradingAccountV2().then((result) {
+        accountTrading.value = result;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,13 +45,7 @@ class _TradeState extends State<Trade> {
               children: [
                 Row(
                   children: [
-                    Text(
-                      'Hello Putra',
-                      style: GoogleFonts.inter(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    Obx(() => Text(homeController.profileModel.value?.name ?? "-", style: GoogleFonts.inter(fontSize: 28, fontWeight: FontWeight.bold,))),
                     Spacer(),
                     CircleAvatar(
                       backgroundImage: AssetImage('assets/images/promotion.jpg'), // ganti sesuai path gambar
@@ -128,36 +93,24 @@ class _TradeState extends State<Trade> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Text("Saham", style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 24.0, color: CustomColor.textThemeDarkSoftColor)),
-                ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: marketName.length,
-                  itemBuilder: (context, index) => GestureDetector(
-                    onTap: (){
-                      Get.to(() => MarketDetail(marketName: marketName[index]['market_name']));
-                    },
-                    child: StockTile(
-                      name: marketName[index]['market_name'],
-                      price: marketName[index]['price'],
-                      changePercent: marketName[index]['change_percent'],
-                      data: marketName[index]['ohlc'],
-                    ),
-                  )
-                ),
-                const SizedBox(height: 20),
-                Text("Crypto", style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 24.0, color: CustomColor.textThemeDarkSoftColor)),
-                ListView.builder(
+                Text("Trade Account", style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 24.0, color: CustomColor.textThemeDarkSoftColor)),
+                Obx(() {
+                  return ListView.builder(
                     physics: const BouncingScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: cryptoMarketName.length,
-                    itemBuilder: (context, index) => StockTile(
-                      name: cryptoMarketName[index]['market_name'],
-                      price: cryptoMarketName[index]['price'],
-                      changePercent: cryptoMarketName[index]['change_percent'],
-                      data: cryptoMarketName[index]['ohlc'],
+                    itemCount: accountTrading.length,
+                    itemBuilder: (context, index) => GestureDetector(
+                      onTap: (){
+                        Get.to(() => MarketDetail(login: accountTrading[index]['login']));
+                      },
+                      child: StockTile(
+                        login: accountTrading[index]['login'].toString(),
+                        balance: accountTrading[index]['balance'],
+                      ),
                     )
-                ),
+                  );
+                }),
+                const SizedBox(height: 20),
               ],
             ),
           ),
@@ -198,23 +151,17 @@ class _TradeState extends State<Trade> {
 }
 
 class StockTile extends StatelessWidget {
-  final String name;
-  final double price;
-  final double changePercent;
-  final List<double> data;
+  final String login;
+  final double balance;
 
   const StockTile({
-    required this.name,
-    required this.price,
-    required this.changePercent,
-    required this.data,
+    required this.login,
+    required this.balance,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    final isPositive = changePercent >= 0;
-    final color = isPositive ? Colors.green.shade800 : Colors.red;
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4),
       padding: const EdgeInsets.all(12),
@@ -227,34 +174,21 @@ class StockTile extends StatelessWidget {
         children: [
           CircleAvatar(
             backgroundColor: CustomColor.textThemeLightColor,
-            child: Text(name[0], style: GoogleFonts.inter(color: CustomColor.textThemeDarkSoftColor, fontWeight: FontWeight.bold)),
+            child: Text("A", style: GoogleFonts.inter(color: CustomColor.textThemeDarkSoftColor, fontWeight: FontWeight.bold)),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name, style: GoogleFonts.inter(color: CustomColor.textThemeLightColor, fontWeight: FontWeight.bold)),
+                Text(login, style: GoogleFonts.inter(color: CustomColor.textThemeLightColor, fontWeight: FontWeight.bold)),
                 Row(
                   children: [
-                    Text('\$${price.toStringAsFixed(2)}', style: GoogleFonts.inter(color: CustomColor.textThemeLightSoftColor)),
+                    Text('\$${balance.toStringAsFixed(2)}', style: GoogleFonts.inter(color: CustomColor.textThemeLightSoftColor)),
                     const SizedBox(width: 5),
-                    Text("${isPositive ? '+' : ''}${changePercent.toStringAsFixed(2)}%", style: TextStyle(color: color, fontWeight: FontWeight.bold),
-                    ),
                   ],
                 ),
               ],
-            ),
-          ),
-          SizedBox(
-            width: 60,
-            height: 40,
-            child: SfSparkLineChart(
-              color: color,
-              data: data,
-              width: 1.0,
-              axisLineWidth: 0,
-              trackball: const SparkChartTrackball(),
             ),
           ),
         ],
