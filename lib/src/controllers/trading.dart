@@ -100,6 +100,23 @@ class TradingController extends GetxController {
     }
   }
 
+  Future<List<Map<String, dynamic>>> getTradingAccountV2() async {
+    try {
+      Map<String, dynamic> result = await authService.get("market/account/list");
+      if (result['status'] != true) {
+        return [];
+      }
+
+      List<dynamic> rawList = result['response'];
+      List<Map<String, dynamic>> json = rawList.map((e) => Map<String, dynamic>.from(e)).toList();
+      print(json);
+      return json;
+
+    } catch (e) {
+      throw Exception("getTradingAccount error: $e");
+    }
+  }
+
   // Create Demo Trading API
   Future<bool> createDemo() async {
     try {
