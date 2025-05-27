@@ -132,12 +132,12 @@ class TradingProperty {
     });
   }
 
-  static Widget buildPriceBox(double price) {
+  static Widget buildPriceBox(double price, Color? color) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
         // color: price >= previousPrice ? Colors.green : Colors.red,
-        color: Colors.green,
+        color: color,
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
@@ -149,7 +149,7 @@ class TradingProperty {
 
   static CartesianChartAnnotation buildPriceBoxAnnotation(double price, num x) {
     return CartesianChartAnnotation(
-      widget: buildPriceBox(price),
+      widget: buildPriceBox(price, Colors.green),
       coordinateUnit: CoordinateUnit.point,
       region: AnnotationRegion.chart,
       x: x, // titik candle terakhir
@@ -244,7 +244,7 @@ class TradingProperty {
     ];
   }
 
-  static Expanded sellButton({Function()? onPressed, String? price}){
+  static Expanded sellButton({Function()? onPressed, double? price = 0.000}){
     return Expanded(
       child: ElevatedButton(
         onPressed: onPressed,
@@ -259,14 +259,14 @@ class TradingProperty {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text('Sell', style: GoogleFonts.inter(color: CustomColor.textThemeDarkColor, fontWeight: FontWeight.bold)),
-            Text(price ?? '1.13765', style: TextStyle(color: CustomColor.textThemeDarkColor, fontWeight: FontWeight.bold)),
+            Text(price.toString(), style: TextStyle(color: CustomColor.textThemeDarkColor, fontWeight: FontWeight.bold)),
           ],
         ),
       ),
     );
   }
 
-  static Expanded buyButton({Function()? onPressed, String? price}){
+  static Expanded buyButton({Function()? onPressed, double? price = 0.000}){
     return Expanded(
       child: ElevatedButton(
         onPressed: onPressed,
@@ -280,8 +280,8 @@ class TradingProperty {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Sell', style: GoogleFonts.inter(color: CustomColor.textThemeDarkColor, fontWeight: FontWeight.bold)),
-            Text(price ?? '1.13765', style: TextStyle(color: CustomColor.textThemeDarkColor, fontWeight: FontWeight.bold)),
+            Text('Buy', style: GoogleFonts.inter(color: CustomColor.textThemeDarkColor, fontWeight: FontWeight.bold)),
+            Text(price.toString(), style: TextStyle(color: CustomColor.textThemeDarkColor, fontWeight: FontWeight.bold)),
           ],
         ),
       ),
