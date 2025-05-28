@@ -59,6 +59,7 @@ class TradingController extends GetxController {
       List<dynamic> json = result['response'].map((e) => e as Map<String, dynamic>).toList();
       minPrice.value = 0.0;
       maxPrice.value = 0.0;
+      ohlcData.clear();
       for(var i in json) {
         minPrice.value = (minPrice.value < double.parse(i['open'].toString()) && minPrice.value != 0.0) ? minPrice.value : double.parse(i['open'].toString());
         maxPrice.value = maxPrice.value > double.parse(i['open'].toString()) ? maxPrice.value : double.parse(i['open'].toString());
