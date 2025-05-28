@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
 import 'package:tridentpro/src/components/buttons/outlined_button.dart';
@@ -11,6 +12,7 @@ import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/components/textfields/name_textfield.dart';
 import 'package:tridentpro/src/components/textfields/phone_textfield.dart';
 import 'package:tridentpro/src/components/textfields/void_textfield.dart';
+import 'package:tridentpro/src/controllers/setting.dart';
 import 'package:tridentpro/src/helpers/handlers/json_file_reader.dart';
 import 'package:tridentpro/src/helpers/variables/countrycurrency.dart';
 import 'package:tridentpro/src/helpers/variables/global_variables.dart';
@@ -40,6 +42,7 @@ class _Step12BankInformation extends State<Step12BankInformation> {
   TextEditingController rootController2 = TextEditingController();
   TextEditingController jenisRekening2 = TextEditingController();
   TextEditingController nomorRekening2 = TextEditingController();
+  SettingController settingController = Get.put(SettingController());
   RxBool addedBank = false.obs;
 
   List<Map<dynamic, dynamic>> resultBank = [];
@@ -49,6 +52,13 @@ class _Step12BankInformation extends State<Step12BankInformation> {
     super.initState();
     readJsonFile('assets/json/bank.json').then((result){
       resultBank = result;
+      settingController.getBankUser().then((result){
+        if(!result){
+          CustomAlert.alertError(message: settingController.responseMessage.value);
+          return;
+        }
+
+      });
     });
   }
 

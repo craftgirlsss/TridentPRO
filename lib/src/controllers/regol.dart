@@ -15,13 +15,13 @@ class RegolController extends GetxController {
   Future<bool> getProducts() async {
     try {
       Map<String, dynamic> result = await authService.get("regol/product");
+      responseMessage(result['message']);
       if (result['status'] != true) {
         return false;
       }
 
       // print(result);
       productModels(ProductModels.fromJson(result));
-      responseMessage(result['message']);
       return true;
     } catch (e) {
       responseMessage(e.toString());
@@ -63,12 +63,12 @@ class RegolController extends GetxController {
       });
 
       isLoading(false);
+      responseMessage(result['message']);
       if (result['status'] != true) {
         return false;
       }
 
       /** Assign new value to Database */
-      responseMessage(result['message']);
       accountModel.value?.type = accountType;
       accountModel.value?.typeAcc = accountSuffix;
       
@@ -135,11 +135,11 @@ class RegolController extends GetxController {
       });
 
       isLoading(false);
+      responseMessage(result['message']);
       if (result['status'] != true) {
         return false;
       }
       print(result);
-      responseMessage(result['message']);
       return true;
     } catch (e) {
       isLoading(false);
@@ -163,10 +163,10 @@ class RegolController extends GetxController {
       print(result);
 
       isLoading(false);
+      responseMessage(result['message']);
       if (result['status'] != true) {
         return false;
       }
-      responseMessage(result['message']);
       return true;
     } catch (e) {
       isLoading(false);
@@ -188,10 +188,10 @@ class RegolController extends GetxController {
       });
 
       isLoading(false);
+      responseMessage(result['message']);
       if (result['status'] != true) {
         return false;
       }
-      responseMessage(result['message']);
       return true;
     } catch (e) {
       isLoading(false);
@@ -210,10 +210,10 @@ class RegolController extends GetxController {
       });
 
       isLoading(false);
+      responseMessage(result['message']);
       if (result['status'] != true) {
         return false;
       }
-      responseMessage(result['message']);
       return true;
     } catch (e) {
       isLoading(false);
@@ -228,14 +228,15 @@ class RegolController extends GetxController {
       isLoading(true);
       Map<String, dynamic> result = await authService.post("regol/apr_pengalaman_investasi", {
         'app_pengalaman_investasi': experience,
-        'nama_perusahaan': companyName ?? "-"
+        'app_nama_perusahaan': companyName
       });
 
       isLoading(false);
+      print(result);
+      responseMessage(result['message']);
       if (result['status'] != true) {
         return false;
       }
-      responseMessage(result['message']);
       return true;
     } catch (e) {
       isLoading(false);
@@ -254,10 +255,10 @@ class RegolController extends GetxController {
       });
 
       isLoading(false);
+      responseMessage(result['message']);
       if (result['status'] != true) {
         return false;
       }
-      responseMessage(result['message']);
       return true;
     } catch (e) {
       isLoading(false);
@@ -268,31 +269,32 @@ class RegolController extends GetxController {
 
   // Create Demo Trading API
   Future<bool> postStepEight({
-    String? jobName,
-    String? companyName,
+    String? namaPekerjaan,
+    String? namaPerusahaan,
     String? bidangUsaha,
-    String? position,
-    String? longTime,
-    String? address,
-    String? longTimeOldJob
+    String? jabatanPekerjaan,
+    String? lamaBekerja,
+    String? alamatKantor,
+    String? lamaBekerjaSebelumnya
   }) async {
     try {
       isLoading(true);
       Map<String, dynamic> result = await authService.post("regol/apr_informasi_pekerjaan", {
-        'nama_pekerjaan': jobName,
-        'nama_perusahaan': companyName,
+        'nama_pekerjaan': namaPekerjaan,
+        'nama_perusahaan': namaPerusahaan,
         'bidang_usaha': bidangUsaha,
-        'jabatan_pekerjaan': position,
-        'lama_bekerja': '${longTime ?? 0} tahun',
-        'alamat_kantor': address,
-        'lama_bekerja_sebelumnya': '${longTimeOldJob ?? 0} tahun'
+        'jabatan_pekerjaan': jabatanPekerjaan,
+        'lama_bekerja': '${lamaBekerja ?? 0} tahun',
+        'alamat_kantor': alamatKantor,
+        'lama_bekerja_sebelumnya': '${lamaBekerjaSebelumnya ?? 0} tahun'
       });
 
       isLoading(false);
+      print(result);
+      responseMessage(result['message']);
       if (result['status'] != true) {
         return false;
       }
-      responseMessage(result['message']);
       return true;
     } catch (e) {
       isLoading(false);

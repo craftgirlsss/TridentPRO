@@ -41,6 +41,20 @@ class _Step11JobHistory extends State<Step11JobHistory> {
   RegolController regolController = Get.find();
 
   @override
+  void initState() {
+    super.initState();
+    yourJobCategoryController.text = regolController.accountModel.value?.kerja_tipe ?? "";
+    businessNameController.text = regolController.accountModel.value?.kerja_nama ?? "";
+    categoryBusinessNameController.text = regolController.accountModel.value?.kerja_bidang ?? "";
+    jobPositionController.text = regolController.accountModel.value?.kerja_jabatan ?? "";
+    durationOfWorkController.text = regolController.accountModel.value?.kerja_lama ?? "";
+    currentAddressOffice.text = regolController.accountModel.value?.kerja_alamat ?? "";
+    officePhoneContact.text = regolController.accountModel.value?.kerja_telepon ?? "";
+    faxController.text = regolController.accountModel.value?.kerja_fax ?? "";
+    durationOfLastWorkController.text = regolController.accountModel.value?.kerja_lama_sebelum ?? "";
+  }
+
+  @override
   void dispose() {
     businessNameController.dispose();
     categoryBusinessNameController.dispose();
@@ -82,28 +96,28 @@ class _Step11JobHistory extends State<Step11JobHistory> {
             child: Column(
               children: [
                 UtilitiesWidget.titleContent(
-                    title: "Job Information",
-                    subtitle: "Tell me a little about your current job",
-                    children: [
-                      VoidTextField(controller: yourJobCategoryController, fieldName: "Your Current Job", hintText: "Your Current Job", labelText: "Your Current Job", onPressed: () async {
-                        CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Choose your current job", children: List.generate(GlobalVariable.jobListIndo.length, (i){
-                          return ListTile(
-                            onTap: (){
-                              Navigator.pop(context);
-                              yourJobCategoryController.text = GlobalVariable.jobListIndo[i];
-                            },
-                            title: Text(GlobalVariable.jobListIndo[i], style: GoogleFonts.inter()),
-                          );
-                        }));
-                      }),
-                      NameTextField(controller: businessNameController, fieldName: "Nama Perusahaan", hintText: "Nama Perusahaan", labelText: "Nama Perusahaan"),
-                      NameTextField(controller: categoryBusinessNameController, fieldName: "Bidang Usaha", hintText: "Input nama bidang usaha", labelText: "Nama Bidang Usaha"),
-                      NameTextField(controller: jobPositionController, fieldName: "Job Position", hintText: "Job Position", labelText: "Job Position"),
-                      NameTextField(controller: durationOfWorkController, fieldName: "Lama Bekerja", hintText: "Lama Bekerja", labelText: "Lama Bekerja"),
-                      DescriptiveTextField(controller: currentAddressOffice, fieldName: "Alamat Pekerjaan Saat Ini", hintText: "Alamat Pekerjaan Saat Ini", labelText: "Alamat Pekerjaan Saat Ini"),
-                      PhoneTextField(controller: officePhoneContact, fieldName: "Office Phone Contact", hintText: "Office Phone Contact", labelText: "Office Phone Contact (Optional)"),
-                      PhoneTextField(controller: faxController, fieldName: "Office Fax", hintText: "Office Fax", labelText: "Office Fax (Optional)"),
-                    ]
+                  title: "Informasi Pekerjaan",
+                  subtitle: "Beri tahu kami tentang pekerjaan anda.",
+                  children: [
+                    VoidTextField(controller: yourJobCategoryController, fieldName: "Your Current Job", hintText: "Your Current Job", labelText: "Your Current Job", onPressed: () async {
+                      CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Choose your current job", children: List.generate(GlobalVariable.jobListIndo.length, (i){
+                        return ListTile(
+                          onTap: (){
+                            Navigator.pop(context);
+                            yourJobCategoryController.text = GlobalVariable.jobListIndo[i];
+                          },
+                          title: Text(GlobalVariable.jobListIndo[i], style: GoogleFonts.inter()),
+                        );
+                      }));
+                    }),
+                    NameTextField(controller: businessNameController, fieldName: "Nama Perusahaan", hintText: "Nama Perusahaan", labelText: "Nama Perusahaan"),
+                    NameTextField(controller: categoryBusinessNameController, fieldName: "Bidang Usaha", hintText: "Input nama bidang usaha", labelText: "Nama Bidang Usaha"),
+                    NameTextField(controller: jobPositionController, fieldName: "Job Position", hintText: "Job Position", labelText: "Job Position"),
+                    NameTextField(controller: durationOfWorkController, fieldName: "Lama Bekerja", hintText: "Lama Bekerja", labelText: "Lama Bekerja"),
+                    DescriptiveTextField(controller: currentAddressOffice, fieldName: "Alamat Pekerjaan Saat Ini", hintText: "Alamat Pekerjaan Saat Ini", labelText: "Alamat Pekerjaan Saat Ini"),
+                    PhoneTextField(controller: officePhoneContact, fieldName: "Office Phone Contact", hintText: "Office Phone Contact", labelText: "Office Phone Contact (Optional)"),
+                    PhoneTextField(controller: faxController, fieldName: "Office Fax", hintText: "Office Fax", labelText: "Office Fax (Optional)"),
+                  ]
                 ),
                 UtilitiesWidget.titleContent(
                   title: "Last Job Information",
@@ -121,15 +135,22 @@ class _Step11JobHistory extends State<Step11JobHistory> {
             size: size,
             title: regolController.isLoading.value ? "Uploading..." : "Your Job Experience",
             onPressed: regolController.isLoading.value ? null : (){
+              print(businessNameController.text);
+              print(yourJobCategoryController.text);
+              print(currentAddressOffice.text);
+              print(categoryBusinessNameController.text);
+              print(durationOfWorkController.text);
+              print(durationOfLastWorkController.text);
+              print(categoryBusinessNameController.text);
               if(_formKey.currentState!.validate()){
                 regolController.postStepEight(
-                  companyName: businessNameController.text,
-                  position: yourJobCategoryController.text,
-                  address: currentAddressOffice.text,
-                  jobName: categoryBusinessNameController.text,
-                  longTime: durationOfWorkController.text,
-                  longTimeOldJob: durationOfLastWorkController.text,
-                  bidangUsaha: categoryBusinessNameController.text
+                  namaPekerjaan: yourJobCategoryController.text,
+                  namaPerusahaan: businessNameController.text,
+                  bidangUsaha: categoryBusinessNameController.text,
+                  jabatanPekerjaan: durationOfWorkController.text,
+                  lamaBekerja: durationOfWorkController.text,
+                  alamatKantor: currentAddressOffice.text,
+                  lamaBekerjaSebelumnya: durationOfLastWorkController.text,
                 ).then((result){
                   if(result){
                     Get.to(() => const Step12BankInformation());

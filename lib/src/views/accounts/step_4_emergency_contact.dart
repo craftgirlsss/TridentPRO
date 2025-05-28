@@ -51,14 +51,11 @@ class _Step4EmergencyContact extends State<Step4EmergencyContact> {
   @override
   void initState() {
     super.initState();
-    utilitiesController.getCountry().then((result){
-      if(!result){
-        CustomAlert.alertError(
-          message: utilitiesController.responseMessage.value,
-          onTap: (){ Get.back(); }
-        );
-      }
-    });
+    nameController.text = regolController.accountModel.value?.drrtName ?? "";
+    relationController.text = regolController.accountModel.value?.drrtStatus ?? "";
+    phoneController.text = regolController.accountModel.value?.drrtPhone ?? "";
+    addressController.text = regolController.accountModel.value?.drrtAddress ?? "";
+    zipController.text = regolController.accountModel.value?.drrtPostalCode ?? "-";
   }
 
   @override

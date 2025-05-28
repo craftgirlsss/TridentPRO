@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
@@ -19,7 +18,6 @@ import 'package:tridentpro/src/controllers/2_factory_auth.dart';
 import 'package:tridentpro/src/controllers/regol.dart';
 import 'package:tridentpro/src/controllers/utilities.dart';
 import 'package:tridentpro/src/helpers/handlers/image_picker.dart';
-import 'package:tridentpro/src/views/accounts/components/checklist_statement.dart';
 import 'package:tridentpro/src/views/accounts/step_3_marital.dart';
 import 'components/step_position.dart';
 
@@ -48,6 +46,7 @@ class _Step18PrenyataanSimulasiState extends State<Step18PrenyataanSimulasi> {
   RxString simulasiAkunDemoURL = "".obs;
   RxBool isLoading = false.obs;
   RxBool selectedStatement = true.obs;
+  RxBool imageLoaded = false.obs;
 
   @override
   void initState() {
@@ -56,6 +55,11 @@ class _Step18PrenyataanSimulasiState extends State<Step18PrenyataanSimulasi> {
       regolController.isLoading(true);
       rtController.text = regolController.accountModel.value?.rt ?? '-';
       rwController.text = regolController.accountModel.value?.rw ?? '-';
+      addressController.text = regolController.accountModel.value?.address ?? "";
+      if(regolController.accountModel.value?.app_foto_simulasi != null){
+        simulasiAkunDemoURL(regolController.accountModel.value?.app_foto_simulasi);
+        imageLoaded(true);
+      }
       await utilitiesController.getProvinceAPI().then((result) async {
         if(!result){
           CustomAlert.alertError(message: utilitiesController.responseMessage.value);
@@ -251,7 +255,7 @@ class _Step18PrenyataanSimulasiState extends State<Step18PrenyataanSimulasi> {
                       subtitle: "Unggah foto simulasi penggunaan akun DEMO yang telah anda buat.",
                       children: [
                         Obx(
-                          () => isLoading.value ? const SizedBox() : UtilitiesWidget.uploadPhoto(title: "Simulasi Akun Demo", onPressed: () async {
+                          () => isLoading.value ? const SizedBox() : UtilitiesWidget.uploadPhoto(isImageOnline: imageLoaded.value, title: "Simulasi Akun Demo", onPressed: () async {
                             simulasiAkunDemoURL(await CustomImagePicker.pickImageFromCameraAndReturnUrl());
                           }, urlPhoto: simulasiAkunDemoURL.value),
                         ),
@@ -321,7 +325,7 @@ class _Step18PrenyataanSimulasiState extends State<Step18PrenyataanSimulasi> {
                   print(provinceController.text);
                   if(_formKey.currentState!.validate()){
                     regolController.postStepNinePernyataanSimulasi(
-                      urlPhoto: simulasiAkunDemoURL.value,
+                      urlPhoto: imageLoaded.value ? "" : simulasiAkunDemoURL.value,
                       appAddress: addressController.text,
                       appAgree: selectedStatement.value == true ? "ya" : "tidak",
                       appCity: kabupatenController.text,

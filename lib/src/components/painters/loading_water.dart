@@ -36,8 +36,8 @@ class _CircularWaveProgressState extends State<CircularWaveProgress> with Ticker
   @override
   void initState() {
     super.initState();
-    _progressController = AnimationController(vsync: this, duration: const Duration(seconds: 2));
-    _waveController = AnimationController(vsync: this, duration: const Duration(seconds: 2));
+    _progressController = AnimationController(vsync: this, duration: const Duration(seconds: 4));
+    _waveController = AnimationController(vsync: this, duration: const Duration(seconds: 4));
 
     _progressAnimation = Tween(begin: 0.0, end: 100.0).animate(_progressController);
     _progressController.addListener(_progressListener);

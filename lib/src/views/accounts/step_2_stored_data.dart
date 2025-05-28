@@ -17,7 +17,6 @@ import 'package:tridentpro/src/controllers/authentication.dart';
 import 'package:tridentpro/src/controllers/regol.dart';
 import 'package:tridentpro/src/helpers/variables/global_variables.dart';
 import 'package:tridentpro/src/views/accounts/step_18_pernyataan_simulasi.dart';
-import 'package:tridentpro/src/views/accounts/step_3_marital.dart';
 
 import 'components/step_position.dart';
 
@@ -56,7 +55,7 @@ class _Step2StoredData extends State<Step2StoredData> {
     taxController.text = regolController.accountModel.value?.npwp ?? "-";
     dateBirthController.text = regolController.accountModel.value?.dateOfBirth ?? "-";
     placeBirthController.text = regolController.accountModel.value?.placeOfBirth ?? "-";
-    genderController.text = regolController.accountModel.value?.gender ?? "-";
+    genderController.text = regolController.accountModel.value?.gender != null ? regolController.accountModel.value!.gender!.capitalize! : "-";
   }
 
   @override

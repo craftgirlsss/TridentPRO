@@ -36,6 +36,7 @@ class _Step1UploadPhotoState extends State<Step1UploadPhoto> {
   RxString idPhoto = "".obs;
   RxString idPhotoSelfie = "".obs;
   RxBool isLoading = false.obs;
+  RxBool imageLoaded = false.obs;
 
   @override
   void initState() {
@@ -43,6 +44,11 @@ class _Step1UploadPhotoState extends State<Step1UploadPhoto> {
     idTypeController.text = regolController.accountModel.value?.idType ?? "";
     idTypeNumber.text = regolController.accountModel.value?.idNumber ?? "";
     nationallyController.text = regolController.accountModel.value?.country ?? "";
+    if(regolController.accountModel.value?.appFotoTerbaru != null && regolController.accountModel.value?.appFotoIdentitas != null){
+      idPhoto(regolController.accountModel.value?.appFotoIdentitas);
+      idPhotoSelfie(regolController.accountModel.value?.appFotoTerbaru);
+      imageLoaded(true);
+    }
   }
 
   @override
@@ -110,14 +116,16 @@ class _Step1UploadPhotoState extends State<Step1UploadPhoto> {
                         ),
                         NumberTextField(controller: idTypeNumber, fieldName: LanguageGlobalVar.ID_TYPE_NUMBER.tr, hintText: LanguageGlobalVar.ID_TYPE_NUMBER.tr, labelText: LanguageGlobalVar.ID_TYPE_NUMBER.tr, maxLength: 14),
                         Obx(
-                          () => isLoading.value ? const SizedBox() : UtilitiesWidget.uploadPhoto(title: "Foto KTP", onPressed: () async {
+                          () => isLoading.value ? const SizedBox() : UtilitiesWidget.uploadPhoto(isImageOnline: imageLoaded.value, title: "Foto KTP", onPressed: () async {
                             idPhoto.value = await CustomImagePicker.pickImageFromCameraAndReturnUrl();
                           }, urlPhoto: idPhoto.value),
                         ),
                         Obx(
-                          () => isLoading.value ? const SizedBox() : UtilitiesWidget.uploadPhoto(title: "Foto Selfie", urlPhoto: idPhotoSelfie.value, onPressed: () async {
-                            idPhotoSelfie.value = await CustomImagePicker.pickImageFromCameraAndReturnUrl();
-                          })),
+                          () => !isLoading.value ? Obx(
+                            () => UtilitiesWidget.uploadPhoto(isImageOnline: imageLoaded.value, title: "Foto Selfie", urlPhoto: idPhotoSelfie.value, onPressed: () async {
+                              idPhotoSelfie.value = await CustomImagePicker.pickImageFromCameraAndReturnUrl();
+                            }),
+                          ) : const SizedBox()),
                       ]
                     ),
                   ],
@@ -133,8 +141,8 @@ class _Step1UploadPhotoState extends State<Step1UploadPhoto> {
                     country: nationallyController.text,
                     idType: idTypeController.text,
                     idTypeNumber: idTypeNumber.text,
-                    appFotoIdentitas: idPhoto.value,
-                    appFotoTerbaru: idPhotoSelfie.value
+                    appFotoIdentitas: imageLoaded.value ? "" : idPhoto.value,
+                    appFotoTerbaru: imageLoaded.value ? "" : idPhotoSelfie.value
                   ).then((result){
                     if(!result){
                       CustomAlert.alertError(message: regolController.responseMessage.value);

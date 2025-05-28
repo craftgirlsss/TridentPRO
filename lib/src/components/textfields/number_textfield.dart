@@ -24,8 +24,9 @@ class _NumberTextFieldState extends State<NumberTextField> {
   @override
   void initState() {
     super.initState();
-    if((widget.controller?.text.length ?? 0) > 0){
+    if((widget.controller?.text.length ?? 0) >= 1){
       isNumber(true);
+      setState(() {});
     }
   }
 
@@ -88,8 +89,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
               )
           ),
           onChanged: (value) {
-            int? length = widget.maxLength ?? 1;
-            if(value.length > length){
+            if(value.length >= widget.maxLength!){
               isNumber(true);
             }else{
               isNumber(false);

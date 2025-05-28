@@ -32,10 +32,32 @@ class AccountModel {
   String? drrtPostalCode;
   String? rt;
   String? rw;
+  String? app_foto_simulasi;
+
+  String? tujuan_investasi;
+  String? pengalaman_investasi;
+  String? pengalaman_investasi_bidang;
+  String? kerja_nama;
+  String? kerja_tipe;
+  String? kerja_bidang;
+  String? kerja_jabatan;
+  String? kerja_lama;
+  String? kerja_lama_sebelum;
+  String? kerja_alamat;
+  String? kerja_zip;
+  String? kerja_telepon;
+  String? kerja_fax;
+  String? kekayaan;
+  String? kekayaan_rumah_lokasi;
+  String? kekayaan_njop;
+  String? kekayaan_deposit;
+  String? kekayaan_nilai;
+  String? kekayaan_lain;
 
   AccountModel({
     this.id,
     this.type,
+    this.app_foto_simulasi,
     this.typeAcc,
     this.country,
     this.idType,
@@ -67,6 +89,26 @@ class AccountModel {
     this.drrtPhone,
     this.drrtAddress,
     this.drrtPostalCode,
+
+    this.kekayaan,
+    this.kekayaan_deposit,
+    this.kekayaan_lain,
+    this.kekayaan_nilai,
+    this.kekayaan_njop,
+    this.kekayaan_rumah_lokasi,
+    this.kerja_alamat,
+    this.kerja_bidang,
+    this.kerja_fax,
+    this.kerja_jabatan,
+    this.kerja_lama,
+    this.kerja_lama_sebelum,
+    this.kerja_nama,
+    this.kerja_telepon,
+    this.kerja_tipe,
+    this.kerja_zip,
+    this.pengalaman_investasi,
+    this.pengalaman_investasi_bidang,
+    this.tujuan_investasi
   });
 
   factory AccountModel.fromJson(Map<String, dynamic> json) {
@@ -103,45 +145,27 @@ class AccountModel {
       drrtStatus: json['drrt_status'],
       drrtPhone: json['drrt_phone'],
       drrtAddress: json['drrt_address'],
+      app_foto_simulasi: json['app_foto_simulasi'],
       drrtPostalCode: json['drrt_postal_code'],
+      kekayaan: json['kekayaan'],
+      kekayaan_deposit: json['kekayaan_deposit'],
+      kekayaan_lain: json['kekayaan_lain'],
+      kekayaan_nilai: json['kekayaan_nilai'],
+      kekayaan_njop: json['kekayaan_njop'],
+      kekayaan_rumah_lokasi: json['kekayaan_rumah_lokasi'],
+      kerja_alamat: json['kerja_alamat'],
+      kerja_bidang: json['kerja_bidang'],
+      kerja_fax: json['kerja_fax'],
+      kerja_jabatan: json['kerja_jabatan'],
+      kerja_lama: json['kerja_lama'],
+      kerja_lama_sebelum: json['kerja_lama_sebelum'],
+      kerja_nama: json['kerja_nama'],
+      kerja_telepon: json['kerja_telepon'],
+      kerja_tipe: json['kerja_tipe'],
+      kerja_zip: json['kerja_zip'],
+      pengalaman_investasi: json['pengalaman_investasi'],
+      pengalaman_investasi_bidang: json['pengalaman_investasi_bidang'],
+      tujuan_investasi: json['tujuan_investasi']
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'type': type,
-      'typeAcc': typeAcc,
-      'country': country,
-      'idType': idType,
-      'idNumber': idNumber,
-      'appFotoIdentitas': appFotoIdentitas,
-      'appFotoTerbaru': appFotoTerbaru,
-      'appFotoPendukung': appFotoPendukung,
-      'appFotoPendukung2': appFotoPendukung2,
-      'npwp': npwp,
-      'dateOfBirth': dateOfBirth,
-      'placeOfBirth': placeOfBirth,
-      'gender': gender,
-      'province': province,
-      'city': city,
-      'district': district,
-      'village': village,
-      'address': address,
-      'postalCode': postalCode,
-      'maritalStatus': maritalStatus,
-      'wifeName': wifeName,
-      'motherName': motherName,
-      'phoneHome': phoneHome,
-      'faxHome': faxHome,
-      'phoneNumber': phoneNumber,
-      'drrtName': drrtName,
-      'drrtStatus': drrtStatus,
-      'drrtPhone': drrtPhone,
-      'drrtAddress': drrtAddress,
-      'drrtPostalCode': drrtPostalCode,
-      'rt' : rt,
-      'rw' : rw
-    };
   }
 }

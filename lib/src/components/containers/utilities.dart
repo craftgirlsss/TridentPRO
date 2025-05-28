@@ -24,7 +24,7 @@ class UtilitiesWidget {
     );
   }
 
-  static GestureDetector uploadPhoto({String? title, String? urlPhoto, Function()? onPressed}){
+  static GestureDetector uploadPhoto({String? title, String? urlPhoto, Function()? onPressed, bool? isImageOnline}){
     return GestureDetector(
       onTap: onPressed,
       child: Container(
@@ -35,8 +35,8 @@ class UtilitiesWidget {
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: Colors.black12),
           color: CustomColor.backgroundIcon,
-          image: (urlPhoto != null && urlPhoto.isNotEmpty) ? DecorationImage(
-            image: FileImage(File(urlPhoto)), 
+          image: (urlPhoto != null && urlPhoto.isNotEmpty) ? isImageOnline == true ? DecorationImage(image: NetworkImage(urlPhoto), fit: BoxFit.cover) : DecorationImage(
+            image: FileImage(File(urlPhoto)),
             fit: BoxFit.cover
           ) : null
         ),

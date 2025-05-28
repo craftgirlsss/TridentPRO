@@ -29,6 +29,26 @@ class _Step6InvestmentExperience extends State<Step6InvestmentExperience> {
   TextEditingController companyNameController = TextEditingController();
   RegolController regolController = Get.find();
 
+  int setInvestExperience({String? experience, String? brokerName}){
+    switch(experience){
+      case "ya":
+        showBrokerName(true);
+        companyNameController.text = brokerName ?? "";
+        return selectedValue(1);
+      case "tidak":
+        showBrokerName(false);
+        return selectedValue(2);
+      default:
+        return 0;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setInvestExperience(experience: regolController.accountModel.value?.pengalaman_investasi, brokerName: regolController.accountModel.value?.pengalaman_investasi_bidang);
+  }
+
   @override
   void dispose() {
     companyNameController.dispose();
@@ -98,10 +118,10 @@ class _Step6InvestmentExperience extends State<Step6InvestmentExperience> {
                 () => showBrokerName.value ? Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: UtilitiesWidget.titleContent(
-                    title: "Nama Perusahaan Pialang",
-                    subtitle: "Inputkan nama perusahaan pialang yang pernah anda gunakan jasa nya.",
+                    title: "Bidang Investasi",
+                    subtitle: "Inputkan nama bidang investasi yang pernah anda coba.",
                     children: [
-                      NameTextField(controller: companyNameController, fieldName: "Nama Perusahaan", hintText: "Nama Perusahaan", labelText: "Nama Perusahaan"),
+                      NameTextField(controller: companyNameController, fieldName: "Nama Bidang Investasi", hintText: "Nama Bidang Investasi", labelText: "Nama Bidang Investasi"),
                     ]
                   ),
                 ) : const SizedBox(),
@@ -114,13 +134,12 @@ class _Step6InvestmentExperience extends State<Step6InvestmentExperience> {
             size: size,
             title: regolController.isLoading.value ? "Uploading..." : "Investment Experience",
             onPressed: regolController.isLoading.value ? null : (){
-              print(showBrokerName);
-              print(selectedValue.value);
-              print(GlobalVariable.investExperienceIndo[selectedValue.value-1]);
               if(showBrokerName.value){
                 if(companyNameController.text == "" || companyNameController.length == 0){
                   CustomAlert.alertError(message: "Mohon nama perusahaan diisi");
                 }else{
+                  print(companyNameController.text);
+                  print(GlobalVariable.investExperienceIndo[selectedValue.value-1].toLowerCase());
                   regolController.postStepSix(companyName: companyNameController.text, experience: GlobalVariable.investExperienceIndo[selectedValue.value-1].toLowerCase()).then((result){
                     if(result){
                       // Get.to(() => const Step7BalanceSources());
@@ -133,7 +152,6 @@ class _Step6InvestmentExperience extends State<Step6InvestmentExperience> {
               }else{
                 regolController.postStepSix(companyName: companyNameController.text, experience: GlobalVariable.investExperienceIndo[selectedValue.value-1].toLowerCase()).then((result){
                   if(result){
-                    // Get.to(() => const Step7BalanceSources());
                     Get.to(() => const Step8IncomeRange());
                   }else{
                     CustomAlert.alertError(message: regolController.responseMessage.value);

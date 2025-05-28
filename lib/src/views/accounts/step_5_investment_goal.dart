@@ -8,6 +8,7 @@ import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/controllers/regol.dart';
 import 'package:tridentpro/src/helpers/variables/global_variables.dart';
+import 'package:tridentpro/src/views/accounts/step_19_familly_bappebti.dart';
 import 'package:tridentpro/src/views/accounts/step_6_invest_experience.dart';
 
 import 'components/step_position.dart';
@@ -22,13 +23,32 @@ class Step5InvestmentGoal extends StatefulWidget {
 class _Step5InvestmentGoal extends State<Step5InvestmentGoal> {
 
   RegolController regolController = Get.find();
-  RxInt _selectedValue = 1.obs;
+  RxInt selectedValue = 1.obs;
   RxString selectedName = "".obs;
+
+  int setInvestGoals({String? name}){
+    switch(name){
+      case "lindung nilai":
+        selectedName(GlobalVariable.investmentGoalIndonesia[0]);
+        return selectedValue(1);
+      case "gain":
+        selectedName(GlobalVariable.investmentGoalIndonesia[1]);
+        return selectedValue(2);
+      case "spekulasi":
+        selectedName(GlobalVariable.investmentGoalIndonesia[2]);
+        return selectedValue(3);
+      case "lainnya":
+        selectedName(GlobalVariable.investmentGoalIndonesia[3]);
+        return selectedValue(4);
+      default:
+        return 0;
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    selectedName(GlobalVariable.investmentGoalIndonesia[0]);
+    setInvestGoals(name: regolController.accountModel.value?.tujuan_investasi);
   }
 
   @override
@@ -75,9 +95,9 @@ class _Step5InvestmentGoal extends State<Step5InvestmentGoal> {
                       ),
                       title: Text(GlobalVariable.investmentGoalIndonesia[index]),
                       value: index + 1,
-                      groupValue: _selectedValue.value,
+                      groupValue: selectedValue.value,
                       onChanged: (value) {
-                        _selectedValue(value);
+                        selectedValue(value);
                         selectedName(GlobalVariable.investmentGoalIndonesia[index]);
                       },
                     ),
@@ -92,16 +112,15 @@ class _Step5InvestmentGoal extends State<Step5InvestmentGoal> {
             size: size,
             title: regolController.isLoading.value ? "Uploading..." : "Investment Goal",
             onPressed: regolController.isLoading.value ? null : (){
-              print(selectedName);
               regolController.postStepFive(investmentGoal: selectedName.value).then((result){
                 if(result){
-                  Get.to(() => const Step6InvestmentExperience());
+                  Get.to(() => Step19FamilyBappebti());
                 }else{
                   CustomAlert.alertError(message: regolController.responseMessage.value);
                 }
               });
             },
-            progressEnd: 6,
+            progressEnd: 4,
             currentAllPageStatus: 2,
             progressStart: 1
           ),

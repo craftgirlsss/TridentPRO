@@ -20,6 +20,14 @@ class _DescriptiveTextFieldState extends State<DescriptiveTextField> {
   RxBool isName = false.obs;
 
   @override
+  void initState() {
+    super.initState();
+    if((widget.controller?.text.length ?? 0) > 2){
+      isName(true);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),

@@ -288,9 +288,34 @@ class _MarketDetailState extends State<MarketDetail> {
       primaryXAxis: DateTimeAxis(
         intervalType: DateTimeIntervalType.minutes,
         interval: 180,
+        plotOffset: 20,
         dateFormat: DateFormat('dd MMM HH:mm'),
+        majorGridLines: MajorGridLines(
+          width: 0.5,
+          color: Colors.grey.shade100,
+        ),
       ),
       primaryYAxis: NumericAxis(
+        majorGridLines: MajorGridLines(
+          width: 0.5,
+          color: Colors.grey.shade100,
+        ),
+        plotBands: <PlotBand>[
+          PlotBand(
+            isVisible: true,
+            start: lastPriceOpen.value,
+            end: lastPriceOpen.value,
+            borderColor: Colors.green,
+            borderWidth: 1,
+          ),
+          PlotBand(
+            isVisible: true,
+            start: lastPriceOpen.value + symbolSpread.value,
+            end: lastPriceOpen.value + symbolSpread.value,
+            borderColor: Colors.red,
+            borderWidth: 1,
+          ),
+        ],
         opposedPosition: true,
         borderColor: Colors.black12,
         labelFormat: r'${value}',

@@ -206,6 +206,7 @@ class TradingProperty {
   static List<HiloOpenCloseSeries<OHLCDataModel, DateTime>> buildHiloOpenCloseSeriesAPI({List<OHLCDataModel>? chartData}) {
     return <HiloOpenCloseSeries<OHLCDataModel, DateTime>>[
       HiloOpenCloseSeries<OHLCDataModel, DateTime>(
+        animationDuration: 0,
         dataSource: chartData,
         xValueMapper: (OHLCDataModel sales, _) => sales.date as DateTime,
         lowValueMapper: (OHLCDataModel data, int index) => data.low,

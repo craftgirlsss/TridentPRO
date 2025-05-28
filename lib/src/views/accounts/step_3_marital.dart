@@ -34,6 +34,7 @@ class _Step3Marital extends State<Step3Marital> {
   TextEditingController faxController = TextEditingController();
   RxBool showNameWifeOrHusband = false.obs;
   final _formKey = GlobalKey<FormState>();
+  RxBool isLoading = false.obs;
 
   // Init Class Controller Trading
   RegolController regolController = Get.find();
@@ -41,7 +42,7 @@ class _Step3Marital extends State<Step3Marital> {
   @override 
   void initState() {
     super.initState();
-    print(regolController.accountModel.value?.wifeName);
+    print(regolController.accountModel.value?.maritalStatus);
     maritalStatusController.text = regolController.accountModel.value?.maritalStatus ?? "";
     motherNameController.text = regolController.accountModel.value?.motherName ?? "";
     phoneHomeController.text = regolController.accountModel.value?.phoneHome ?? "";
@@ -50,7 +51,6 @@ class _Step3Marital extends State<Step3Marital> {
     if(maritalStatusController.text.toLowerCase() == "tidak kawin"){
       showNameWifeOrHusband(false);
     }else{
-      wifeHusbandName.text = regolController.accountModel.value?.wifeName ?? "-";
       showNameWifeOrHusband(true);
     }
   }
@@ -95,22 +95,24 @@ class _Step3Marital extends State<Step3Marital> {
                       title: "Marital Status",
                       subtitle: "Please select information details",
                       children: [
-                        VoidTextField(controller: maritalStatusController, fieldName: "Marital Status", hintText: "Marital Status", labelText: "Marital Status", onPressed: () async {
-                          CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, isScrolledController: true, title: "Please choose your marital status", children: List.generate(GlobalVariable.maritalIndoVersion.length, (i){
-                            return ListTile(
-                              title: Text(GlobalVariable.maritalIndoVersion[i], style: GoogleFonts.inter()),
-                              onTap: (){
-                                Navigator.pop(context);
-                                maritalStatusController.text = GlobalVariable.maritalIndoVersion[i];
-                                if(maritalStatusController.text.toLowerCase() == "Tidak Kawin"){
-                                  showNameWifeOrHusband(false);
-                                }else{
-                                  showNameWifeOrHusband(true);
+                        Obx(
+                          () => isLoading.value ? const SizedBox() : VoidTextField(controller: maritalStatusController, fieldName: "Marital Status", hintText: "Marital Status", labelText: "Marital Status", onPressed: () async {
+                            CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, isScrolledController: true, title: "Please choose your marital status", children: List.generate(GlobalVariable.maritalIndoVersion.length, (i){
+                              return ListTile(
+                                title: Text(GlobalVariable.maritalIndoVersion[i], style: GoogleFonts.inter()),
+                                onTap: (){
+                                  Navigator.pop(context);
+                                  maritalStatusController.text = GlobalVariable.maritalIndoVersion[i];
+                                  if(maritalStatusController.text == "Tidak Kawin"){
+                                    showNameWifeOrHusband(false);
+                                  }else{
+                                    showNameWifeOrHusband(true);
+                                  }
                                 }
-                              }
-                            );
-                          }));
-                        }),
+                              );
+                            }));
+                          }),
+                        ),
                         Obx(() => showNameWifeOrHusband.value ? NameTextField(controller: wifeHusbandName, fieldName: "Wife or Husband Name", hintText: "Wife or Husband Name", labelText: "Wife or Husband Name") : const SizedBox()),
                       ]
                     ),
@@ -131,6 +133,7 @@ class _Step3Marital extends State<Step3Marital> {
               size: size,
               title: "Marital Status",
               onPressed: (){
+                print("wifeName ${wifeHusbandName.text}");
                 if(!_formKey.currentState!.validate()){
                   CustomAlert.alertError(message: "Please fill all the fields");
                   return false;

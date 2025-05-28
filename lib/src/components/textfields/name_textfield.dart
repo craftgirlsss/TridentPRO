@@ -23,7 +23,7 @@ class _NameTextFieldState extends State<NameTextField> {
   @override
   void initState() {
     super.initState();
-    if((widget.controller?.text.length ?? 0) > 2){
+    if((widget.controller?.text.length ?? 0) >= 1){
       isName(true);
     }
   }
