@@ -46,7 +46,7 @@ class CustomAlert {
         title: "",
         content: Column(
           children: [
-            Lottie.asset('assets/json/success.json', repeat: true,frameRate: const FrameRate(50)),
+            Lottie.asset('assets/json/success.json', repeat: false, frameRate: const FrameRate(120)),
             const SizedBox(height: 10),
             Text(title ?? "Berhasil", style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold),),
             const SizedBox(height: 5),
