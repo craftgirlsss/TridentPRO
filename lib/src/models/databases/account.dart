@@ -53,6 +53,8 @@ class AccountModel {
   String? kekayaan_deposit;
   String? kekayaan_nilai;
   String? kekayaan_lain;
+  String? keluarga_bursa;
+  String? pernyataan_pailit;
 
   AccountModel({
     this.id,
@@ -108,7 +110,9 @@ class AccountModel {
     this.kerja_zip,
     this.pengalaman_investasi,
     this.pengalaman_investasi_bidang,
-    this.tujuan_investasi
+    this.tujuan_investasi,
+    this.pernyataan_pailit,
+    this.keluarga_bursa
   });
 
   factory AccountModel.fromJson(Map<String, dynamic> json) {
@@ -165,7 +169,9 @@ class AccountModel {
       kerja_zip: json['kerja_zip'],
       pengalaman_investasi: json['pengalaman_investasi'],
       pengalaman_investasi_bidang: json['pengalaman_investasi_bidang'],
-      tujuan_investasi: json['tujuan_investasi']
+      tujuan_investasi: json['tujuan_investasi'],
+      pernyataan_pailit: json['pernyataan_pailit'],
+      keluarga_bursa: json['keluarga_bursa']
     );
   }
 }

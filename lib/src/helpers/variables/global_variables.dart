@@ -17,11 +17,12 @@ class GlobalVariable {
   static final List<String> investmentGoal = ["Hedging", "Speculation", "Gain", "Other"];
   static final List<String> investmentGoalIndonesia = ["Lindungi Nilai", "Gain", "Spekulasi", "Lainnya"];
   static final List<String> jenisTabungan = ["Giro", "Tabungan"];
-  static final List<String> tempatPenyelesaianPerselisihan = ["Bandung", "Jakarta"];
+  static final List<String> tempatPenyelesaianPerselisihan = ["Badan Arbitrase Perdagangan Berjangka Komoditi (Bandung)", "Pengadilan Negeri Jakarta"];
+  static final List<String> kantorCabangBerjangka = ["Jakarta Selatan", "Surabaya"];
   static final List<String> investmentExperience = ["I Never Invest", "I Have Tried Investing", "I Know What I'm Doing", "I Have Invested Many Times"];
   static final List<String> balanceSources = ["Salary", "Business", "Partner", "Parent", "Inheritance", "Investment", "Property", "Savings", "Other"];
   static final List<String> incomePerYear = ["Between 100 - 250 jt Rupiah", "Between 250 - 500 jt Rupiah", "Above 500 jt Rupiah"];
-  static final List<String> incomePerYearIndo = ["Antara 100 - 250 jt Rupiah", "Antara 250 - 500 jt Rupiah", "Diatas 500 jt Rupiah"];
+  static final List<String> incomePerYearIndo = ["Antara 100-250 juta", "Antara 250-500 juta", "500 juta"];
   static final List<String> otherIncomePerYear = ["Between 100 - 250 jt Rupiah", "Between 250 - 500 jt Rupiah", "Above 500 jt Rupiah", "Not Have"];
   static final List<String> totalAssets = ["< 1 Billion Rupiah", "1 - 5 Billion Rupiah", "> 5 Billion Rupiah"];
   static final List<String> listSupportedDocuments = ["Cover Buku Tabungan (recommended)", "Tagihan Kartu Kredit", "Tagihan Listrik / Air", "Scan Kartu NPWP", "Rekening Koran Bank", "PBB / BPJS", "Lainnya"];

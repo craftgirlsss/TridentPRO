@@ -89,7 +89,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
               )
           ),
           onChanged: (value) {
-            if(value.length >= widget.maxLength!){
+            if(value.length >= (widget.maxLength ?? 0)){
               isNumber(true);
             }else{
               isNumber(false);

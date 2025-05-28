@@ -3,10 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
+import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
+import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/components/containers/utilities.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/helpers/variables/global_variables.dart';
+import 'package:tridentpro/src/views/accounts/components/pernyataan_pengungkapan_text.dart';
+import 'package:tridentpro/src/views/accounts/components/profile_perusahaan_pialang_text.dart';
 import 'package:tridentpro/src/views/accounts/step_16_success.dart';
+import 'components/dokumen_pemberitahuan_resiko_txt.dart';
 import 'components/step_position.dart';
 
 class Step14PenyelesaianPerselisihan extends StatefulWidget {
@@ -43,7 +48,7 @@ class _Step14PenyelesaianPerselisihan extends State<Step14PenyelesaianPerselisih
             actions: [
               CupertinoButton(
                 onPressed: (){},
-                child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
+                child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
               )
             ]
         ),
@@ -62,25 +67,33 @@ class _Step14PenyelesaianPerselisihan extends State<Step14PenyelesaianPerselisih
                         contentPadding: EdgeInsets.zero,
                         title: Text('Profile Perusahaan Pialang Berjangka', style: GoogleFonts.inter(fontSize: 16.0)),
                         value: true,
-                        onChanged:(bool? value) {},
+                        onChanged:(bool? value) {
+                          CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Profile Perusahaan Pialang Berjangka", children: [
+                            Text(profilePerusahaanPialang)
+                          ]);
+                        },
                       ),
-                      CheckboxListTile(
-                        contentPadding: EdgeInsets.zero,
-                        title: Text('Simulasi Trading', style: GoogleFonts.inter(fontSize: 16.0)),
-                        value: true,
-                        onChanged:(bool? value) {},
-                      ),
-                      CheckboxListTile(
-                        contentPadding: EdgeInsets.zero,
-                        title: Text('Pernyataaan Telah Berpengalaman', style: GoogleFonts.inter(fontSize: 16.0)),
-                        value: true,
-                        onChanged:(bool? value) {},
-                      ),
+                      // CheckboxListTile(
+                      //   contentPadding: EdgeInsets.zero,
+                      //   title: Text('Simulasi Trading', style: GoogleFonts.inter(fontSize: 16.0)),
+                      //   value: true,
+                      //   onChanged:(bool? value) {},
+                      // ),
+                      // CheckboxListTile(
+                      //   contentPadding: EdgeInsets.zero,
+                      //   title: Text('Pernyataaan Telah Berpengalaman', style: GoogleFonts.inter(fontSize: 16.0)),
+                      //   value: true,
+                      //   onChanged:(bool? value) {},
+                      // ),
                       CheckboxListTile(
                         contentPadding: EdgeInsets.zero,
                         title: Text('Pernyataaan Pengungkapan', style: GoogleFonts.inter(fontSize: 16.0)),
                         value: true,
-                        onChanged:(bool? value) {},
+                        onChanged:(bool? value) {
+                          CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Pernyataaan Pengungkapan", children: [
+                            Text(pernyataanPengungkapan) 
+                          ]);
+                        },
                       ),
                       CheckboxListTile(
                         contentPadding: EdgeInsets.zero,
@@ -92,7 +105,11 @@ class _Step14PenyelesaianPerselisihan extends State<Step14PenyelesaianPerselisih
                         contentPadding: EdgeInsets.zero,
                         title: Text('Dokumen Pemberitahuan Adanya Resiko', style: GoogleFonts.inter(fontSize: 16.0)),
                         value: true,
-                        onChanged:(bool? value) {},
+                        onChanged:(bool? value) {
+                          CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Pernyataaan Pengungkapan", children: [
+                            Text(dokumenPemberitahuanResiko)
+                          ]);
+                        },
                       ),
                       CheckboxListTile(
                         contentPadding: EdgeInsets.zero,
@@ -100,18 +117,18 @@ class _Step14PenyelesaianPerselisihan extends State<Step14PenyelesaianPerselisih
                         value: true,
                         onChanged:(bool? value) {},
                       ),
-                      CheckboxListTile(
-                        contentPadding: EdgeInsets.zero,
-                        title: Text('Kode Akses', style: GoogleFonts.inter(fontSize: 16.0)),
-                        value: true,
-                        onChanged:(bool? value) {},
-                      ),
-                      CheckboxListTile(
-                        contentPadding: EdgeInsets.zero,
-                        title: Text('Pernyataan Sumber Dana Milik Sendiri', style: GoogleFonts.inter(fontSize: 16.0)),
-                        value: true,
-                        onChanged:(bool? value) {},
-                      ),
+                      // CheckboxListTile(
+                      //   contentPadding: EdgeInsets.zero,
+                      //   title: Text('Kode Akses', style: GoogleFonts.inter(fontSize: 16.0)),
+                      //   value: true,
+                      //   onChanged:(bool? value) {},
+                      // ),
+                      // CheckboxListTile(
+                      //   contentPadding: EdgeInsets.zero,
+                      //   title: Text('Pernyataan Sumber Dana Milik Sendiri', style: GoogleFonts.inter(fontSize: 16.0)),
+                      //   value: true,
+                      //   onChanged:(bool? value) {},
+                      // ),
                     ]
                 ),
               ],
@@ -119,14 +136,14 @@ class _Step14PenyelesaianPerselisihan extends State<Step14PenyelesaianPerselisih
           ),
         ),
         bottomNavigationBar: StepUtilities.stepOnlineRegister(
-            size: size,
-            title: "Dokumen Persetujuan",
-            onPressed: (){
-              Get.to(() => const SuccessSubmit());
-            },
-            progressEnd: 4,
-            currentAllPageStatus: 3,
-            progressStart: 4
+          size: size,
+          title: "Dokumen Persetujuan",
+          onPressed: (){
+            Get.to(() => const SuccessSubmit());
+          },
+          progressEnd: 4,
+          currentAllPageStatus: 3,
+          progressStart: 4
         ),
       ),
     );

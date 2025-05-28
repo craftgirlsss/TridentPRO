@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
@@ -10,7 +11,6 @@ import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/components/painters/loading_water.dart';
 import 'package:tridentpro/src/components/textfields/void_textfield.dart';
 import 'package:tridentpro/src/controllers/regol.dart';
-import 'package:tridentpro/src/views/accounts/step_20_pernyataan_pailit.dart';
 import 'package:tridentpro/src/views/accounts/step_6_invest_experience.dart';
 import 'components/step_position.dart';
 
@@ -25,6 +25,7 @@ class _Step19FamilyBappebti extends State<Step19FamilyBappebti> {
 
   final _formKey = GlobalKey<FormState>();
   TextEditingController familyBappebti = TextEditingController();
+  TextEditingController pernyataanPailit = TextEditingController();
   RegolController regolController = Get.put(RegolController());
 
   RxString idPhoto = "".obs;
@@ -33,11 +34,14 @@ class _Step19FamilyBappebti extends State<Step19FamilyBappebti> {
   @override
   void initState() {
     super.initState();
+    familyBappebti.text = regolController.accountModel.value?.keluarga_bursa != null ? regolController.accountModel.value!.keluarga_bursa!.toUpperCase() : "";
+    pernyataanPailit.text = regolController.accountModel.value?.pernyataan_pailit != null ? regolController.accountModel.value!.pernyataan_pailit!.toUpperCase() : "";
   }
 
   @override
   void dispose() {
     familyBappebti.dispose();
+    pernyataanPailit.dispose();
     super.dispose();
   }
 
@@ -85,6 +89,25 @@ class _Step19FamilyBappebti extends State<Step19FamilyBappebti> {
                         }),
                       ]
                     ),
+
+                    UtilitiesWidget.titleContent(
+                        title: "Pernyataan Pailit",
+                        subtitle: "Apakah anda dinyatakan pailit oleh pengadilan?",
+                        children: [
+                          const SizedBox(height: 10),
+                          VoidTextField(controller: pernyataanPailit, fieldName: "Pernyataan Pailit", hintText: "Pernyataan Pailit", labelText: "Pernyataan Pailit", onPressed: (){
+                            CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Apakah anda dinyatakan pailit oleh pengadilan?", children: List.generate(pilihan.length, (i){
+                              return ListTile(
+                                onTap: (){
+                                  Navigator.pop(context);
+                                  pernyataanPailit.text = pilihan[i];
+                                },
+                                title: Text(pilihan[i], style: GoogleFonts.inter()),
+                              );
+                            }));
+                          }),
+                        ]
+                    ),
                   ],
                 ),
               ),
@@ -92,9 +115,17 @@ class _Step19FamilyBappebti extends State<Step19FamilyBappebti> {
             bottomNavigationBar: Obx(
               () => StepUtilities.stepOnlineRegister(
               size: size,
-              title: "Keluarga BAPPEBTI",
+              title: regolController.isLoading.value ? "Loading..." : "Keluarga BAPPEBTI",
               onPressed: regolController.isLoading.value ? null : (){
-                Get.to(() => const Step20PernytaaanPailit());
+                print(familyBappebti.text);
+                print(pernyataanPailit.text);
+                regolController.postPernytaanPailit(keluargaBappebti: familyBappebti.text.toLowerCase(), pailit: pernyataanPailit.text.toLowerCase()).then((result){
+                  if(result){
+                    Get.to(() => const Step6InvestmentExperience());
+                    return;
+                  }
+                  CustomAlert.alertError(message: regolController.responseMessage.value);
+                });
               },
               progressEnd: 4,
               progressStart: 2

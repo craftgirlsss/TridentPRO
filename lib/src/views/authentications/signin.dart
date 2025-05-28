@@ -13,6 +13,7 @@ import 'package:tridentpro/src/components/painters/loading_water.dart';
 import 'package:tridentpro/src/components/textfields/email_textfield.dart';
 import 'package:tridentpro/src/components/textfields/password_textfield.dart';
 import 'package:tridentpro/src/controllers/authentication.dart';
+import 'package:tridentpro/src/views/accounts/test_page.dart';
 import 'package:tridentpro/src/views/authentications/forgot.dart';
 import 'package:tridentpro/src/views/authentications/passcode.dart';
 import 'package:tridentpro/src/views/authentications/signup.dart';
@@ -39,14 +40,16 @@ class _SignInState extends State<SignIn> {
     passwordController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return GestureDetector(
-      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-      child: Stack(
-        children: [
-          Scaffold(
+    return Stack(
+      children: [
+        GestureDetector(
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: Scaffold(
+            resizeToAvoidBottomInset: true,
             body: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
@@ -166,7 +169,9 @@ class _SignInState extends State<SignIn> {
                                 padding: const EdgeInsets.symmetric(vertical: 16),
                                 child: Center(
                                   child: IconButtons.defaultIconButton(
-                                    onPressed: (){},
+                                    onPressed: (){
+                                      Get.to(() => const TestPage());
+                                    },
                                     icon: Bootstrap.google
                                   ),
                                 ),
@@ -181,9 +186,9 @@ class _SignInState extends State<SignIn> {
               ),
             ),
           ),
-          Obx(() => authController.isLoading.value ? LoadingWater() : const SizedBox())
-        ],
-      ),
+        ),
+      Obx(() => authController.isLoading.value ? LoadingWater() : const SizedBox())
+      ],
     );
   }
 }

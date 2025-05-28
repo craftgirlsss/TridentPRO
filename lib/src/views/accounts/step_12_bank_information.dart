@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
@@ -10,6 +11,7 @@ import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/components/containers/utilities.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/components/textfields/name_textfield.dart';
+import 'package:tridentpro/src/components/textfields/number_textfield.dart';
 import 'package:tridentpro/src/components/textfields/phone_textfield.dart';
 import 'package:tridentpro/src/components/textfields/void_textfield.dart';
 import 'package:tridentpro/src/controllers/setting.dart';
@@ -52,12 +54,23 @@ class _Step12BankInformation extends State<Step12BankInformation> {
     super.initState();
     readJsonFile('assets/json/bank.json').then((result){
       resultBank = result;
-      settingController.getBankUser().then((result){
+      settingController.getUserBank().then((result){
         if(!result){
           CustomAlert.alertError(message: settingController.responseMessage.value);
           return;
         }
-
+        if(settingController.userBankModel.value?.response != null || settingController.userBankModel.value?.response?.length != 0){
+          bankNameController.text = settingController.userBankModel.value?.response?[0].name ?? "";
+          rootController.text = settingController.userBankModel.value?.response?[0].branch ?? "";
+          jenisRekening.text = settingController.userBankModel.value?.response?[0].type ?? "";
+          nomorRekening.text = settingController.userBankModel.value?.response?[0].account ?? "";
+          if(settingController.userBankModel.value!.response!.length > 1){
+            bankNameController2.text = settingController.userBankModel.value?.response?[1].name ?? "";
+            rootController2.text = settingController.userBankModel.value?.response?[1].branch ?? "";
+            jenisRekening2.text = settingController.userBankModel.value?.response?[1].type ?? "";
+            nomorRekening2.text = settingController.userBankModel.value?.response?[1].account ?? "";
+          }
+        }
       });
     });
   }
@@ -93,7 +106,11 @@ class _Step12BankInformation extends State<Step12BankInformation> {
           title: "Bank Information",
           actions: [
             CupertinoButton(
-              onPressed: (){},
+              onPressed: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                String? token = prefs.getString('accessToken');
+                print(token);
+              },
               child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
             )
           ]
@@ -146,7 +163,7 @@ class _Step12BankInformation extends State<Step12BankInformation> {
                             );
                           }));
                         }),
-                        PhoneTextField(controller: nomorRekening, fieldName: "Nomor Rekening", hintText: "Nomor Rekening", labelText: "Nomor Rekening"),
+                        NumberTextField(controller: nomorRekening, fieldName: "Nomor Rekening", hintText: "Nomor Rekening", labelText: "Nomor Rekening"),
                         SizedBox(
                           height: 40,
                           width: size.width / 1.7,
@@ -176,15 +193,17 @@ class _Step12BankInformation extends State<Step12BankInformation> {
             ],
           ),
         ),
-        bottomNavigationBar: StepUtilities.stepOnlineRegister(
-          size: size,
-          title: "Bank Information",
-          onPressed: (){
-            Get.to(() => const Step17UploadPhoto());
-          },
-          progressEnd: 4,
-          currentAllPageStatus: 3,
-          progressStart: 2
+        bottomNavigationBar: Obx(
+          () => StepUtilities.stepOnlineRegister(
+            size: size,
+            title: settingController.isLoading.value ? null : "Bank Information",
+            onPressed: settingController.isLoading.value ? null : (){
+              Get.to(() => const Step17UploadPhoto());
+            },
+            progressEnd: 4,
+            currentAllPageStatus: 3,
+            progressStart: 2
+          ),
         ),
       ),
     );

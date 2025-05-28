@@ -351,4 +351,95 @@ class RegolController extends GetxController {
       return false;
     }
   }
+
+
+  // Pernataan Pailit
+  Future<bool> postPernytaanPailit({
+    String? keluargaBappebti,
+    String? pailit
+  }) async {
+    try {
+      isLoading(true);
+      Map<String, dynamic> result = await authService.post("regol/apr_keterangan_pailit", {
+        'app_keterangan_pailit': pailit,
+        'app_keluarga_bursa': keluargaBappebti
+      });
+
+      isLoading(false);
+      print(result);
+      responseMessage(result['message']);
+      if (result['status'] != true) {
+        return false;
+      }
+      return true;
+    } catch (e) {
+      isLoading(false);
+      responseMessage(e.toString());
+      return false;
+    }
+  }
+
+  // Pernataan Pailit
+  Future<bool> postKekayaan({
+    String? annualIncome,
+    String? lokasiRumah,
+    String? njop,
+    String? deposito,
+    String? lainnya
+  }) async {
+    try {
+      isLoading(true);
+      Map<String, dynamic> result = await authService.post("regol/apr_daftar_kekayaan", {
+        'annual_income': annualIncome,
+        'lokasi_rumah': lokasiRumah,
+        'njop': njop,
+        'deposito': deposito,
+        'lainnya': lainnya
+      });
+
+      isLoading(false);
+      print(result);
+      responseMessage(result['message']);
+      if (result['status'] != true) {
+        return false;
+      }
+      return true;
+    } catch (e) {
+      isLoading(false);
+      responseMessage(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> stepDokumenPendukung({String? dokumenPendukung1, String? dokumenPendukung2, String? jenisDokumen}) async {
+    print("Fungsi dokumen pendukung dijalankan");
+    try {
+      Map<String, String> file = {};
+      isLoading(true);
+      Map<String, String> body = {'tipe': jenisDokumen!};
+
+      if(dokumenPendukung1 != null) {
+        file['dokumen'] = dokumenPendukung1;
+      }
+
+      if(dokumenPendukung2 != null) {
+        file['dokumen_lainnya'] = dokumenPendukung2;
+      }
+
+      var result = await authService.multipart("regol/apr_dokumen_pendukung", body, file);
+      isLoading(false);
+      print(result);
+      responseMessage(result['message']);
+      if(result['status'] == false){
+        return false;
+      }
+      print(result);
+      return true;
+
+    } catch (e) {
+      isLoading(false);
+      responseMessage(e.toString());
+      return false;
+    }
+  }
 }

@@ -159,9 +159,9 @@ class _Step6InvestmentExperience extends State<Step6InvestmentExperience> {
                 });
               }
             },
-            progressEnd: 5,
+            progressEnd: 4,
             currentAllPageStatus: 2,
-            progressStart: 4
+            progressStart: 3
           ),
         ),
       ),

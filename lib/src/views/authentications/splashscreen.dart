@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tridentpro/src/components/colors/default.dart';
+import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/controllers/2_factory_auth.dart';
 import 'package:get/get.dart';
 import 'package:tridentpro/src/controllers/home.dart';
 import 'package:tridentpro/src/service/auth_service.dart';
 import 'package:tridentpro/src/views/authentications/onboarding.dart';
+import 'package:tridentpro/src/views/authentications/signin.dart';
 import 'package:tridentpro/src/views/mainpage.dart';
 
 class Splashscreen extends StatefulWidget {
@@ -35,13 +36,21 @@ class _SplashscreenState extends State<Splashscreen> {
         Map<String, dynamic> result = await authService.get("profile/info");
         print(result);
         if(result['statusCode'] == 200){
-          Get.offAll(() => const Mainpage());
-        }else{
-          Get.off(() => const Onboarding());
+          homeController.profile().then((resultProfile){
+            print(resultProfile);
+            if(!resultProfile){
+              CustomAlert.alertError(message: homeController.responseMessage.value, onTap: (){
+                Get.offAll(() => const SignIn());
+              });
+              return;
+            }
+            Get.offAll(() => const Mainpage());
+          });
+          return;
         }
-
+        Get.offAll(() => const SignIn());
       }else{
-        Get.off(() => const Onboarding());
+        Get.offAll(() => const SignIn());
       }
     });
   }

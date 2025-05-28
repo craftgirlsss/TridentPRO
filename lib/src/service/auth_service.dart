@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tridentpro/src/helpers/variables/global_variables.dart';
+import 'package:http_parser/http_parser.dart';
 
 class AuthService extends GetxController {
   String? accessToken;
@@ -82,7 +83,7 @@ class AuthService extends GetxController {
 
       for(var key in file.keys) {
         if(file[key] != "" && file[key] != null) {
-          request.files.add(await http.MultipartFile.fromPath(key, file[key]!));
+          request.files.add(await http.MultipartFile.fromPath(key, file[key]!,  contentType: MediaType('image', 'jpeg')));
         }
       }
 

@@ -8,6 +8,7 @@ import 'package:tridentpro/src/components/containers/utilities.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/components/textfields/descriptive_textfield.dart';
 import 'package:tridentpro/src/components/textfields/number_textfield.dart';
+import 'package:tridentpro/src/controllers/regol.dart';
 import 'package:tridentpro/src/helpers/variables/global_variables.dart';
 import 'package:tridentpro/src/views/accounts/step_11_job_history.dart';
 import 'components/step_position.dart';
@@ -25,8 +26,19 @@ class _Step8IncomeRange extends State<Step8IncomeRange> {
   TextEditingController nilaiNJOP = TextEditingController();
   TextEditingController depositoBank = TextEditingController();
   TextEditingController lainnya = TextEditingController();
+  RegolController regolController = Get.find();
+  RxString selectedIncome = "Antara 100-250 juta".obs;
 
   RxInt selectedValue = 1.obs;
+
+  @override
+  void initState() {
+    super.initState();
+    lokasiRumah.text = regolController.accountModel.value?.kekayaan_rumah_lokasi ?? "";
+    nilaiNJOP.text = regolController.accountModel.value?.kekayaan_njop ?? "";
+    depositoBank.text = regolController.accountModel.value?.kekayaan_deposit ?? "";
+    lainnya.text = regolController.accountModel.value?.kekayaan_lain ?? "";
+  }
 
   @override
   void dispose() {
@@ -83,6 +95,16 @@ class _Step8IncomeRange extends State<Step8IncomeRange> {
                         value: index + 1,
                         groupValue: selectedValue.value,
                         onChanged: (value) {
+                          switch(value){
+                            case 1:
+                              selectedIncome("Antara 100-250 juta");
+                            case 2:
+                              selectedIncome("Antara 250-500 juta");
+                            case 3:
+                              selectedIncome("500 juta");
+                            default:
+                              selectedIncome("-");
+                          }
                           selectedValue(value);
                         },
                       ),
@@ -111,15 +133,27 @@ class _Step8IncomeRange extends State<Step8IncomeRange> {
             ],
           ),
         ),
-        bottomNavigationBar: StepUtilities.stepOnlineRegister(
-          size: size,
-          title: "Annual Income Range",
-          onPressed: (){
-            Get.to(() => const Step11JobHistory());
-          },
-          progressEnd: 5,
-          currentAllPageStatus: 2,
-          progressStart: 5
+        bottomNavigationBar: Obx(
+          () => StepUtilities.stepOnlineRegister(
+            size: size,
+            title: regolController.isLoading.value ? "Loading..." : "Annual Income Range",
+            onPressed: regolController.isLoading.value ? null : (){
+              regolController.postKekayaan(
+                annualIncome: selectedIncome.value,
+                deposito: depositoBank.text,
+                lainnya: lainnya.text,
+                lokasiRumah: lokasiRumah.text,
+                njop: nilaiNJOP.text,
+              ).then((result){
+                if(result){
+                  Get.to(() => const Step11JobHistory());
+                }
+              });
+            },
+            progressEnd: 4,
+            currentAllPageStatus: 2,
+            progressStart: 4
+          ),
         ),
       ),
     );
