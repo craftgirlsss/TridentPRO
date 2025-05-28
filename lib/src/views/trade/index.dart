@@ -166,6 +166,21 @@ class _TradeState extends State<Trade> {
                     shrinkWrap: true,
                     itemCount: accountTrading.length,
                     itemBuilder: (context, index) => GestureDetector(
+                      onLongPress: () {
+                        CustomAlert.alertDialogCustomInfo(title: "Hapus Akun Trading", message: "Apakah anda yakin ingin menghapus akun trading ini?", textButton: "Ya", moreThanOneButton: true, onTap: () {
+                          Get.back();
+                          tradingController.deleteTradingAccount(accountId: accountTrading[index]['id']).then((result) {
+                            if(result['status'] != true) {
+                              CustomAlert.alertError(message: result['message']);
+                              return false;
+                            }
+
+                            accountTrading.removeAt(index);
+                            CustomAlert.alertDialogCustomSuccess(message: "Akun trading berhasil dihapus", onTap: (() { Get.back(); }));
+                            loadTradingAccount();
+                          });
+                        });
+                      },
                       onTap: (){
                         Get.to(() => MarketDetail(login: accountTrading[index]['login']));
                       },
