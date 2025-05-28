@@ -281,7 +281,7 @@ class _MarketDetailState extends State<MarketDetail> {
                 SizedBox(width: 8),
                 TradingProperty.lotButton(),
                 SizedBox(width: 8),
-                Obx(() => TradingProperty.buyButton(price: lastPriceOpen.value, onPressed: () {
+                Obx(() => TradingProperty.buyButton(price: (lastPriceOpen.value + symbolSpread.value), onPressed: () {
                   CustomAlert.alertDialogCustomInfo(title: "Buy", message: "Apakah anda yakin ingin melanjutkan?", onTap: () {
                     Get.back();
                     tradingController.executionOrder(symbol: activeSymbol.value, type: "buy", login: widget.login.toString(), lot: TradingProperty.volumeInit.value.toString()).then((result) {
