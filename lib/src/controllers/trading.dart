@@ -149,6 +149,19 @@ class TradingController extends GetxController {
     }
   }
 
+  Future<Map<String, dynamic>> deleteTradingAccount({required String accountId}) async {
+    try {
+      Map<String, dynamic> result = await authService.post('market/account/delete', {
+        'trade_id': accountId
+      });
+
+      return result;
+      
+    } catch (e) {
+      throw Exception("deleteTradingAccount error: $e");
+    }
+  }
+
   Future<Map<String, dynamic>> executionOrder({required String symbol, required String type, required String login, required String lot, String? price = "0.00"}) async {
     try {
       Map<String, dynamic> result = await authService.post('market/execution/open', {
