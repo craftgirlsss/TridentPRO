@@ -10,6 +10,7 @@ import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/components/painters/loading_water.dart';
 import 'package:tridentpro/src/components/textfields/void_textfield.dart';
 import 'package:tridentpro/src/controllers/regol.dart';
+import 'package:tridentpro/src/views/accounts/step_20_pernyataan_pailit.dart';
 import 'package:tridentpro/src/views/accounts/step_6_invest_experience.dart';
 import 'components/step_position.dart';
 
@@ -93,7 +94,7 @@ class _Step19FamilyBappebti extends State<Step19FamilyBappebti> {
               size: size,
               title: "Keluarga BAPPEBTI",
               onPressed: regolController.isLoading.value ? null : (){
-                Get.to(() => const Step6InvestmentExperience());
+                Get.to(() => const Step20PernytaaanPailit());
               },
               progressEnd: 4,
               progressStart: 2

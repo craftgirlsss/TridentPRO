@@ -320,4 +320,98 @@ class TradingProperty {
       ),
     );
   }
+
+
+  static List<double> calculateRSI(List<double> data, int period) {
+    List<double> rsi = [];
+    List<double> gains = [];
+    List<double> losses = [];
+
+    for (int i = 1; i < data.length; i++) {
+      double change = data[i] - data[i - 1];
+      gains.add(change > 0 ? change : 0);
+      losses.add(change < 0 ? -change : 0);
+    }
+
+    for (int i = 0; i < gains.length; i++) {
+      if (i + 1 < period) {
+        rsi.add(0);
+      } else {
+        double avgGain = gains.sublist(i + 1 - period, i + 1).reduce((a, b) => a + b) / period;
+        double avgLoss = losses.sublist(i + 1 - period, i + 1).reduce((a, b) => a + b) / period;
+
+        double rs = avgLoss == 0 ? 100 : avgGain / avgLoss;
+        rsi.add(100 - (100 / (1 + rs)));
+      }
+    }
+
+    // Tambahkan 0 ke awal biar panjang sama dengan data
+    rsi.insert(0, 0);
+    return rsi;
+  }
+
+  static List<double> calculateWMA(List<double> data, int period) {
+    List<double> wma = [];
+
+    for (int i = 0; i < data.length; i++) {
+      if (i + 1 < period) {
+        wma.add(0);
+      } else {
+        double weightedSum = 0;
+        int weightTotal = 0;
+
+        for (int j = 0; j < period; j++) {
+          int weight = period - j;
+          weightedSum += data[i - j] * weight;
+          weightTotal += weight;
+        }
+
+        wma.add(weightedSum / weightTotal);
+      }
+    }
+
+    return wma;
+  }
+
+  static List<double> calculateEMA(List<double> data, int period) {
+    List<double> ema = [];
+    double multiplier = 2 / (period + 1);
+    double? prevEma;
+
+    for (int i = 0; i < data.length; i++) {
+      if (i + 1 < period) {
+        ema.add(0);
+      } else if (i + 1 == period) {
+        double sum = 0;
+        for (int j = 0; j < period; j++) {
+          sum += data[j];
+        }
+        prevEma = sum / period;
+        ema.add(prevEma);
+      } else {
+        prevEma = (data[i] - prevEma!) * multiplier + prevEma;
+        ema.add(prevEma);
+      }
+    }
+
+    return ema;
+  }
+
+  static List<double> calculateSMA(List<double> data, int period) {
+    List<double> sma = [];
+
+    for (int i = 0; i < data.length; i++) {
+      if (i + 1 < period) {
+        sma.add(0); // Belum cukup data
+      } else {
+        double sum = 0;
+        for (int j = i - period + 1; j <= i; j++) {
+          sum += data[j];
+        }
+        sma.add(sum / period);
+      }
+    }
+
+    return sma;
+  }
 }

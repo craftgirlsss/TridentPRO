@@ -33,8 +33,11 @@ class _MarketDetailState extends State<MarketDetail> {
   RxString activeSymbol = "Loading...".obs;
   RxDouble symbolSpread = 0.0.obs;
   RxDouble lastPriceOpen = 0.0.obs;
+  RxList indicators = ["SMA", "EMA", "RSI", "WMA"].obs;
   // RxDouble lastPriceOpen = 0.0.obs;
   Timer? _timer;
+
+  RxBool isLoading = false.obs;
 
   Future<void> reloadMarket({String? timeframe}) async {
     await tradingController.getMarket(market: activeSymbol.value, timeframe: timeframe).then((result){
@@ -80,7 +83,20 @@ class _MarketDetailState extends State<MarketDetail> {
       }
     });
   }
-  
+
+  void updateLastCandle(OHLCDataModel newCandle) {
+    final lastIndex = _chartData!.length - 1;
+
+    if (_chartData?[lastIndex].date == newCandle.date) {
+      // ✅ Update candle terakhir jika timestamp sama
+      _chartData?[lastIndex] = newCandle;
+    } else {
+      // ✅ Jika timestamp berbeda (jam sudah berubah), tambahkan candle baru
+      _chartData?.add(newCandle);
+    }
+
+    setState(() {}); // Atau notifyListeners kalau pakai state management
+  }
 
   @override
   void initState() {
@@ -190,7 +206,18 @@ class _MarketDetailState extends State<MarketDetail> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              TradingProperty.iconButton(AntDesign.function_outline, (){}),
+                              Obx(
+                                () => isLoading.value ? const SizedBox() : TradingProperty.iconButton(AntDesign.function_outline, (){
+                                  CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Indicators", children: List.generate(indicators.length, (i){
+                                    return ListTile(
+                                      onTap: (){
+                                        Navigator.pop(context);
+                                      },
+                                      title: Text(indicators[i], style: GoogleFonts.inter()),
+                                    );
+                                  }));
+                                }),
+                              ),
                               TradingProperty.iconButton(Icons.edit, (){}),
                               TradingProperty.iconButton(Icons.layers, (){}),
                               TradingProperty.iconButton(Icons.tune, (){}),
@@ -288,7 +315,8 @@ class _MarketDetailState extends State<MarketDetail> {
       primaryXAxis: DateTimeAxis(
         intervalType: DateTimeIntervalType.minutes,
         interval: 180,
-        plotOffset: 20,
+        edgeLabelPlacement: EdgeLabelPlacement.shift,
+        plotOffset: 5,
         dateFormat: DateFormat('dd MMM HH:mm'),
         majorGridLines: MajorGridLines(
           width: 0.5,
@@ -296,6 +324,7 @@ class _MarketDetailState extends State<MarketDetail> {
         ),
       ),
       primaryYAxis: NumericAxis(
+        plotOffset: 10,
         majorGridLines: MajorGridLines(
           width: 0.5,
           color: Colors.grey.shade100,

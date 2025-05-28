@@ -117,9 +117,9 @@ class _Step8IncomeRange extends State<Step8IncomeRange> {
           onPressed: (){
             Get.to(() => const Step11JobHistory());
           },
-          progressEnd: 3,
+          progressEnd: 5,
           currentAllPageStatus: 2,
-          progressStart: 3
+          progressStart: 5
         ),
       ),
     );
