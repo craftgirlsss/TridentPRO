@@ -4,15 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
+import 'package:tridentpro/src/components/buttons/outlined_button.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/components/painters/loading_water.dart';
 import 'package:tridentpro/src/controllers/trading.dart';
 import 'package:tridentpro/src/views/trade/components/chart_section.dart';
 import 'package:get/get.dart';
+import 'package:tridentpro/src/views/trade/trading_order_history.dart';
+
+import 'deriv_chart_page.dart';
 
 class MarketDetail extends StatefulWidget {
   final int login;
@@ -64,7 +69,7 @@ class _MarketDetailState extends State<MarketDetail> {
           widget: TradingProperty.buildPriceBox(lastPriceOpen.value, Colors.green),
           coordinateUnit: CoordinateUnit.point,
           region: AnnotationRegion.chart,
-          x: tradingController.ohlcData.last.date,
+          x: tradingController.ohlcData.last.date?.add(Duration(minutes: 40)),
           y: lastPriceOpen.value,
           horizontalAlignment: ChartAlignment.near
         );
@@ -74,7 +79,7 @@ class _MarketDetailState extends State<MarketDetail> {
           widget: TradingProperty.buildPriceBox(lastPriceOpen.value + symbolSpread.value, Colors.red),
           coordinateUnit: CoordinateUnit.point,
           region: AnnotationRegion.chart,
-          x: tradingController.ohlcData.last.date,
+          x: tradingController.ohlcData.last.date?.add(Duration(minutes: 40)),
           y: lastPriceOpen.value + symbolSpread.value,
           horizontalAlignment: ChartAlignment.near
         );
@@ -104,11 +109,11 @@ class _MarketDetailState extends State<MarketDetail> {
     Future.delayed(Duration.zero, () async{
       tradingController.isLoading(true);
       await tradingController.getSymbols().then((result){
-        if(result.isNotEmpty ){
-          activeSymbol.value = result[0]['symbol'];
-          TradingProperty.volumeInit.value = double.parse(result[0]['volume_min'].toString());
-          TradingProperty.volumeMin.value = double.parse(result[0]['volume_min'].toString());
-          TradingProperty.volumeMax.value = double.parse(result[0]['volume_max'].toString());
+        if(result.isNotEmpty){
+          activeSymbol(result[0]['symbol']);
+          TradingProperty.volumeInit(double.parse(result[0]['volume_min'].toString()));
+          TradingProperty.volumeMin(double.parse(result[0]['volume_min'].toString()));
+          TradingProperty.volumeMax(double.parse(result[0]['volume_max'].toString()));
         }
       });
 
@@ -133,12 +138,28 @@ class _MarketDetailState extends State<MarketDetail> {
     return Stack(
       children: [
         Scaffold(
-          appBar: CustomAppBar.defaultAppBar(title: widget.login.toString(), autoImplyLeading: true),
+          appBar: CustomAppBar.defaultAppBar(title: widget.login.toString(), autoImplyLeading: true, actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: SizedBox(
+                height: 30,
+                child: CustomOutlinedButton.defaultOutlinedButton(
+                  onPressed: () async {
+                    SharedPreferences prefs = await SharedPreferences.getInstance();
+                    String? access = prefs.getString('accessToken');
+                    print(access);
+                    Get.to(() => TradingOrderHistory(accountID: widget.login.toString()));
+                  },
+                  title: "History"
+                ),
+              ),
+            )
+          ]),
           body: SingleChildScrollView(
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 0),
                   child: Row(
                       children: [
                         Row(
@@ -221,7 +242,9 @@ class _MarketDetailState extends State<MarketDetail> {
                               TradingProperty.iconButton(Icons.edit, (){}),
                               TradingProperty.iconButton(Icons.layers, (){}),
                               TradingProperty.iconButton(Icons.tune, (){}),
-                              TradingProperty.iconButton(Icons.fullscreen, (){}),
+                              TradingProperty.iconButton(Icons.fullscreen, (){
+                                Get.to(() => DerivChartPage(login: widget.login));
+                              }),
                             ],
                           ),
                         )
@@ -235,7 +258,8 @@ class _MarketDetailState extends State<MarketDetail> {
                 Obx(
                   () => tradingController.isLoading.value ? Container(
                     width: size.width,
-                    height: size.height / 1.35,
+                    // height: size.height / 1.35,
+                    height: double.maxFinite,
                     decoration: BoxDecoration(border: Border.all(color: CustomColor.textThemeDarkSoftColor)),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -250,9 +274,9 @@ class _MarketDetailState extends State<MarketDetail> {
                     width: size.width,
                     height: size.height / 1.4,
                     decoration: BoxDecoration(border: Border.all(color: CustomColor.textThemeDarkSoftColor)),
-                    child: Obx(() => buildHiloOpenClose(maximumPrice: tradingController.maxPrice.value, minimumPrice: tradingController.minPrice.value))
+                    child: Obx(() => buildHiloOpenCloseOHLC(maximumPrice: tradingController.maxPrice.value, minimumPrice: tradingController.minPrice.value))
                   ) : const SizedBox(),
-                )
+                ),
                 // End of Chart Section
               ],
             ),
@@ -271,7 +295,6 @@ class _MarketDetailState extends State<MarketDetail> {
                         CustomAlert.alertError(message: result['message']);
                         return false;
                       }
-
                       CustomAlert.alertDialogCustomSuccess(message: result['message'], onTap: () {
                         Get.back();
                       });
@@ -352,6 +375,57 @@ class _MarketDetailState extends State<MarketDetail> {
         maximum: maximumPrice,
       ),
       series: TradingProperty.buildHiloOpenCloseSeriesAPI(chartData: _chartData),
+      trackballBehavior: _trackballBehavior,
+    );
+  }
+
+
+  /// Returns the cartesian High-low-open-close chart.
+  SfCartesianChart buildHiloOpenCloseOHLC({double? minimumPrice, double? maximumPrice, DateTime? dateMax, DateTime? dateMin}) {
+    return SfCartesianChart(
+      annotations: <CartesianChartAnnotation>[_priceBox!, _priceBoxSell!],
+      plotAreaBorderWidth: 10,
+      zoomPanBehavior: TradingProperty.zoomPan,
+      primaryXAxis: DateTimeAxis(
+        intervalType: DateTimeIntervalType.minutes,
+        interval: 180,
+        edgeLabelPlacement: EdgeLabelPlacement.shift,
+        plotOffset: 5,
+        dateFormat: DateFormat('dd MMM HH:mm'),
+        majorGridLines: MajorGridLines(
+          width: 0.5,
+          color: Colors.grey.shade100,
+        ),
+      ),
+      primaryYAxis: NumericAxis(
+        plotOffset: 10,
+        majorGridLines: MajorGridLines(
+          width: 0.5,
+          color: Colors.grey.shade100,
+        ),
+        plotBands: <PlotBand>[
+          PlotBand(
+            isVisible: true,
+            start: lastPriceOpen.value,
+            end: lastPriceOpen.value,
+            borderColor: Colors.green,
+            borderWidth: 1,
+          ),
+          PlotBand(
+            isVisible: true,
+            start: lastPriceOpen.value + symbolSpread.value,
+            end: lastPriceOpen.value + symbolSpread.value,
+            borderColor: Colors.red,
+            borderWidth: 1,
+          ),
+        ],
+        opposedPosition: true,
+        borderColor: Colors.black12,
+        labelFormat: r'${value}',
+        minimum: minimumPrice,
+        maximum: maximumPrice,
+      ),
+      series: TradingProperty.buildCandleSeries(chartCandleData: _chartData),
       trackballBehavior: _trackballBehavior,
     );
   }

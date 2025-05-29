@@ -219,34 +219,23 @@ class TradingProperty {
     ];
   }
 
-  // OHLC Series
-  static List<HiloOpenCloseSeries<ChartSampleData, DateTime>> buildHiloOpenCloseSeries({List<ChartSampleData>? chartData}) {
-    return <HiloOpenCloseSeries<ChartSampleData, DateTime>>[
-      HiloOpenCloseSeries<ChartSampleData, DateTime>(
-        dataSource: chartData,
-        xValueMapper: (ChartSampleData sales, _) => sales.x as DateTime,
-        lowValueMapper: (ChartSampleData data, int index) => data.low,
-        highValueMapper: (ChartSampleData data, int index) => data.high,
-        openValueMapper: (ChartSampleData data, int index) => data.open,
-        closeValueMapper: (ChartSampleData data, int index) => data.close,
-        showIndicationForSameValues: true,
-        name: 'AAPL',
-      ),
-    ];
-  }
-
   // Candle Series
-  static List<CartesianSeries<ChartCandleSampleData, int>> buildCandleSeries({List<ChartCandleSampleData>? chartCandleData}) {
-    return <CartesianSeries<ChartCandleSampleData, int>>[
-      CandleSeries<ChartCandleSampleData, int>(
-          dataSource: chartCandleData,
-          xValueMapper: (ChartCandleSampleData data, int index) => data.x,
-          highValueMapper: (ChartCandleSampleData data, int index) => data.high,
-          lowValueMapper: (ChartCandleSampleData data, int index) => data.low,
-          openValueMapper: (ChartCandleSampleData data, int index) => data.open,
-          closeValueMapper: (ChartCandleSampleData data, int index) => data.close,
-          width: 0.8,
-          spacing: 0.2
+  static List<CartesianSeries<OHLCDataModel, DateTime>> buildCandleSeries({List<OHLCDataModel>? chartCandleData}) {
+    return <CartesianSeries<OHLCDataModel, DateTime>>[
+      CandleSeries<OHLCDataModel, DateTime>(
+        dataSource: chartCandleData,
+        xValueMapper: (OHLCDataModel data, int index) => data.date,
+        highValueMapper: (OHLCDataModel data, int index) => data.high,
+        lowValueMapper: (OHLCDataModel data, int index) => data.low,
+        openValueMapper: (OHLCDataModel data, int index) => data.open,
+        closeValueMapper: (OHLCDataModel data, int index) => data.close,
+        width: 1,
+        borderRadius: BorderRadius.zero,
+        spacing: 0.1,
+        isVisibleInLegend: true,
+        enableSolidCandles: true,
+        bearColor: Colors.red,
+        bullColor: Colors.green,
       )
     ];
   }

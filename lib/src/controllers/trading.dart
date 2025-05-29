@@ -1,6 +1,5 @@
-import 'dart:convert';
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:tridentpro/src/controllers/2_factory_auth.dart';
 import 'package:tridentpro/src/controllers/authentication.dart';
 import 'package:tridentpro/src/models/trades/ohlc_models.dart';
@@ -21,6 +20,7 @@ class TradingController extends GetxController {
   RxString responseMessage = "".obs;
   Rxn<OHLCModels> ohlcModels = Rxn<OHLCModels>();
   RxList<OHLCDataModel> ohlcData = <OHLCDataModel>[].obs;
+  RxList<Candle> ohlcDataDeriv = <Candle>[].obs;
   Rxn<TradingAccountModels> tradingAccountModels = Rxn<TradingAccountModels>();
   TwoFactoryAuth twoFactoryAuth = Get.find();
   AuthController authController = Get.find();
@@ -46,7 +46,7 @@ class TradingController extends GetxController {
     }
   }
   
-  // Status Order API Driver
+  /// Get Market History SyncFusion
   Future<bool> getMarket({String? market, String? timeframe}) async {
     try {
       market = market ?? "-";
@@ -77,6 +77,60 @@ class TradingController extends GetxController {
 
     } catch (e) {
       throw Exception("getMarket error: $e");
+    }
+  }
+
+
+  /// Get Market History for Deriv Chart with real-time updates
+  Future<bool> getMarketForDerivChart({String? market, String? timeframe}) async {
+    try {
+      market = market ?? "GOLDUD";
+      timeframe = timeframe ?? "H1";
+      
+      final Map<String, dynamic> result = await authService.get(
+        "market/price-history?symbol=$market&timeframe=$timeframe"
+      );
+      
+      if(result['status'] != true) {
+        return false;
+      }
+
+      final List<dynamic> json = result['response']
+        .map((e) => e as Map<String, dynamic>)
+        .toList();
+
+      // Create a new list for the candles
+      List<Candle> newCandles = [];
+      
+      // Process the new data
+      for(var i in json) {
+        try {
+          final candle = Candle(
+            epoch: DateTime.parse(i['date']).millisecondsSinceEpoch ~/ 1000,
+            open: double.parse(i['open'].toString()),
+            high: double.parse(i['high'].toString()),
+            low: double.parse(i['low'].toString()),
+            close: double.parse(i['close'].toString()),
+          );
+          newCandles.add(candle);
+        } catch (e) {
+          print("Error processing candle data: $e");
+          continue;
+        }
+      }
+
+      // Sort the new candles by epoch
+      newCandles.sort((a, b) => a.epoch.compareTo(b.epoch));
+      
+      // Update the observable list with the new data
+      ohlcDataDeriv.clear();
+      ohlcDataDeriv.addAll(newCandles);
+      
+      // print("Current number of candles: ${ohlcDataDeriv.length}");
+      return true;
+    } catch (e) {
+      print("Error in getMarketForDerivChart: $e");
+      return false;
     }
   }
 
