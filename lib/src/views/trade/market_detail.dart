@@ -118,7 +118,7 @@ class _MarketDetailState extends State<MarketDetail> {
       });
 
       await reloadMarket();
-      _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+      _timer = Timer.periodic(Duration(seconds: 3), (timer) {
         reloadMarket();
       });
       tradingController.isLoading(false);
@@ -148,7 +148,7 @@ class _MarketDetailState extends State<MarketDetail> {
                     SharedPreferences prefs = await SharedPreferences.getInstance();
                     String? access = prefs.getString('accessToken');
                     print(access);
-                    Get.to(() => TradingOrderHistory(accountID: widget.login.toString()));
+                    Get.to(() => TradingOrderHistory(accountID: widget.login));
                   },
                   title: "History"
                 ),

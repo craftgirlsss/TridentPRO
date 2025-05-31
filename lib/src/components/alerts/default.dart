@@ -114,6 +114,26 @@ class CustomAlert {
     );
   }
 
+
+  static alertDialogCustomInfoButton({Function()? onTap, String? message, String? title, List<Widget>? widgets}){
+    return Get.defaultDialog(
+        backgroundColor: CupertinoColors.lightBackgroundGray,
+        radius: 30,
+        barrierDismissible: false,
+        title: "",
+        content: Column(
+          children: [
+            const Icon(CupertinoIcons.info, size: 60, color: Colors.black87),
+            const SizedBox(height: 10),
+            Text(title ?? "Berhasil", style: const TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold),),
+            const SizedBox(height: 5),
+            Text(message ?? "Berhasil", style: const TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: Colors.black54), textAlign: TextAlign.center)
+          ],
+        ),
+        actions: widgets
+    );
+  }
+
   static alertError({Function()? onTap, String? message, String? title}){
     return Get.defaultDialog(
         backgroundColor: CupertinoColors.lightBackgroundGray,

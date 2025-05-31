@@ -15,6 +15,7 @@ import 'package:tridentpro/src/components/textfields/password_textfield.dart';
 import 'package:tridentpro/src/controllers/authentication.dart';
 import 'package:tridentpro/src/views/accounts/test_page.dart';
 import 'package:tridentpro/src/views/authentications/forgot.dart';
+import 'package:tridentpro/src/views/authentications/onboarding.dart';
 import 'package:tridentpro/src/views/authentications/passcode.dart';
 import 'package:tridentpro/src/views/authentications/signup.dart';
 
@@ -133,7 +134,7 @@ class _SignInState extends State<SignIn> {
                                     if(_formKey.currentState!.validate()){
                                       authController.login(email: emailController.text, password: passwordController.text).then((result){
                                         if(result){
-                                          Get.to(() => const Passcode());
+                                          Get.offAll(() => Onboarding());
                                         }else{
                                           CustomAlert.alertError(message: authController.responseMessage.value);
                                         }

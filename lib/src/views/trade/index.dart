@@ -7,6 +7,7 @@ import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.da
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/controllers/home.dart';
 import 'package:tridentpro/src/controllers/trading.dart';
+import 'package:tridentpro/src/views/trade/deriv_chart_page.dart';
 import 'package:tridentpro/src/views/trade/market_detail.dart';
 
 class Trade extends StatefulWidget {
@@ -182,7 +183,41 @@ class _TradeState extends State<Trade> {
                         });
                       },
                       onTap: (){
-                        Get.to(() => MarketDetail(login: accountTrading[index]['login']));
+                        CustomAlert.alertDialogCustomInfoButton(
+                          title: "Pilih Chart View",
+                          message: "Terdapat 2 pilhan View untuk chart",
+                          widgets: [
+                            SizedBox(
+                              width: 120,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  shape: const StadiumBorder(),
+                                  elevation: 5,
+                                  backgroundColor: CustomColor.defaultColor
+                                ),
+                                onPressed: (){
+                                  Get.back();
+                                  Get.to(() => DerivChartPage(login: accountTrading[index]['login']));
+                                },
+                                child: Text("Deriv Chart", style: GoogleFonts.inter(color: Colors.white), textAlign: TextAlign.center)),
+                            ),
+
+                            SizedBox(
+                              width: 120,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    shape: const StadiumBorder(),
+                                    elevation: 5,
+                                    backgroundColor: CustomColor.defaultColor
+                                ),
+                                onPressed: (){
+                                  Get.back();
+                                  Get.to(() => MarketDetail(login: accountTrading[index]['login']));
+                                },
+                                child: Text("Synfusion Chart", style: GoogleFonts.inter(color: Colors.white), textAlign: TextAlign.center)),
+                            ),
+                          ]
+                        );
                       },
                       child: StockTile(
                         login: accountTrading[index]['login'].toString(),

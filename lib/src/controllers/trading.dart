@@ -6,6 +6,8 @@ import 'package:tridentpro/src/models/trades/ohlc_models.dart';
 import 'package:tridentpro/src/models/trades/trading_account_models.dart';
 import 'package:tridentpro/src/service/auth_service.dart';
 
+import '../models/trades/trading_order_history_model.dart';
+
 class OHLCDataModel {
   DateTime? date;
   double? open;
@@ -22,6 +24,7 @@ class TradingController extends GetxController {
   RxList<OHLCDataModel> ohlcData = <OHLCDataModel>[].obs;
   RxList<Candle> ohlcDataDeriv = <Candle>[].obs;
   Rxn<TradingAccountModels> tradingAccountModels = Rxn<TradingAccountModels>();
+  Rxn<TradingOrderHistoryModel> tradingHistoryModel = Rxn<TradingOrderHistoryModel>();
   TwoFactoryAuth twoFactoryAuth = Get.find();
   AuthController authController = Get.find();
   AuthService authService = AuthService();
@@ -228,6 +231,20 @@ class TradingController extends GetxController {
 
       return result;
       
+    } catch (e) {
+      throw Exception("executionOrder error: $e");
+    }
+  }
+
+  Future<Map<String, dynamic>> tradeHistory({required String login}) async {
+    print("Eksekusi trade history dijalankan");
+    isLoading(true);
+    try {
+      Map<String, dynamic> result = await authService.get('market/trade-history?login=$login');
+      tradingHistoryModel(TradingOrderHistoryModel.fromJson(result));
+      isLoading(false);
+      print(result);
+      return result;
     } catch (e) {
       throw Exception("executionOrder error: $e");
     }

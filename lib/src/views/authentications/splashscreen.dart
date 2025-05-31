@@ -5,7 +5,6 @@ import 'package:tridentpro/src/controllers/2_factory_auth.dart';
 import 'package:get/get.dart';
 import 'package:tridentpro/src/controllers/home.dart';
 import 'package:tridentpro/src/service/auth_service.dart';
-import 'package:tridentpro/src/views/authentications/onboarding.dart';
 import 'package:tridentpro/src/views/authentications/signin.dart';
 import 'package:tridentpro/src/views/mainpage.dart';
 

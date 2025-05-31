@@ -2,13 +2,14 @@ import 'dart:async';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
+import 'package:tridentpro/src/components/buttons/outlined_button.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/controllers/trading.dart';
+import 'package:tridentpro/src/views/trade/trading_order_history.dart';
 
 import 'components/chart_section.dart';
 
@@ -32,7 +33,6 @@ class _DerivChartPageState extends State<DerivChartPage> {
   RxList indicators = ["SMA", "EMA", "RSI", "WMA"].obs;
 
   void _handleBuy() {
-    // TODO: Implement buy logic
     Get.snackbar(
       'Buy Order',
       'Placing buy order for $currentSymbol\nLot Size: ${lotSize.value}\nPrice: ${currentPrice.value}',
@@ -42,7 +42,6 @@ class _DerivChartPageState extends State<DerivChartPage> {
   }
 
   void _handleSell() {
-    // TODO: Implement sell logic
     Get.snackbar(
       'Sell Order',
       'Placing sell order for $currentSymbol\nLot Size: ${lotSize.value}\nPrice: ${currentPrice.value}',
@@ -188,28 +187,6 @@ class _DerivChartPageState extends State<DerivChartPage> {
       appBar: AppBar(
         title: Text(currentSymbol),
         actions: [
-          Obx(() => Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Center(
-              child: Text(
-                'Price: ${currentPrice.value.toStringAsFixed(2)}',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: currentPrice.value >= 0 ? Colors.green : Colors.red,
-                  fontWeight: FontWeight.bold
-                ),
-              ),
-            ),
-          )),
-          Obx(() => Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Center(
-              child: Text(
-                'Candles: ${candleCount.value}',
-                style: const TextStyle(fontSize: 14),
-              ),
-            ),
-          )),
           Obx(() => isLoading.value 
             ? const Padding(
                 padding: EdgeInsets.all(16.0),
@@ -219,8 +196,16 @@ class _DerivChartPageState extends State<DerivChartPage> {
                   child: CircularProgressIndicator(strokeWidth: 2),
                 ),
               )
-            : const SizedBox()
+            : SizedBox(
+            height: 30,
+            child: CustomOutlinedButton.defaultOutlinedButton(
+              onPressed: ()  {
+                Get.to(() => TradingOrderHistory(accountID: widget.login));
+              },
+              title: "History"
+            )),
           ),
+          const SizedBox(width: 10)
         ],
       ),
       body: Column(

@@ -19,12 +19,13 @@ class NameTextField extends StatefulWidget {
 
 class _NameTextFieldState extends State<NameTextField> {
   RxBool isName = false.obs;
+  RxBool isLoading = false.obs;
 
   @override
   void initState() {
     super.initState();
     if((widget.controller?.text.length ?? 0) >= 1){
-      isName(true);
+        isName(true);
     }
   }
 
@@ -33,7 +34,7 @@ class _NameTextFieldState extends State<NameTextField> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Obx(
-        () => TextFormField(
+        () => isLoading.value ? const SizedBox() : TextFormField(
           readOnly: widget.readOnly ?? false,
           controller: widget.controller,
           autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -43,7 +44,7 @@ class _NameTextFieldState extends State<NameTextField> {
           style: GoogleFonts.inter(),
           cursorColor: CustomColor.defaultColor,
           validator: (value) {
-            if(widget.useValidator != null){
+            if(widget.useValidator == true){
               if (value == null || value.isEmpty) {
                 return 'Mohon isikan ${widget.fieldName}';
               }else if(!isName.value){
@@ -62,10 +63,10 @@ class _NameTextFieldState extends State<NameTextField> {
             labelText: widget.labelText,
             labelStyle: const TextStyle(color: CustomColor.textThemeDarkSoftColor),
             filled: false,
-            suffix: AnimatedContainer(
+            suffix: widget.useValidator == false ? const SizedBox() : AnimatedContainer(
               duration: const Duration(milliseconds: 500),
               padding: const EdgeInsets.all(2),
-              decoration:  BoxDecoration(
+              decoration: BoxDecoration(
                 color: isName.value == false ? Colors.red : CustomColor.defaultColor,
                 shape: BoxShape.circle),
               child: isName.value == false ? const Icon(Icons.close, color: Colors.white, size: 16) : const Icon(Icons.done, color: Colors.white, size: 16),
