@@ -87,10 +87,18 @@ class SettingController extends GetxController{
   }
 
   // Pernataan Pailit
-  Future<bool> withdrawal() async {
+  Future<bool> withdrawal({
+    String? bankUserID,
+    String? tradingID,
+    String? amount
+  }) async {
     try {
       isLoading(true);
-      Map<String, dynamic> result = await authService.get("transaction/deposit");
+      Map<String, dynamic> result = await authService.post("transaction/deposit", {
+        'account': tradingID,
+        'amount': amount,
+        'bank_user': bankUserID
+      });
       isLoading(false);
       print(result);
       responseMessage(result['message']);

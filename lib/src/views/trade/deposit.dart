@@ -128,13 +128,13 @@ class _DepositState extends State<Deposit> {
                       ).then((result){
                         if(result){
                           CustomAlert.alertDialogCustomSuccess(message: settingController.responseMessage.value, onTap: (){
-                            Get.back();
+                          Get.back();
                           });
                           isLoading(false);
                           return;
                         }
-                        CustomAlert.alertError(message: settingController.responseMessage.value);
                         isLoading(false);
+                        CustomAlert.alertError(message: settingController.responseMessage.value);
                       });
                     }
                   }

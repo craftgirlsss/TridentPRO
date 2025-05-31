@@ -48,7 +48,7 @@ class _MainpageState extends State<Mainpage> {
                 label: LanguageGlobalVar.HOME.tr,
               ),
               BottomNavigationBarItem(
-                icon: Icon(Clarity.lightbulb_solid),
+                icon: Icon(BoxIcons.bx_dollar),
                 label: LanguageGlobalVar.TRADING_ACCOUNT.tr,
               ),
               BottomNavigationBarItem(
