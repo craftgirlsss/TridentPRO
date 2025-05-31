@@ -78,27 +78,33 @@ class _WithdrawalState extends State<Withdrawal> {
           actions: [
             SizedBox(
               height: 30,
-              child: CustomOutlinedButton.defaultOutlinedButton(
-                title: "Submit",
-                onPressed: (){
-                  isLoading(true);
-                  print("Trading ID: ${selectedTradingID.value}");
-                  print("Bank User ID: ${selectedBankUserID.value}");
-                  print("Amount: ${myAmount.text}");
-                  if(_formKey.currentState!.validate()){
-                    settingController.withdrawal().then((resultWD){
-                      if(resultWD){
-                        CustomAlert.alertDialogCustomSuccess(message: settingController.responseMessage.value, onTap: (){
-                          Get.back();
-                        });
+              child: Obx(
+                () => isLoading.value ? CircularProgressIndicator(color: CustomColor.defaultColor) : CustomOutlinedButton.defaultOutlinedButton(
+                  title: "Submit",
+                  onPressed: (){
+                    isLoading(true);
+                    print("Trading ID: ${selectedTradingID.value}");
+                    print("Bank User ID: ${selectedBankUserID.value}");
+                    print("Amount: ${myAmount.text}");
+                    if(_formKey.currentState!.validate()){
+                      settingController.withdrawal(
+                        bankUserID: selectedBankUserID.value,
+                        amount: myAmount.text,
+                        tradingID: selectedTradingID.value
+                      ).then((resultWD){
+                        if(resultWD){
+                          CustomAlert.alertDialogCustomSuccess(message: settingController.responseMessage.value, onTap: (){
+                            Get.back();
+                          });
+                          isLoading(false);
+                          return;
+                        }
                         isLoading(false);
-                        return;
-                      }
-                      isLoading(false);
-                      CustomAlert.alertError(message: settingController.responseMessage.value);
-                    });
+                        CustomAlert.alertError(message: settingController.responseMessage.value);
+                      });
+                    }
                   }
-                }
+                ),
               ),
             ),
             const SizedBox(width: 10)
@@ -143,10 +149,10 @@ class _WithdrawalState extends State<Withdrawal> {
                             return ListTile(
                               onTap: (){
                                 Navigator.pop(context);
-                                myAccountTrading.text = "${akunTradingList[i]['login'].toString()} - \$${myAccountTrading.text = akunTradingList[i]['balance'].toString()}";
+                                myAccountTrading.text = "${akunTradingList[i]['login'].toString()} - \$${akunTradingList[i]['balance'].toString()}";
                                 selectedTradingID(akunTradingList[i]['id']);
                               },
-                              title: Text("${myAccountTrading.text = akunTradingList[i]['login'].toString()} - \$${myAccountTrading.text = akunTradingList[i]['balance'].toString()}", style: GoogleFonts.inter()),
+                              title: Text("${myAccountTrading.text = akunTradingList[i]['login'].toString()} - \$${akunTradingList[i]['balance'].toString()}", style: GoogleFonts.inter()),
                             );
                           }));
                         }),

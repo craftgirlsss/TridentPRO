@@ -11,6 +11,7 @@ import 'package:tridentpro/src/controllers/home.dart';
 import 'package:tridentpro/src/views/authentications/onboarding.dart';
 import 'package:tridentpro/src/views/settings/edit_profile.dart';
 import 'package:tridentpro/src/views/trade/deposit.dart';
+import 'package:tridentpro/src/views/trade/internal_transfer.dart';
 import 'package:tridentpro/src/views/trade/withdrawal.dart';
 
 import 'components/profile_listtile.dart';
@@ -145,7 +146,9 @@ class _SettingsState extends State<Settings> {
                 storageCard("Deposit", Bootstrap.box_arrow_down, (){
                   Get.to(() => const Deposit());
                 }),
-                storageCard("Transfer", BoxIcons.bx_transfer_alt, (){}),
+                storageCard("Transfer", BoxIcons.bx_transfer_alt, (){
+                  Get.to(() => const InternalTransfer());
+                }),
                 storageCard("Documents", Iconsax.document_outline, (){}),
               ],
             ),

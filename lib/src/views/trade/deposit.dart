@@ -212,10 +212,10 @@ class _DepositState extends State<Deposit> {
                             return ListTile(
                               onTap: (){
                                 Navigator.pop(context);
-                                myAccountTrading.text = "${akunTradingList[i]['login'].toString()} - \$${myAccountTrading.text = akunTradingList[i]['balance'].toString()}";
+                                myAccountTrading.text = "${akunTradingList[i]['login'].toString()} - \$${akunTradingList[i]['balance'].toString()}";
                                 selectedTradingID(akunTradingList[i]['id']);
                               },
-                              title: Text("${myAccountTrading.text = akunTradingList[i]['login'].toString()} - \$${myAccountTrading.text = akunTradingList[i]['balance'].toString()}", style: GoogleFonts.inter()),
+                              title: Text("${myAccountTrading.text = akunTradingList[i]['login'].toString()} - \$${akunTradingList[i]['balance'].toString()}", style: GoogleFonts.inter()),
                             );
                           }));
                         }),

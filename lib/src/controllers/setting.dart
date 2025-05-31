@@ -94,10 +94,37 @@ class SettingController extends GetxController{
   }) async {
     try {
       isLoading(true);
-      Map<String, dynamic> result = await authService.post("transaction/deposit", {
+      Map<String, dynamic> result = await authService.post("transaction/withdrawal", {
         'account': tradingID,
         'amount': amount,
         'bank_user': bankUserID
+      });
+      isLoading(false);
+      print(result);
+      responseMessage(result['message']);
+      if (result['status'] != true) {
+        return false;
+      }
+      return true;
+    } catch (e) {
+      isLoading(false);
+      responseMessage(e.toString());
+      return false;
+    }
+  }
+
+  // Pernataan Pailit
+  Future<bool> internalTransfer({
+    String? tradingIDReceiver,
+    String? tradingIDSender,
+    String? amount
+  }) async {
+    try {
+      isLoading(true);
+      Map<String, dynamic> result = await authService.post("transaction/internal-transfer", {
+        'acc_from': tradingIDSender,
+        'acc_to': tradingIDReceiver,
+        'amount': amount
       });
       isLoading(false);
       print(result);
