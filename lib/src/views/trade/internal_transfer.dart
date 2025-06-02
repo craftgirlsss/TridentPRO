@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
@@ -38,6 +39,7 @@ class _InternalTransferState extends State<InternalTransfer> {
     Future.delayed(Duration.zero, (){
       tradingController.getTradingAccountV2().then((resultTrading){
         akunTradingList.value = resultTrading;
+        print(akunTradingList);
       });
     });
   }
@@ -65,7 +67,10 @@ class _InternalTransferState extends State<InternalTransfer> {
               child: Obx(
                 () => isLoading.value ? CircularProgressIndicator(color: CustomColor.defaultColor) : CustomOutlinedButton.defaultOutlinedButton(
                   title: "Submit",
-                  onPressed: (){
+                  onPressed: () async {
+                    SharedPreferences prefs = await SharedPreferences.getInstance();
+                    String? accessToken = prefs.getString('accessToken');
+                    print(accessToken);
                     isLoading(true);
                     print("Trading ID Sender: ${selectedTradingIDSender.value}");
                     print("Trading ID Receiver: ${selectedTradingIDReceiver.value}");
