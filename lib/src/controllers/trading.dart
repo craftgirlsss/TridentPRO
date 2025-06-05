@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:get/get.dart';
 import 'package:tridentpro/src/controllers/2_factory_auth.dart';
 import 'package:tridentpro/src/controllers/authentication.dart';
 import 'package:tridentpro/src/models/trades/ohlc_models.dart';
+import 'package:tridentpro/src/models/trades/open_order_model.dart';
 import 'package:tridentpro/src/models/trades/trading_account_models.dart';
 import 'package:tridentpro/src/service/auth_service.dart';
 
@@ -25,12 +28,14 @@ class TradingController extends GetxController {
   RxList<Candle> ohlcDataDeriv = <Candle>[].obs;
   Rxn<TradingAccountModels> tradingAccountModels = Rxn<TradingAccountModels>();
   Rxn<TradingOrderHistoryModel> tradingHistoryModel = Rxn<TradingOrderHistoryModel>();
+  Rxn<OpenOrderModel> openOrderModel = Rxn<OpenOrderModel>();
   TwoFactoryAuth twoFactoryAuth = Get.find();
   AuthController authController = Get.find();
   AuthService authService = AuthService();
   RxList symbols = [].obs;
   RxDouble minPrice = 0.0.obs;
   RxDouble maxPrice = 0.0.obs;
+  static final Random _random = Random(42);
 
   Future<List<dynamic>> getSymbols({String? market}) async {
     try {
@@ -90,22 +95,15 @@ class TradingController extends GetxController {
       market = market ?? "GOLDUD";
       timeframe = timeframe ?? "H1";
       
-      final Map<String, dynamic> result = await authService.get(
-        "market/price-history?symbol=$market&timeframe=$timeframe"
-      );
+      final Map<String, dynamic> result = await authService.get("market/price-history?symbol=$market&timeframe=$timeframe");
       
       if(result['status'] != true) {
         return false;
       }
 
-      final List<dynamic> json = result['response']
-        .map((e) => e as Map<String, dynamic>)
-        .toList();
-
-      // Create a new list for the candles
+      final List<dynamic> json = result['response'].map((e) => e as Map<String, dynamic>).toList();
       List<Candle> newCandles = [];
-      
-      // Process the new data
+
       for(var i in json) {
         try {
           final candle = Candle(
@@ -121,11 +119,7 @@ class TradingController extends GetxController {
           continue;
         }
       }
-
-      // Sort the new candles by epoch
       newCandles.sort((a, b) => a.epoch.compareTo(b.epoch));
-      
-      // Update the observable list with the new data
       ohlcDataDeriv.clear();
       ohlcDataDeriv.addAll(newCandles);
       
@@ -137,17 +131,37 @@ class TradingController extends GetxController {
     }
   }
 
+  /// Generate a list of sample ticks.
+  static List<Tick> generateTicks({int count = 100}) {
+    final List<Tick> ticks = [];
+    final baseTimestamp = DateTime.now().subtract(Duration(minutes: count)).millisecondsSinceEpoch;
+    double lastQuote = 100;
+
+    for (int i = 0; i < count; i++) {
+      final timestamp = baseTimestamp + i * 60000; // 1 minute intervals
+      // Random walk with some volatility
+      lastQuote += (_random.nextDouble() - 0.5) * 2.0;
+      ticks.add(Tick(
+        epoch: timestamp,
+        quote: lastQuote,
+      ));
+    }
+
+    return ticks;
+  }
+
   // Create Demo Trading API
   Future<bool> getTradingAccount() async {
+    print("GET TRADING AKUN DIJALANKAN");
     try {
       isLoading(true);
-      Map<String, dynamic> result = await authService.post("account/info", {});
+      Map<String, dynamic> result = await authService.get("account/info");
       isLoading(false);
+      print(result);
       if (result['statusCode'] == 200) {
         tradingAccountModels(TradingAccountModels.fromJson(result['response']));
         return true;
       }
-
       responseMessage(result['message']);
       return false;
 
@@ -236,14 +250,24 @@ class TradingController extends GetxController {
     }
   }
 
-  Future<Map<String, dynamic>> tradeHistory({required String login}) async {
-    print("Eksekusi trade history dijalankan");
+  Future<Map<String, dynamic>> closedOrder({required String login}) async {
     isLoading(true);
     try {
       Map<String, dynamic> result = await authService.get('market/trade-history?login=$login');
       tradingHistoryModel(TradingOrderHistoryModel.fromJson(result));
       isLoading(false);
-      print(result);
+      return result;
+    } catch (e) {
+      throw Exception("executionOrder error: $e");
+    }
+  }
+
+  Future<Map<String, dynamic>> openOrder({required String login}) async {
+    isLoading(true);
+    try {
+      Map<String, dynamic> result = await authService.get('market/opened-order?login=$login');
+      openOrderModel(OpenOrderModel.fromJson(result));
+      isLoading(false);
       return result;
     } catch (e) {
       throw Exception("executionOrder error: $e");

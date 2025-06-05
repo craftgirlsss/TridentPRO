@@ -11,6 +11,7 @@ import 'package:tridentpro/src/helpers/variables/global_variables.dart';
 import 'package:tridentpro/src/views/accounts/components/pernyataan_pengungkapan_text.dart';
 import 'package:tridentpro/src/views/accounts/components/profile_perusahaan_pialang_text.dart';
 import 'package:tridentpro/src/views/accounts/step_16_success.dart';
+import 'package:tridentpro/src/views/mainpage.dart';
 import 'components/dokumen_pemberitahuan_resiko_txt.dart';
 import 'components/step_position.dart';
 
@@ -41,13 +42,15 @@ class _Step14PenyelesaianPerselisihan extends State<Step14PenyelesaianPerselisih
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         appBar: CustomAppBar.defaultAppBar(
             autoImplyLeading: true,
             title: "Peraturan",
             actions: [
               CupertinoButton(
-                onPressed: (){},
+                onPressed: (){
+                  Get.offAll(() => const Mainpage());
+                },
                 child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
               )
             ]

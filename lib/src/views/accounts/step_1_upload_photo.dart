@@ -16,6 +16,7 @@ import 'package:tridentpro/src/helpers/handlers/image_picker.dart';
 import 'package:tridentpro/src/helpers/variables/countries.dart';
 import 'package:tridentpro/src/helpers/variables/id_type.dart' show idTypeList;
 import 'package:tridentpro/src/views/accounts/step_2_stored_data.dart';
+import 'package:tridentpro/src/views/mainpage.dart';
 import 'components/step_position.dart';
 
 class Step1UploadPhoto extends StatefulWidget {
@@ -67,13 +68,15 @@ class _Step1UploadPhotoState extends State<Step1UploadPhoto> {
         GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: Scaffold(
-            resizeToAvoidBottomInset: false,
+            resizeToAvoidBottomInset: true,
             appBar: CustomAppBar.defaultAppBar(
               autoImplyLeading: true,
               title: LanguageGlobalVar.PERSONAL_INFORMATION.tr,
               actions: [
                 CupertinoButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    Get.offAll(() => const Mainpage());
+                  },
                   child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
                 )
               ]

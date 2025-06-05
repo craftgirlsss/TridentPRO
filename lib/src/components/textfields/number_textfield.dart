@@ -11,7 +11,8 @@ class NumberTextField extends StatefulWidget {
   final String? fieldName;
   final int? maxLength;
   final TextEditingController? controller;
-  const NumberTextField({super.key, this.hintText, this.labelText, this.controller, this.readOnly, this.fieldName, this.maxLength});
+  final bool? useValidator;
+  const NumberTextField({super.key, this.hintText, this.labelText, this.controller, this.readOnly, this.fieldName, this.maxLength, this.useValidator});
 
   @override
   State<NumberTextField> createState() => _NumberTextFieldState();
@@ -42,51 +43,51 @@ class _NumberTextFieldState extends State<NumberTextField> {
           keyboardType: TextInputType.number,
           cursorColor: CustomColor.defaultColor,
           validator: (value) {
-            int? length = widget.maxLength ?? 1;
-            if (value == null || value.isEmpty) {
-              return 'Mohon isikan ${widget.fieldName}';
-            }else if(!isNumber.value){
-              return 'Mohon isikan ${widget.fieldName} yang benar';
-            }else if(value.length < length){
-              return 'Mohon isikan ${widget.fieldName} dengan jumlah yang benar';
+            if(widget.useValidator == true){
+              if(value == null || value.isEmpty){
+                return 'Mohon isikan ${widget.fieldName}';
+              }else if(!isNumber.value){
+                return 'Mohon isikan ${widget.fieldName} yang benar';
+              }
+              return null;
             }
             return null;
           },
           decoration: InputDecoration(
-              hintText: widget.hintText,
-              hintStyle: GoogleFonts.inter(
-                  color: CustomColor.textThemeDarkSoftColor,
-                  fontSize: 14
-              ),
-              labelText: widget.labelText,
-              labelStyle: const TextStyle(color: CustomColor.textThemeDarkSoftColor),
-              filled: false,
-              suffix: AnimatedContainer(
-                duration: const Duration(milliseconds: 500),
-                padding: const EdgeInsets.all(2),
-                decoration: BoxDecoration(
-                  color: isNumber.value == false ? Colors.red : CustomColor.defaultColor,
-                  shape: BoxShape.circle),
-                child: isNumber.value == false ? const Icon(Icons.close, color: Colors.white, size: 16) : const Icon(Icons.done, color: Colors.white, size: 16),
-              ),
-              focusedBorder: OutlineInputBorder(
+            hintText: widget.hintText,
+            hintStyle: GoogleFonts.inter(
+                color: CustomColor.textThemeDarkSoftColor,
+                fontSize: 14
+            ),
+            labelText: widget.labelText,
+            labelStyle: const TextStyle(color: CustomColor.textThemeDarkSoftColor),
+            filled: false,
+            suffix: widget.useValidator == false ? const SizedBox() : AnimatedContainer(
+              duration: const Duration(milliseconds: 500),
+              padding: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                color: isNumber.value == false ? Colors.red : CustomColor.defaultColor,
+                shape: BoxShape.circle),
+              child: isNumber.value == false ? const Icon(Icons.close, color: Colors.white, size: 16) : const Icon(Icons.done, color: Colors.white, size: 16),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.0),
+              borderSide: BorderSide(
+                  color: CustomColor.defaultColor
+              )
+            ),
+            enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.0),
                 borderSide: BorderSide(
-                    color: CustomColor.defaultColor
+                    color: CustomColor.textThemeDarkSoftColor
                 )
-              ),
-              enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                  borderSide: BorderSide(
-                      color: CustomColor.textThemeDarkSoftColor
-                  )
-              ),
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                  borderSide: BorderSide(
-                      color: CustomColor.textThemeDarkSoftColor
-                  )
-              )
+            ),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0),
+                borderSide: BorderSide(
+                    color: CustomColor.textThemeDarkSoftColor
+                )
+            )
           ),
           onChanged: (value) {
             if(value.length >= (widget.maxLength ?? 0)){

@@ -11,6 +11,7 @@ import 'package:tridentpro/src/components/textfields/number_textfield.dart';
 import 'package:tridentpro/src/controllers/regol.dart';
 import 'package:tridentpro/src/helpers/variables/global_variables.dart';
 import 'package:tridentpro/src/views/accounts/step_11_job_history.dart';
+import 'package:tridentpro/src/views/mainpage.dart';
 import 'components/step_position.dart';
 
 class Step8IncomeRange extends StatefulWidget {
@@ -55,13 +56,15 @@ class _Step8IncomeRange extends State<Step8IncomeRange> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         appBar: CustomAppBar.defaultAppBar(
             autoImplyLeading: true,
             title: "Investment",
             actions: [
               CupertinoButton(
-                onPressed: (){},
+                onPressed: (){
+                  Get.offAll(() => const Mainpage());
+                },
                 child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
               )
             ]

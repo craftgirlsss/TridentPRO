@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/views/trade/closed_position.dart';
 
@@ -20,20 +22,30 @@ class _TradingOrderHistoryState extends State<TradingOrderHistory> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
+          actions: [
+            IconButton(onPressed: () async {
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              String? id = prefs.getString('accessToken');
+              print(id);
+            }, icon: Icon(CupertinoIcons.info))
+          ],
           bottom: TabBar(
             dividerColor: CustomColor.defaultColor,
             automaticIndicatorColorAdjustment: true,
-            labelStyle: GoogleFonts.inter(),
+            indicatorSize: TabBarIndicatorSize.tab,
+            unselectedLabelColor: Colors.black26,
+            indicatorColor: CustomColor.defaultColor,
+            labelStyle: GoogleFonts.inter(color: CustomColor.defaultColor),
             physics: BouncingScrollPhysics(),
             tabs: <Widget>[
-              Tab(icon: Text("Open")),
-              Tab(icon: Text("Closed")),
+              Tab(icon: Text("OPEN")),
+              Tab(icon: Text("CLOSED")),
             ],
           ),
         ),
         body: TabBarView(
           children: [
-            OpenPosition(),
+            OpenPosition(loginID: widget.accountID.toString()),
             ClosedPosition(loginID: widget.accountID)
           ]
         ),

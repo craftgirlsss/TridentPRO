@@ -22,7 +22,7 @@ class _SuccessSubmit extends State<SuccessSubmit> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         body: Container(
           width: double.infinity,
           height: double.maxFinite,

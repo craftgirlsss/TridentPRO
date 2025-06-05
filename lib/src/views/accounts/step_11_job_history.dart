@@ -75,7 +75,7 @@ class _Step11JobHistory extends State<Step11JobHistory> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         appBar: CustomAppBar.defaultAppBar(
             autoImplyLeading: true,
             title: "Job Information",

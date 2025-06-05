@@ -10,7 +10,8 @@ class DescriptiveTextField extends StatefulWidget {
   final bool? readOnly;
   final String? fieldName;
   final TextEditingController? controller;
-  const DescriptiveTextField({super.key, this.hintText, this.labelText, this.controller, this.readOnly, this.fieldName});
+  final bool? useValidator;
+  const DescriptiveTextField({super.key, this.hintText, this.labelText, this.controller, this.readOnly, this.fieldName, this.useValidator});
 
   @override
   State<DescriptiveTextField> createState() => _DescriptiveTextFieldState();
@@ -44,10 +45,13 @@ class _DescriptiveTextFieldState extends State<DescriptiveTextField> {
           style: GoogleFonts.inter(),
           cursorColor: CustomColor.defaultColor,
           validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Mohon isikan ${widget.fieldName}';
-            }else if(!isName.value){
-              return 'Mohon isikan ${widget.fieldName} yang benar';
+            if(widget.useValidator == true){
+              if (value == null || value.isEmpty) {
+                return 'Mohon isikan ${widget.fieldName}';
+              }else if(!isName.value){
+                return 'Mohon isikan ${widget.fieldName} yang benar';
+              }
+              return null;
             }
             return null;
           },
@@ -61,7 +65,7 @@ class _DescriptiveTextFieldState extends State<DescriptiveTextField> {
               labelText: widget.labelText,
               labelStyle: const TextStyle(color: CustomColor.textThemeDarkSoftColor),
               filled: false,
-              suffix: AnimatedContainer(
+              suffix: widget.useValidator == false ? const SizedBox() : AnimatedContainer(
                 duration: const Duration(milliseconds: 500),
                 padding: const EdgeInsets.all(2),
                 decoration:  BoxDecoration(

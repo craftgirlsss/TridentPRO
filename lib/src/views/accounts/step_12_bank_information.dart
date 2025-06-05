@@ -19,6 +19,7 @@ import 'package:tridentpro/src/helpers/handlers/json_file_reader.dart';
 import 'package:tridentpro/src/helpers/variables/countrycurrency.dart';
 import 'package:tridentpro/src/helpers/variables/global_variables.dart';
 import 'package:tridentpro/src/views/accounts/step_17_dokumen_pendukung.dart';
+import 'package:tridentpro/src/views/mainpage.dart';
 import 'components/step_position.dart';
 
 class Step12BankInformation extends StatefulWidget {
@@ -100,16 +101,14 @@ class _Step12BankInformation extends State<Step12BankInformation> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         appBar: CustomAppBar.defaultAppBar(
           autoImplyLeading: true,
           title: "Bank Information",
           actions: [
             CupertinoButton(
               onPressed: () async {
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                String? token = prefs.getString('accessToken');
-                print(token);
+                Get.offAll(() => const Mainpage());
               },
               child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
             )

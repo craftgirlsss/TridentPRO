@@ -7,6 +7,7 @@ import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/helpers/variables/global_variables.dart';
 import 'package:tridentpro/src/views/accounts/step_8_income_range.dart';
+import 'package:tridentpro/src/views/mainpage.dart';
 
 import 'components/step_position.dart';
 
@@ -27,13 +28,15 @@ class _Step7BalanceSources extends State<Step7BalanceSources> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         appBar: CustomAppBar.defaultAppBar(
             autoImplyLeading: true,
             title: "Investment",
             actions: [
               CupertinoButton(
-                onPressed: (){},
+                onPressed: (){
+                  Get.offAll(() => const Mainpage());
+                },
                 child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
               )
             ]

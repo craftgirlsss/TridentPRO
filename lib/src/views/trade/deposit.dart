@@ -64,8 +64,10 @@ class _DepositState extends State<Deposit> {
             CustomAlert.alertError(message: settingController.responseMessage.value);
             return;
           }
-          tradingController.getTradingAccountV2().then((resultTrading){
-            akunTradingList.value = resultTrading;
+          tradingController.getTradingAccount().then((resultTrading){
+            if(!resultTrading){
+              CustomAlert.alertError(message: tradingController.responseMessage.value);
+            }
           });
           selectedBankUserID(settingController.userBankModel.value?.response?[0].id);
           myBankCabang.text = settingController.userBankModel.value?.response?[0].branch ?? "";
@@ -208,14 +210,14 @@ class _DepositState extends State<Deposit> {
                       NameTextField(controller: myBankType, fieldName: "Tipe", hintText: "Tipe", labelText: "Tipe", readOnly: true, useValidator: false),
                       Obx(
                         () => VoidTextField(controller: myAccountTrading, fieldName: "Akun Trading", hintText: "Akun Trading", labelText: "Akun Trading", onPressed: settingController.isLoading.value ? null : () async {
-                          CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Pilih Akun Trading", children: List.generate(akunTradingList.length, (i){
+                          CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Pilih Akun Trading", children: List.generate(tradingController.tradingAccountModels.value?.response.real?.length ?? 0, (i){
                             return ListTile(
                               onTap: (){
                                 Navigator.pop(context);
-                                myAccountTrading.text = "${akunTradingList[i]['login'].toString()} - \$${akunTradingList[i]['balance'].toString()}";
-                                selectedTradingID(akunTradingList[i]['id']);
+                                myAccountTrading.text = "${tradingController.tradingAccountModels.value?.response.real?[i].login} - \$${tradingController.tradingAccountModels.value?.response.real?[i].balance}";
+                                selectedTradingID(tradingController.tradingAccountModels.value?.response.real?[i].id);
                               },
-                              title: Text("${myAccountTrading.text = akunTradingList[i]['login'].toString()} - \$${akunTradingList[i]['balance'].toString()}", style: GoogleFonts.inter()),
+                              title: Text("${tradingController.tradingAccountModels.value?.response.real?[i].login} - \$${tradingController.tradingAccountModels.value?.response.real?[i].balance}", style: GoogleFonts.inter()),
                             );
                           }));
                         }),

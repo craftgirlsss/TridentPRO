@@ -312,7 +312,6 @@ class _MarketDetailState extends State<MarketDetail> {
                         CustomAlert.alertError(message: result['message']);
                         return false;
                       }
-
                       CustomAlert.alertDialogCustomSuccess(message: result['message'], onTap: () {
                         Get.back();
                       });

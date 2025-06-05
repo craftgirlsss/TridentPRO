@@ -9,7 +9,7 @@ import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/controllers/regol.dart';
 import 'package:tridentpro/src/helpers/variables/global_variables.dart';
 import 'package:tridentpro/src/views/accounts/step_19_familly_bappebti.dart';
-import 'package:tridentpro/src/views/accounts/step_6_invest_experience.dart';
+import 'package:tridentpro/src/views/mainpage.dart';
 
 import 'components/step_position.dart';
 
@@ -57,13 +57,15 @@ class _Step5InvestmentGoal extends State<Step5InvestmentGoal> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         appBar: CustomAppBar.defaultAppBar(
             autoImplyLeading: true,
             title: "Investment",
             actions: [
               CupertinoButton(
-                onPressed: (){},
+                onPressed: (){
+                  Get.offAll(() => const Mainpage());
+                },
                 child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
               )
             ]

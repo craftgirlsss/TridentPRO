@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:intl/intl.dart';
 
 class CustomSlideAbleListTile {
-  static Slidable openListTile(BuildContext context, {Function(BuildContext)? onPressedEdit, Function(BuildContext)? onPressedClose, int? index, String? title, String? subtitle}){
+  static Slidable openListTile(BuildContext context, {Function(BuildContext)? onPressedEdit, Function(BuildContext)? onPressedClose, int? index, String? market, String? orderType, String? lot, String? dateTime, dynamic profitLoss, dynamic openPrice, dynamic currentPrice, dynamic commission, dynamic swap, dynamic id, dynamic sl, dynamic tp}){
     return Slidable(
       startActionPane: ActionPane(
         motion: const ScrollMotion(),
@@ -39,25 +38,48 @@ class CustomSlideAbleListTile {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'EURUSD,',
-              style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              'sell 0.01',
-              style: TextStyle(color: Colors.redAccent),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      '$market,',
+                      style: GoogleFonts.inter(color: Colors.black87, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      ' $orderType $lot',
+                      style: GoogleFonts.inter(color: orderType != null ? orderType == "Sell" ? Colors.redAccent : Colors.blue : Colors.black38, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      '$openPrice ',
+                      style: TextStyle(color: Colors.black45),
+                    ),
+                    Icon(Icons.arrow_right_alt, color: Colors.black38),
+                    Text(
+                      ' $currentPrice',
+                      style: TextStyle(color: Colors.black45),
+                    ),
+                  ],
+                ),
+              ],
             ),
             Spacer(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  '2025.04.25 14:46:02',
-                  style: GoogleFonts.inter(color: Colors.grey[400], fontSize: 12),
+                  '$dateTime',
+                  style: GoogleFonts.inter(color: Colors.grey[600], fontSize: 12),
                 ),
                 Text(
-                  '10.40',
-                  style: GoogleFonts.inter(color: Colors.blueAccent, fontSize: 14, fontWeight: FontWeight.bold),
+                  '$profitLoss',
+                  style: GoogleFonts.inter(color: profitLoss != null ? profitLoss >= 0 ? Colors.blueAccent : Colors.red : Colors.black26, fontSize: 14, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -70,14 +92,11 @@ class CustomSlideAbleListTile {
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             child: Column(
               children: [
-                _buildRow('1.14667 → 1.13627', '-'),
+                _buildRow('S / L:', '${sl ?? 0}', 'T / P:', '${tp ?? 0}'),
                 SizedBox(height: 8),
-                _buildRow('S / L:', '-', 'T / P:', '-'),
+                _buildRow('ID:', '#${id ?? 0}'),
                 SizedBox(height: 8),
-                _buildRow('Open:', '2025.04.22 17:22:30'),
-                _buildRow('Id:', '#5393431301'),
-                SizedBox(height: 8),
-                _buildRow('Swap:', '0.00', 'Commission:', '0.00'),
+                _buildRow('Swap:', '${swap ?? 0.00}', 'Commission:', '${commission ?? 0.00}'),
               ],
             ),
           ),
@@ -108,7 +127,7 @@ class CustomSlideAbleListTile {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            marketName ?? 'EURUSD,',
+            marketName ?? '-,',
             style: GoogleFonts.inter(color: Colors.black87, fontWeight: FontWeight.bold),
           ),
           Text(
@@ -159,21 +178,27 @@ class CustomSlideAbleListTile {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
-          child: Row(children: [
-            Text(label1, style: TextStyle(color: Colors.grey)),
-            SizedBox(width: 6),
-            Text(value1, style: TextStyle(color: Colors.black45)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(label1, style: TextStyle(color: Colors.grey)),
+              SizedBox(width: 6),
+              Text(value1, style: TextStyle(color: Colors.black45)),
           ]),
         ),
+        const SizedBox(width: 5),
         if (label2 != null && value2 != null)
           Expanded(
-            child: Row(children: [
-              Text(label2, style: TextStyle(color: Colors.grey)),
-              SizedBox(width: 6),
-              Text(value2, style: TextStyle(color: Colors.black45)),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(label2, style: TextStyle(color: Colors.grey)),
+                SizedBox(width: 6),
+                Text(value2, style: TextStyle(color: Colors.black45)),
             ]),
           )
       ],
     );
   }
 }
+

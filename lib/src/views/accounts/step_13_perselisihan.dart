@@ -10,6 +10,7 @@ import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/components/textfields/void_textfield.dart';
 import 'package:tridentpro/src/helpers/variables/global_variables.dart';
 import 'package:tridentpro/src/views/accounts/step_14_dokumen_persetujuan.dart' show Step14PenyelesaianPerselisihan;
+import 'package:tridentpro/src/views/mainpage.dart';
 import 'components/step_position.dart';
 
 class Step13PenyelesaianPerselisihan extends StatefulWidget {
@@ -43,13 +44,15 @@ class _Step13PenyelesaianPerselisihan extends State<Step13PenyelesaianPerselisih
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         appBar: CustomAppBar.defaultAppBar(
           autoImplyLeading: true,
           title: "Peraturan",
           actions: [
             CupertinoButton(
-              onPressed: (){},
+              onPressed: (){
+                Get.offAll(() => const Mainpage());
+              },
               child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
             )
           ]

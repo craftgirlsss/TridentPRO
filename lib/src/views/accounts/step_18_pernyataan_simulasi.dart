@@ -19,6 +19,7 @@ import 'package:tridentpro/src/controllers/regol.dart';
 import 'package:tridentpro/src/controllers/utilities.dart';
 import 'package:tridentpro/src/helpers/handlers/image_picker.dart';
 import 'package:tridentpro/src/views/accounts/step_3_marital.dart';
+import 'package:tridentpro/src/views/mainpage.dart';
 import 'components/step_position.dart';
 
 class Step18PrenyataanSimulasi extends StatefulWidget {
@@ -122,17 +123,14 @@ class _Step18PrenyataanSimulasiState extends State<Step18PrenyataanSimulasi> {
         GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: Scaffold(
-            resizeToAvoidBottomInset: false,
+            resizeToAvoidBottomInset: true,
             appBar: CustomAppBar.defaultAppBar(
               autoImplyLeading: true,
               title: LanguageGlobalVar.PERSONAL_INFORMATION.tr,
               actions: [
                 CupertinoButton(
                   onPressed: () async {
-                    print(regolController.accountModel.value?.province);
-                    // SharedPreferences prefs = await SharedPreferences.getInstance();
-                    // String? results = prefs.getString('accessToken');
-                    // print(results);
+                    Get.offAll(() => const Mainpage());
                   },
                   child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
                 )
@@ -231,21 +229,21 @@ class _Step18PrenyataanSimulasiState extends State<Step18PrenyataanSimulasi> {
                           }),
                         // ),
                         // Obx(() => utilitiesController.selectedDesaID.value == "" ? const SizedBox() :
-                        NumberTextField(controller: zipController, hintText: "Kode Pos", labelText: "Kode Pos", maxLength: 4, fieldName: "Alamat Lengkap"),
+                        NumberTextField(controller: zipController, hintText: "Kode Pos", labelText: "Kode Pos", maxLength: 4, fieldName: "Kode Pos", useValidator: false),
                         // ),
                         // Obx(
                         //   () => utilitiesController.selectedDesaID.value == "" ? const SizedBox() :
                           Row(
                             children: [
-                              Expanded(child: NumberTextField(controller: rtController, hintText: "RT", labelText: "RT", maxLength: 1, fieldName: "RT")),
+                              Expanded(child: NumberTextField(controller: rtController, hintText: "RT", labelText: "RT", maxLength: 1, fieldName: "RT", useValidator: false)),
                               const SizedBox(width: 10.0),
-                              Expanded(child: NumberTextField(controller: rwController, hintText: "RW", labelText: "RW", maxLength: 1, fieldName: "RW",)),
+                              Expanded(child: NumberTextField(controller: rwController, hintText: "RW", labelText: "RW", maxLength: 1, fieldName: "RW", useValidator: false)),
                             ],
                           ),
                         // ),
 
                         // Obx(() => utilitiesController.selectedDesaID.value == "" ? const SizedBox() :
-                        DescriptiveTextField(controller: addressController, hintText: "Alamat Lengkap", labelText: "Alamat Lengkap", fieldName: "Alamat Lengkap")
+                        DescriptiveTextField(controller: addressController, hintText: "Alamat Lengkap", labelText: "Alamat Lengkap", fieldName: "Alamat Lengkap", useValidator: false)
         // ),
                       ]
                     ),

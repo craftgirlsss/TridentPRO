@@ -12,6 +12,7 @@ import 'package:tridentpro/src/components/painters/loading_water.dart';
 import 'package:tridentpro/src/components/textfields/void_textfield.dart';
 import 'package:tridentpro/src/controllers/regol.dart';
 import 'package:tridentpro/src/views/accounts/step_6_invest_experience.dart';
+import 'package:tridentpro/src/views/mainpage.dart';
 import 'components/step_position.dart';
 
 class Step19FamilyBappebti extends StatefulWidget {
@@ -53,13 +54,15 @@ class _Step19FamilyBappebti extends State<Step19FamilyBappebti> {
         GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: Scaffold(
-            resizeToAvoidBottomInset: false,
+            resizeToAvoidBottomInset: true,
             appBar: CustomAppBar.defaultAppBar(
               autoImplyLeading: true,
               title: LanguageGlobalVar.PERSONAL_INFORMATION.tr,
               actions: [
                 CupertinoButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    Get.offAll(() => const Mainpage());
+                  },
                   child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
                 )
               ]

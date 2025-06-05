@@ -21,7 +21,7 @@ class _ClosedPositionState extends State<ClosedPosition> {
     super.initState();
     Future.delayed(const Duration(seconds: 1), (){
       isLoading(true);
-      tradingController.tradeHistory(login: "${widget.loginID ?? 0}").then((result){
+      tradingController.closedOrder(login: "${widget.loginID ?? 0}").then((result){
 
       });
       isLoading(false);

@@ -10,11 +10,14 @@ import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/controllers/home.dart';
 import 'package:tridentpro/src/views/authentications/onboarding.dart';
 import 'package:tridentpro/src/views/settings/edit_profile.dart';
+import 'package:tridentpro/src/views/settings/faq.dart';
 import 'package:tridentpro/src/views/trade/deposit.dart';
 import 'package:tridentpro/src/views/trade/internal_transfer.dart';
 import 'package:tridentpro/src/views/trade/withdrawal.dart';
 
+import 'about_app.dart';
 import 'components/profile_listtile.dart';
+import 'documents.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -84,7 +87,7 @@ class _SettingsState extends State<Settings> {
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                color: Colors.grey[100],
+                color: Colors.green[50],
               ),
               child: Row(
                 children: [
@@ -121,20 +124,25 @@ class _SettingsState extends State<Settings> {
             ),
             SizedBox(height: 20),
 
-            // Review Large Files
-            ListTile(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              tileColor: Colors.green[50],
-              leading: Icon(Icons.file_present_rounded, color: Colors.green),
-              title: Text("Review Large Files"),
-              subtitle: Text("Save up to 6GB by reviewing the files that take the most storage."),
-              trailing: Icon(Icons.arrow_forward_ios, size: 16),
-              onTap: () {},
-            ),
-            SizedBox(height: 20),
+            // // Review Large Files
+            // ListTile(
+            //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            //   tileColor: Colors.green[50],
+            //   leading: Icon(Icons.file_present_rounded, color: Colors.green),
+            //   title: Text("Review Large Files"),
+            //   subtitle: Text("Save up to 6GB by reviewing the files that take the most storage."),
+            //   trailing: Icon(Icons.arrow_forward_ios, size: 16),
+            //   onTap: () {},
+            // ),
+            // SizedBox(height: 20),
 
             // Frequently Opened
-            Text("Frequently Opened", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text("Frequently Opened", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              ],
+            ),
             SizedBox(height: 12),
             Wrap(
               spacing: 12,
@@ -149,7 +157,9 @@ class _SettingsState extends State<Settings> {
                 storageCard("Transfer", BoxIcons.bx_transfer_alt, (){
                   Get.to(() => const InternalTransfer());
                 }),
-                storageCard("Documents", Iconsax.document_outline, (){}),
+                storageCard("Documents", Iconsax.document_outline, (){
+                  Get.to(() => const Documents());
+                }),
               ],
             ),
             SizedBox(height: 30),
@@ -163,8 +173,12 @@ class _SettingsState extends State<Settings> {
             ),
             SizedBox(height: 12),
             listTileItem("Tickets", "Help your problem", LineAwesome.headset_solid),
-            listTileItem("FAQ", "All Frequently Asking Question", Bootstrap.question_circle),
-            listTileItem("About", "Information about this App", FontAwesome.app_store_brand),
+            listTileItem("FAQ", "All Frequently Asking Question", Bootstrap.question_circle, onTap: (){
+              Get.to(() => const Faq());
+            }),
+            listTileItem("About", "Information about this App", FontAwesome.app_store_brand, onTap: (){
+              Get.to(() => const AboutApp());
+            }),
           ],
         ),
       ),
@@ -192,14 +206,14 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  Widget listTileItem(String title, String subtitle, IconData icon) {
+  Widget listTileItem(String title, String subtitle, IconData icon, {Function()? onTap}) {
     return ListTile(
       contentPadding: EdgeInsets.symmetric(vertical: 4, horizontal: 0),
       leading: Icon(icon, size: 28),
       title: Text(title, style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
       subtitle: Text(subtitle, style: GoogleFonts.inter(color: Colors.black54)),
       trailing: Icon(Icons.arrow_forward_ios, size: 16),
-      onTap: () {},
+      onTap: onTap,
     );
   }
 }

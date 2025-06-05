@@ -17,6 +17,7 @@ import 'package:tridentpro/src/controllers/authentication.dart';
 import 'package:tridentpro/src/controllers/regol.dart';
 import 'package:tridentpro/src/helpers/variables/global_variables.dart';
 import 'package:tridentpro/src/views/accounts/step_18_pernyataan_simulasi.dart';
+import 'package:tridentpro/src/views/mainpage.dart';
 
 import 'components/step_position.dart';
 
@@ -79,13 +80,15 @@ class _Step2StoredData extends State<Step2StoredData> {
         GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: Scaffold(
-            resizeToAvoidBottomInset: false,
+            resizeToAvoidBottomInset: true,
             appBar: CustomAppBar.defaultAppBar(
               autoImplyLeading: true,
               title: LanguageGlobalVar.PERSONAL_INFORMATION.tr,
               actions: [
                 CupertinoButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    Get.offAll(() => const Mainpage());
+                  },
                   child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
                 )
               ]

@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 
 class UtilitiesWidget {
-  static Padding titleContent({required List<Widget> children, String? title, String? subtitle}){
+  static Padding titleContent({required List<Widget> children, String? title, String? subtitle, TextAlign? textAlign}){
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: Column(
@@ -14,7 +14,7 @@ class UtilitiesWidget {
         children: [
           Text(title ?? "Title", style: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.start),
           const SizedBox(height: 5),
-          Text(subtitle ?? "Subtitle", style: GoogleFonts.inter(fontSize: 16)),
+          Text(subtitle ?? "Subtitle", style: GoogleFonts.inter(fontSize: 16), textAlign: textAlign ?? TextAlign.start),
           const SizedBox(height: 20.0),
           Column(
             children: children,

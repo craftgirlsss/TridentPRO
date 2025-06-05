@@ -37,8 +37,10 @@ class _InternalTransferState extends State<InternalTransfer> {
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, (){
-      tradingController.getTradingAccountV2().then((resultTrading){
-        akunTradingList.value = resultTrading;
+      tradingController.getTradingAccount().then((resultTrading){
+        if(!resultTrading){
+          CustomAlert.alertError(message: tradingController.responseMessage.value);
+        }
         print(akunTradingList);
       });
     });
@@ -92,6 +94,7 @@ class _InternalTransferState extends State<InternalTransfer> {
                         CustomAlert.alertError(message: settingController.responseMessage.value);
                       });
                     }
+                    isLoading(true);
                   }
                 ),
               ),
@@ -111,14 +114,14 @@ class _InternalTransferState extends State<InternalTransfer> {
                   children: [
                     Obx(
                       () => VoidTextField(controller: myAccountTradingSender, fieldName: "Akun Trading Pengirim", hintText: "Akun Trading Pengirim", labelText: "Akun Trading Pengirim", onPressed: settingController.isLoading.value ? null : () async {
-                        CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Pilih Akun Trading Pengirim", children: List.generate(akunTradingList.length, (i){
+                        CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Pilih Akun Trading Pengirim", children: List.generate(tradingController.tradingAccountModels.value?.response.real?.length ?? 0, (i){
                           return ListTile(
                             onTap: (){
                               Navigator.pop(context);
-                              myAccountTradingSender.text = "${akunTradingList[i]['login'].toString()} - \$${akunTradingList[i]['balance'].toString()}";
-                              selectedTradingIDSender(akunTradingList[i]['id']);
+                              myAccountTradingSender.text = "${tradingController.tradingAccountModels.value?.response.real?[i].login} - \$${tradingController.tradingAccountModels.value?.response.real?[i].balance}";
+                              selectedTradingIDSender(tradingController.tradingAccountModels.value?.response.real?[i].id);
                             },
-                            title: Text("${myAccountTradingSender.text = akunTradingList[i]['login'].toString()} - \$${akunTradingList[i]['balance'].toString()}", style: GoogleFonts.inter()),
+                            title: Text("${tradingController.tradingAccountModels.value?.response.real?[i].login} - \$${tradingController.tradingAccountModels.value?.response.real?[i].balance}", style: GoogleFonts.inter()),
                           );
                         }));
                       }),
@@ -132,14 +135,14 @@ class _InternalTransferState extends State<InternalTransfer> {
                   children: [
                     Obx(
                       () => VoidTextField(controller: myAccountTradingReceiver, fieldName: "Akun Trading Pengirim", hintText: "Akun Trading Pengirim", labelText: "Akun Trading Pengirim", onPressed: settingController.isLoading.value ? null : () async {
-                        CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Pilih Akun Trading Pengirim", children: List.generate(akunTradingList.length, (i){
+                        CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Pilih Akun Trading Pengirim", children: List.generate(tradingController.tradingAccountModels.value?.response.real?.length ?? 0, (i){
                           return ListTile(
                             onTap: (){
                               Navigator.pop(context);
-                              myAccountTradingReceiver.text = "${akunTradingList[i]['login'].toString()} - \$${akunTradingList[i]['balance'].toString()}";
-                              selectedTradingIDReceiver(akunTradingList[i]['id']);
+                              myAccountTradingReceiver.text = "${tradingController.tradingAccountModels.value?.response.real?[i].login} - \$${tradingController.tradingAccountModels.value?.response.real?[i].balance}";
+                              selectedTradingIDReceiver(tradingController.tradingAccountModels.value?.response.real?[i].id);
                             },
-                            title: Text("${myAccountTradingReceiver.text = akunTradingList[i]['login'].toString()} - \$${akunTradingList[i]['balance'].toString()}", style: GoogleFonts.inter()),
+                            title: Text("${tradingController.tradingAccountModels.value?.response.real?[i].login} - \$${tradingController.tradingAccountModels.value?.response.real?[i].balance}", style: GoogleFonts.inter()),
                           );
                         }));
                       }),

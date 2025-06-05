@@ -13,10 +13,8 @@ import 'package:tridentpro/src/components/painters/loading_water.dart';
 import 'package:tridentpro/src/components/textfields/email_textfield.dart';
 import 'package:tridentpro/src/components/textfields/password_textfield.dart';
 import 'package:tridentpro/src/controllers/authentication.dart';
-import 'package:tridentpro/src/views/accounts/test_page.dart';
 import 'package:tridentpro/src/views/authentications/forgot.dart';
 import 'package:tridentpro/src/views/authentications/onboarding.dart';
-import 'package:tridentpro/src/views/authentications/passcode.dart';
 import 'package:tridentpro/src/views/authentications/signup.dart';
 
 class SignIn extends StatefulWidget {
@@ -170,9 +168,7 @@ class _SignInState extends State<SignIn> {
                                 padding: const EdgeInsets.symmetric(vertical: 16),
                                 child: Center(
                                   child: IconButtons.defaultIconButton(
-                                    onPressed: (){
-                                      Get.to(() => const TestPage());
-                                    },
+                                    onPressed: (){},
                                     icon: Bootstrap.google
                                   ),
                                 ),

@@ -7,7 +7,7 @@ import 'package:tridentpro/src/components/languages/language_variable.dart';
 class StepUtilities {
   static Padding stepOnlineRegister({required Size size, int? progressStart, int? progressEnd, String? title, Function()? onPressed, int? currentAllPageStatus = 1}){
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      padding: const EdgeInsets.only(bottom: 30, top: 5, left: 12, right: 12),
       child: SizedBox(
         height: size.width / 3.2,
         width: double.infinity,

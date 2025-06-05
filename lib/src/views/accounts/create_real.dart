@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tridentpro/src/components/alerts/default.dart';
+import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
 import 'package:tridentpro/src/components/buttons/elevated_button.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
@@ -77,12 +79,16 @@ class _CreateRealState extends State<CreateReal> {
     return Stack(
       children: [
         Scaffold(
+          appBar: CustomAppBar.defaultAppBar(
+            autoImplyLeading: true,
+            title: '',
+          ),
           body: SafeArea(
             child: SizedBox(
               width: size.width,
               height: size.height,
               child: Padding(
-                padding: const EdgeInsets.all(24.0),
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
