@@ -220,12 +220,12 @@ class _DerivChartPageState extends State<DerivChartPage> {
         title: Obx(() => Text(currentSymbol.value)),
         actions: [
           Obx(() => isLoading.value 
-            ? const Padding(
+            ? Padding(
                 padding: EdgeInsets.all(16.0),
                 child: SizedBox(
                   width: 20,
                   height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
+                  child: CircularProgressIndicator(strokeWidth: 2, color: CustomColor.defaultColor),
                 ),
               )
             : SizedBox(
@@ -401,7 +401,7 @@ class _DerivChartPageState extends State<DerivChartPage> {
         ],
       ),
       bottomNavigationBar: Container(
-        padding: EdgeInsets.symmetric(vertical: 16.0,  horizontal: 16.0),
+        padding: EdgeInsets.only(top: 5,  left: 16.0, right: 16.0, bottom: 50.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [

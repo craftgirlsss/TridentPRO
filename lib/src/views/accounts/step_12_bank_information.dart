@@ -150,7 +150,7 @@ class _Step12BankInformation extends State<Step12BankInformation> {
                           }));
                         }),
                         NameTextField(controller: cityController, fieldName: "City", hintText: "City", labelText: "City"),
-                        NameTextField(controller: rootController, fieldName: "Cabang", hintText: "Cabang", labelText: "Cabang"),
+                        NameTextField(controller: rootController, fieldName: "Cabang", hintText: "Cabang", labelText: "Cabang", useValidator: false),
                         VoidTextField(controller: jenisRekening, fieldName: "Jenis Rekening", hintText: "Jenis Rekening", labelText: "Jenis Rekening", onPressed: () async {
                           CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Choose your saving bank type", children: List.generate(GlobalVariable.jenisTabungan.length, (i){
                             return ListTile(
@@ -162,7 +162,7 @@ class _Step12BankInformation extends State<Step12BankInformation> {
                             );
                           }));
                         }),
-                        NumberTextField(controller: nomorRekening, fieldName: "Nomor Rekening", hintText: "Nomor Rekening", labelText: "Nomor Rekening"),
+                        NumberTextField(controller: nomorRekening, fieldName: "Nomor Rekening", hintText: "Nomor Rekening", labelText: "Nomor Rekening", useValidator: false),
                         SizedBox(
                           height: 40,
                           width: size.width / 1.7,

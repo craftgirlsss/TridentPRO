@@ -115,8 +115,8 @@ class _Step11JobHistory extends State<Step11JobHistory> {
                     NameTextField(controller: jobPositionController, fieldName: "Job Position", hintText: "Job Position", labelText: "Job Position"),
                     NameTextField(controller: durationOfWorkController, fieldName: "Lama Bekerja", hintText: "Lama Bekerja", labelText: "Lama Bekerja"),
                     DescriptiveTextField(controller: currentAddressOffice, fieldName: "Alamat Pekerjaan Saat Ini", hintText: "Alamat Pekerjaan Saat Ini", labelText: "Alamat Pekerjaan Saat Ini"),
-                    PhoneTextField(controller: officePhoneContact, fieldName: "Office Phone Contact", hintText: "Office Phone Contact", labelText: "Office Phone Contact (Optional)"),
-                    PhoneTextField(controller: faxController, fieldName: "Office Fax", hintText: "Office Fax", labelText: "Office Fax (Optional)"),
+                    PhoneTextField(controller: officePhoneContact, fieldName: "Office Phone Contact", hintText: "Office Phone Contact", labelText: "Office Phone Contact (Optional)", useValidator: false),
+                    PhoneTextField(controller: faxController, fieldName: "Office Fax", hintText: "Office Fax", labelText: "Office Fax (Optional)", useValidator: false),
                   ]
                 ),
                 UtilitiesWidget.titleContent(

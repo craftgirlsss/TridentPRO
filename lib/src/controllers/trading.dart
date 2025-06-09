@@ -270,6 +270,21 @@ class TradingController extends GetxController {
       isLoading(false);
       return result;
     } catch (e) {
+      return {};
+      throw Exception("executionOrder error: $e");
+    }
+  }
+
+  Future<Map<String, dynamic>> closingOrder({required String loginID, required String? ticketID}) async {
+    isLoading(true);
+    try {
+      Map<String, dynamic> result = await authService.post('market/market/execution/close', {
+        'login': loginID,
+        'ticket': ticketID
+      });
+      isLoading(false);
+      return result;
+    } catch (e) {
       throw Exception("executionOrder error: $e");
     }
   }

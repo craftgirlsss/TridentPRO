@@ -86,12 +86,20 @@ class ResourceCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(item.description, style: TextStyle(color: Colors.grey[700])),
             const Spacer(),
-            OutlinedButton(
-              onPressed: () {},
-              style: OutlinedButton.styleFrom(
-                side: BorderSide(color: CustomColor.defaultColor)
-              ),
-              child: Text(item.action, textAlign: TextAlign.center, style: GoogleFonts.inter(color: CustomColor.defaultColor)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 30,
+                  child: OutlinedButton(
+                    onPressed: () {},
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: CustomColor.defaultColor)
+                    ),
+                    child: Text(item.action, textAlign: TextAlign.center, style: GoogleFonts.inter(color: CustomColor.defaultColor, fontSize: 10, fontWeight: FontWeight.bold)),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

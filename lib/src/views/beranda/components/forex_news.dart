@@ -1,5 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:tridentpro/src/views/beranda/news_detail.dart';
 
 class ForexNews extends StatefulWidget {
   const ForexNews({super.key});
@@ -30,18 +33,24 @@ class _ForexNewsState extends State<ForexNews> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: List.generate(8, (index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text("Berita ke ${index + 1}", style: TextStyle(fontWeight: FontWeight.bold)),
-                        SizedBox(height: 4),
-                        Text("Deskripsi Berita ke ${index + 1}"),
-                        SizedBox(height: 4),
-                        Text("Published: ${DateFormat('MMMM, dd yyyy').format(now)}", style: TextStyle(color: Colors.grey)),
-                      ],
+                  return CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: (){
+                      Get.to(() => const NewsDetail());
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text("Berita ke ${index + 1}", style: TextStyle(fontWeight: FontWeight.bold)),
+                          SizedBox(height: 4),
+                          Text("Deskripsi Berita ke ${index + 1}"),
+                          SizedBox(height: 4),
+                          Text("Published: ${DateFormat('MMMM, dd yyyy').format(now)}", style: TextStyle(color: Colors.grey)),
+                        ],
+                      ),
                     ),
                   );
                 }),

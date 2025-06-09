@@ -9,6 +9,7 @@ import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/controllers/home.dart';
 import 'package:tridentpro/src/views/authentications/onboarding.dart';
+import 'package:tridentpro/src/views/settings/deposit_withdrawal_history.dart';
 import 'package:tridentpro/src/views/settings/edit_profile.dart';
 import 'package:tridentpro/src/views/settings/faq.dart';
 import 'package:tridentpro/src/views/trade/deposit.dart';
@@ -172,6 +173,9 @@ class _SettingsState extends State<Settings> {
               ],
             ),
             SizedBox(height: 12),
+            listTileItem("Riwayat Deposit Withdrawal", "Semua riwayat deposit akun trading anda", AntDesign.transaction_outline, onTap: (){
+              Get.to(() => const DepositWithdrawalHistory());
+            }),
             listTileItem("Tickets", "Help your problem", LineAwesome.headset_solid),
             listTileItem("FAQ", "All Frequently Asking Question", Bootstrap.question_circle, onTap: (){
               Get.to(() => const Faq());
@@ -208,9 +212,10 @@ class _SettingsState extends State<Settings> {
 
   Widget listTileItem(String title, String subtitle, IconData icon, {Function()? onTap}) {
     return ListTile(
-      contentPadding: EdgeInsets.symmetric(vertical: 4, horizontal: 0),
+      dense: true,
+      contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
       leading: Icon(icon, size: 28),
-      title: Text(title, style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
+      title: Text(title, style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 15)),
       subtitle: Text(subtitle, style: GoogleFonts.inter(color: Colors.black54)),
       trailing: Icon(Icons.arrow_forward_ios, size: 16),
       onTap: onTap,

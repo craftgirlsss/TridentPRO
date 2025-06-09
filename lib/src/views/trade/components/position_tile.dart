@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 class CustomSlideAbleListTile {
-  static Slidable openListTile(BuildContext context, {Function(BuildContext)? onPressedEdit, Function(BuildContext)? onPressedClose, int? index, String? market, String? orderType, String? lot, String? dateTime, dynamic profitLoss, dynamic openPrice, dynamic currentPrice, dynamic commission, dynamic swap, dynamic id, dynamic sl, dynamic tp}){
+  static Slidable openListTile(BuildContext context, {Function(BuildContext)? onPressedEdit, Function(BuildContext)? onPressedClose, int? index, String? market, String? orderType, dynamic lot, String? dateTime, dynamic profitLoss, dynamic openPrice, dynamic currentPrice, dynamic commission, dynamic swap, dynamic id, dynamic sl, dynamic tp}){
     return Slidable(
       startActionPane: ActionPane(
         motion: const ScrollMotion(),

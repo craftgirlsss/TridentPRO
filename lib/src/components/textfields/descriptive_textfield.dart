@@ -19,6 +19,7 @@ class DescriptiveTextField extends StatefulWidget {
 
 class _DescriptiveTextFieldState extends State<DescriptiveTextField> {
   RxBool isName = false.obs;
+  RxBool isLoading = false.obs;
 
   @override
   void initState() {
@@ -33,7 +34,7 @@ class _DescriptiveTextFieldState extends State<DescriptiveTextField> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Obx(
-        () => TextFormField(
+        () => isLoading.value ? const SizedBox() : TextFormField(
           minLines: 5,
           maxLines: 5,
           readOnly: widget.readOnly ?? false,
