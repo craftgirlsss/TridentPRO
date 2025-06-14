@@ -1,8 +1,8 @@
-// Promotion Section Home
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/components/containers/news_card.dart';
+import 'package:tridentpro/src/controllers/utilities.dart';
+import 'package:tridentpro/src/helpers/handlers/url_handler.dart';
 
 class PromotionSection extends StatefulWidget {
   const PromotionSection({super.key});
@@ -13,41 +13,62 @@ class PromotionSection extends StatefulWidget {
 
 class _PromotionSectionState extends State<PromotionSection> {
   PageController pageControllerPromo = PageController();
+  UtilitiesController utilitiesController = Get.put(UtilitiesController());
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, (){
+      utilitiesController.getSlideImageHome().then((result){
+        if(!result){
+          print(utilitiesController.responseMessage.value);
+        }
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Column(
-      children: [
-        SizedBox(
-          width: size.width,
-          height: size.width / 2,
-          child: PageView.builder(
-            physics: const BouncingScrollPhysics(),
-            itemCount: 3,
-            pageSnapping: true,
-            controller: pageControllerPromo,
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-              child: NewsCard.blurredNews(onPressed: (){}),
+    return Obx(
+      () => utilitiesController.isLoading.value ? const SizedBox() : Column(
+        children: [
+          SizedBox(
+            width: size.width,
+            height: size.width / 2,
+            child: Obx(
+              () => PageView.builder(
+                physics: const BouncingScrollPhysics(),
+                itemCount: utilitiesController.slideModel.value?.response.length ?? 0,
+                pageSnapping: true,
+                controller: pageControllerPromo,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: NewsCard.blurredNews(onPressed: (){
+                    print("ditekan");
+                    openInChrome(utilitiesController.slideModel.value?.response[index].link ?? 'https://tridentpro.com');
+                  }, imageURL: utilitiesController.slideModel.value?.response[index].picture),
+                ),
+              ),
             ),
           ),
-        ),
-        const SizedBox(height: 10),
-        Center(
-          child: SmoothPageIndicator(
-            controller: pageControllerPromo,
-            count: 3,
-            effect: WormEffect(
-              dotHeight: 5,
-              dotWidth: 20,
-              type: WormType.thinUnderground,
-              activeDotColor: CustomColor.defaultColor,
-            ),
-          ),
-        ),
-      ],
+          // Center(
+          //   child: Obx(
+          //     () => SmoothPageIndicator(
+          //       controller: pageControllerPromo,
+          //       count: utilitiesController.slideModel.value?.response.length ?? 0,
+          //       effect: WormEffect(
+          //         dotHeight: 5,
+          //         dotWidth: 20,
+          //         type: WormType.thinUnderground,
+          //         activeDotColor: CustomColor.defaultColor,
+          //       ),
+          //     ),
+          //   ),
+          // ),
+        ],
+      ),
     );
   }
 }

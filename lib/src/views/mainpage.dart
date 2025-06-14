@@ -8,6 +8,7 @@ import 'package:tridentpro/src/views/accounts/index.dart';
 import 'package:tridentpro/src/views/beranda/index.dart';
 import 'package:tridentpro/src/views/settings/index.dart';
 import 'package:tridentpro/src/views/trade/index.dart';
+import 'package:tridentpro/src/views/trade/index_v2.dart';
 
 class Mainpage extends StatefulWidget {
   const Mainpage({super.key});
@@ -21,7 +22,8 @@ class _MainpageState extends State<Mainpage> {
   static final List<Widget> _widgetOptions = <Widget>[
     const Beranda(),
     const Accounts(),
-    const Trade(),
+    // const Trade(),
+    const MetaQuotesPage(),
     const Settings(),
   ];
 

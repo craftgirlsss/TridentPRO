@@ -147,15 +147,17 @@ class _CreateRealState extends State<CreateReal> {
             ),
           ),
           bottomNavigationBar: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0, top: 3, bottom: 40),
             child: Obx(
               () => DefaultButton.defaultElevatedButton(
                 onPressed: regolController.isLoading.value ? null : (){
+                  print("INI ACCOUNT SUFFIX $accountTypeSuffix");
+                  print("INI PRODUCT CONTROLLER ${productController.text}");
                   regolController.postStepZero(accountSuffix: accountTypeSuffix.value, accountType: productController.text).then((result){
                     if(result){
                       Get.to(() => const Step1UploadPhoto());
                     }else{
-                      CustomAlert.alertError(message: accountTypeSuffix.value);
+                      CustomAlert.alertError(message: regolController.responseMessage.value);
                     }
                   });
                 },

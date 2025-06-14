@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:get/get.dart';
 import 'package:tridentpro/src/controllers/2_factory_auth.dart';
@@ -32,6 +31,7 @@ class TradingController extends GetxController {
   TwoFactoryAuth twoFactoryAuth = Get.find();
   AuthController authController = Get.find();
   AuthService authService = AuthService();
+  RxList<Map<String, dynamic>> accountTrading = <Map<String, dynamic>>[].obs;
   RxList symbols = [].obs;
   RxDouble minPrice = 0.0.obs;
   RxDouble maxPrice = 0.0.obs;
@@ -266,11 +266,12 @@ class TradingController extends GetxController {
     isLoading(true);
     try {
       Map<String, dynamic> result = await authService.get('market/opened-order?login=$login');
+      print(result);
       openOrderModel(OpenOrderModel.fromJson(result));
       isLoading(false);
       return result;
     } catch (e) {
-      return {};
+      // return {};
       throw Exception("executionOrder error: $e");
     }
   }

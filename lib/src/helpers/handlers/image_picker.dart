@@ -2,11 +2,11 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
 class CustomImagePicker {
-  static Future<String> pickImageFromCameraAndReturnUrl({String? fileName}) async {
+  static Future<String> pickImageFromCameraAndReturnUrl({bool useCamera = false}) async {
     try {
       final ImagePicker picker = ImagePicker();
       final XFile? imagePicked = await picker.pickImage(
-        source: ImageSource.gallery,
+        source: useCamera ? ImageSource.camera : ImageSource.gallery,
         imageQuality: 100,
       );
       

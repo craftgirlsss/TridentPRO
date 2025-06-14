@@ -157,7 +157,7 @@ class _WithdrawalState extends State<Withdrawal> {
                           }));
                         }),
                       ),
-                      NumberTextField(controller: myAmount, fieldName: "Jumlah Deposit", hintText: "Jumlah Deposit", labelText: "Jumlah Deposit", maxLength: 1),
+                      NumberTextField(controller: myAmount, fieldName: "Jumlah Deposit", hintText: "Jumlah Withdrawal", labelText: "Jumlah Withdrawal", maxLength: 1),
                     ]
                   )
                 ],

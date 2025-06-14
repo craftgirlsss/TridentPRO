@@ -73,18 +73,21 @@ class _FaqState extends State<Faq> {
               children: List.generate(
                 faqs.length, (i) {
                   final faq = faqs[i];
-                  return ExpansionTile(
-                    tilePadding: EdgeInsets.zero,
-                    title: Text(
-                      faq['question']!,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(faq['answer']!),
+                  return Theme(
+                    data: ThemeData().copyWith(dividerColor: Colors.transparent),
+                    child: ExpansionTile(
+                      tilePadding: EdgeInsets.zero,
+                      title: Text(
+                        faq['question']!,
+                        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black54),
                       ),
-                    ],
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(faq['answer']!),
+                        ),
+                      ],
+                    ),
                   );
                 },
               ),

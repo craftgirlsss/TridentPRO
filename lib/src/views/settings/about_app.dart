@@ -76,7 +76,7 @@ PT Tridentpro Futures berkomitmen untuk menyediakan layanan keuangan yang transp
                 title: "Beri Nilai Aplikasi"
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 60),
           ],
         ),
       ),

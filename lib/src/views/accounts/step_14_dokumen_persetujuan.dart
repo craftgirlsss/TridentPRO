@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
@@ -48,7 +49,10 @@ class _Step14PenyelesaianPerselisihan extends State<Step14PenyelesaianPerselisih
             title: "Peraturan",
             actions: [
               CupertinoButton(
-                onPressed: (){
+                onPressed: () async {
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  String? token = prefs.getString('accessToken');
+                  print(token);
                   Get.offAll(() => const Mainpage());
                 },
                 child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
@@ -68,7 +72,7 @@ class _Step14PenyelesaianPerselisihan extends State<Step14PenyelesaianPerselisih
                     children: [
                       CheckboxListTile(
                         contentPadding: EdgeInsets.zero,
-                        title: Text('Profile Perusahaan Pialang Berjangka', style: GoogleFonts.inter(fontSize: 16.0)),
+                        title: Text('Profile Perusahaan Pialang Berjangka', style: GoogleFonts.inter(fontSize: 16.0, color: Colors.black54)),
                         value: true,
                         onChanged:(bool? value) {
                           CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Profile Perusahaan Pialang Berjangka", children: [
@@ -100,13 +104,13 @@ class _Step14PenyelesaianPerselisihan extends State<Step14PenyelesaianPerselisih
                       ),
                       CheckboxListTile(
                         contentPadding: EdgeInsets.zero,
-                        title: Text('Aplikasi Pembukaaan Rekening Transaksi', style: GoogleFonts.inter(fontSize: 16.0)),
+                        title: Text('Aplikasi Pembukaaan Rekening Transaksi', style: GoogleFonts.inter(fontSize: 16.0, color: Colors.black54)),
                         value: true,
                         onChanged:(bool? value) {},
                       ),
                       CheckboxListTile(
                         contentPadding: EdgeInsets.zero,
-                        title: Text('Dokumen Pemberitahuan Adanya Resiko', style: GoogleFonts.inter(fontSize: 16.0)),
+                        title: Text('Dokumen Pemberitahuan Adanya Resiko', style: GoogleFonts.inter(fontSize: 16.0, color: Colors.black54)),
                         value: true,
                         onChanged:(bool? value) {
                           CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Pernyataaan Pengungkapan", children: [
@@ -116,7 +120,7 @@ class _Step14PenyelesaianPerselisihan extends State<Step14PenyelesaianPerselisih
                       ),
                       CheckboxListTile(
                         contentPadding: EdgeInsets.zero,
-                        title: Text('Peraturan Perdagangan (Trading Rules)', style: GoogleFonts.inter(fontSize: 16.0)),
+                        title: Text('Peraturan Perdagangan (Trading Rules)', style: GoogleFonts.inter(fontSize: 16.0, color: Colors.black54)),
                         value: true,
                         onChanged:(bool? value) {},
                       ),

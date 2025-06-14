@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
@@ -69,9 +70,16 @@ class _TradeState extends State<Trade> {
                   children: [
                     Obx(() => Text(homeController.profileModel.value?.name ?? "-", style: GoogleFonts.inter(fontSize: 28, fontWeight: FontWeight.bold,))),
                     Spacer(),
-                    CircleAvatar(
-                      backgroundImage: AssetImage('assets/images/promotion.jpg'), // ganti sesuai path gambar
-                      radius: 22,
+                    GestureDetector(
+                      onTap: () async {
+                        SharedPreferences prefs = await SharedPreferences.getInstance();
+                        String? accessToken = prefs.getString("accessToken");
+                        print(accessToken);
+                      },
+                      child: CircleAvatar(
+                        backgroundImage: AssetImage('assets/images/promotion.jpg'), // ganti sesuai path gambar
+                        radius: 22,
+                      ),
                     ),
                   ],
                 ),

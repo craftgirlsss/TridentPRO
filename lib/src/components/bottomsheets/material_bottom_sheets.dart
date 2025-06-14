@@ -37,13 +37,14 @@ class CustomMaterialBottomSheets {
                       padding: const EdgeInsets.all(3),
                       decoration: BoxDecoration(
                         color: CustomColor.defaultSoftColor,
+                        border: Border.all(color: Colors.black12, width: 0.5),
                         shape: BoxShape.circle
                       ),
                       child: GestureDetector(
                         onTap: (){
                           Navigator.pop(context);
                         },
-                        child: Icon(Icons.close, color: CustomColor.defaultColor, size: 17)),
+                        child: Icon(Icons.close, color: Colors.black45, size: 17)),
                     )
                   ],
                 ),

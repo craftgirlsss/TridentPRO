@@ -13,9 +13,11 @@ import 'package:tridentpro/src/components/painters/loading_water.dart';
 import 'package:tridentpro/src/components/textfields/email_textfield.dart';
 import 'package:tridentpro/src/components/textfields/password_textfield.dart';
 import 'package:tridentpro/src/controllers/authentication.dart';
+import 'package:tridentpro/src/controllers/utilities.dart';
 import 'package:tridentpro/src/views/authentications/forgot.dart';
 import 'package:tridentpro/src/views/authentications/onboarding.dart';
 import 'package:tridentpro/src/views/authentications/signup.dart';
+import 'package:tridentpro/src/views/mainpage.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -30,8 +32,20 @@ class _SignInState extends State<SignIn> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-
+  UtilitiesController utilitiesController = Get.put(UtilitiesController());
   AuthController authController = Get.put(AuthController());
+  
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, (){
+      utilitiesController.getSlideImageLogin().then((result){
+        if(!result){
+          print(utilitiesController.responseMessage.value);
+        }
+      });
+    });
+  }
 
   @override
   void dispose() {
@@ -57,17 +71,22 @@ class _SignInState extends State<SignIn> {
                   SizedBox(
                     width: size.width,
                     height: size.height / 2.8,
-                    child: PageView.builder(
-                      controller: pageController,
-                      physics: const BouncingScrollPhysics(),
-                      pageSnapping: true,
-                      itemCount: imageURL.length,
-                      itemBuilder: (context, index) => Container(
-                        width: size.width,
-                        height: size.height / 2.8,
-                        color: CustomColor.backgroundIcon,
-                        child: Center(
-                          child: Icon(imageURL[index]),
+                    child: Obx(
+                      () => PageView.builder(
+                        controller: pageController,
+                        physics: const BouncingScrollPhysics(),
+                        pageSnapping: true,
+                        itemCount: utilitiesController.imageLoginModel.value?.response?.length != null ? utilitiesController.imageLoginModel.value?.response?.length : imageURL.length,
+                        itemBuilder: (context, index) => Container(
+                          width: size.width,
+                          height: size.height / 2.8,
+                          decoration: BoxDecoration(
+                            color: CustomColor.backgroundIcon,
+                            image: utilitiesController.imageLoginModel.value?.response?.length != null ? DecorationImage(image: NetworkImage(utilitiesController.imageLoginModel.value!.response![index].picture!), fit: BoxFit.cover) : null
+                          ),
+                          child: utilitiesController.imageLoginModel.value?.response?.length != null ? null : Center(
+                            child: Icon(imageURL[index]),
+                          ),
                         ),
                       ),
                     ),
@@ -132,7 +151,7 @@ class _SignInState extends State<SignIn> {
                                     if(_formKey.currentState!.validate()){
                                       authController.login(email: emailController.text, password: passwordController.text).then((result){
                                         if(result){
-                                          Get.offAll(() => Onboarding());
+                                          Get.offAll(() => Mainpage());
                                         }else{
                                           CustomAlert.alertError(message: authController.responseMessage.value);
                                         }

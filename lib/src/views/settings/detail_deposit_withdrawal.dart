@@ -6,7 +6,8 @@ import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 
 class DetailDepositWithdrawal extends StatefulWidget {
-  const DetailDepositWithdrawal({super.key});
+  const DetailDepositWithdrawal({super.key, this.isDeposit});
+  final bool? isDeposit;
 
   @override
   State<DetailDepositWithdrawal> createState() => _DetailDepositWithdrawalState();
@@ -38,7 +39,7 @@ class _DetailDepositWithdrawalState extends State<DetailDepositWithdrawal> {
                   CircleAvatar(
                     radius: 30,
                     backgroundColor: CustomColor.defaultColor,
-                    child: Icon(MingCute.transfer_2_fill, size: 30),
+                    child: widget.isDeposit == true ? Icon(AntDesign.arrow_down_outline, size: 30) : Icon(AntDesign.arrow_up_outline, size: 30),
                   ),
                   const SizedBox(height: 10),
                   Text("\$120.43", style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 30, color: Colors.black)),
@@ -50,7 +51,7 @@ class _DetailDepositWithdrawalState extends State<DetailDepositWithdrawal> {
                       borderRadius: BorderRadius.circular(20),
                       color: CustomColor.defaultColor
                     ),
-                    child: Text("Deposit", style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
+                    child: widget.isDeposit == true ? Text("Deposit", style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)) : Text("Withdrawal", style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
                   )
                 ],
               ),
@@ -92,9 +93,10 @@ class _DetailDepositWithdrawalState extends State<DetailDepositWithdrawal> {
                   const SizedBox(height: 4),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Total Diterima", style: GoogleFonts.inter(fontSize: 14)),
-                      Text("\$288.43", style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold)),
+                      Text("Tanggal Transaksi", style: GoogleFonts.inter(fontSize: 14)),
+                      Flexible(child: Text(DateFormat("dd MMM yyyy").format(DateTime.now()), style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold), maxLines: 1)),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -102,8 +104,8 @@ class _DetailDepositWithdrawalState extends State<DetailDepositWithdrawal> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Tanggal Transaksi", style: GoogleFonts.inter(fontSize: 14)),
-                      Flexible(child: Text(DateFormat("dd MMM yyyy").add_jms().format(DateTime.now()), style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold), maxLines: 1)),
+                      Text("Waktu", style: GoogleFonts.inter(fontSize: 14)),
+                      Flexible(child: Text(DateFormat().add_jms().format(DateTime.now()), style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold), maxLines: 1)),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -115,12 +117,35 @@ class _DetailDepositWithdrawalState extends State<DetailDepositWithdrawal> {
                       Flexible(child: Text("2403230", style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold), maxLines: 1)),
                     ],
                   ),
-                  const SizedBox(height: 4),
+                ],
+              ),
+            ),
+
+
+            const SizedBox(height: 10),
+            widget.isDeposit == true ? Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.black12),
+                borderRadius: BorderRadius.circular(20.0)
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Text("Bank Admin", style: GoogleFonts.inter(color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 16)),
+                      const SizedBox(width: 5),
+                      Expanded(child: const Divider(color: Colors.black12))
+                    ],
+                  ),
+                  const SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Bank Pengirim", style: GoogleFonts.inter(fontSize: 14)),
+                      Text("Nama Bank", style: GoogleFonts.inter(fontSize: 14)),
                       Flexible(child: Text("BCA", style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold), maxLines: 1)),
                     ],
                   ),
@@ -129,7 +154,40 @@ class _DetailDepositWithdrawalState extends State<DetailDepositWithdrawal> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Bank Penerima", style: GoogleFonts.inter(fontSize: 14)),
+                      Text("Nomor Rekening Bank", style: GoogleFonts.inter(fontSize: 14)),
+                      Flexible(child: Text("2492312", style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold), maxLines: 1)),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                ],
+              ),
+            ) : const SizedBox(),
+
+
+            const SizedBox(height: 10),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.black12),
+                borderRadius: BorderRadius.circular(20.0)
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Text("Bank Nasabah", style: GoogleFonts.inter(color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 16)),
+                      const SizedBox(width: 5),
+                      Expanded(child: const Divider(color: Colors.black12))
+                    ],
+                  ),
+                  const SizedBox(height: 15),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Nama Bank", style: GoogleFonts.inter(fontSize: 14)),
                       Flexible(child: Text("BCA", style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold), maxLines: 1)),
                     ],
                   ),
@@ -138,10 +196,19 @@ class _DetailDepositWithdrawalState extends State<DetailDepositWithdrawal> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Bukti Transfer", style: GoogleFonts.inter(fontSize: 14)),
-                      Text("Lihat Gambar", style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
+                      Text("Nomor Rekening Bank", style: GoogleFonts.inter(fontSize: 14)),
+                      Flexible(child: Text("2492312", style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold), maxLines: 1)),
                     ],
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Cabang Bank", style: GoogleFonts.inter(fontSize: 14)),
+                      Flexible(child: Text("Sukodono, Sidoarjo", style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold), maxLines: 1)),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
                 ],
               ),
             ),

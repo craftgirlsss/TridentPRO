@@ -1,8 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/controllers/trading.dart';
 import 'package:tridentpro/src/helpers/formatters/number_formatter.dart';
+import 'package:tridentpro/src/views/settings/documents.dart';
+import 'package:tridentpro/src/views/trade/deposit.dart';
+import 'package:tridentpro/src/views/trade/withdrawal.dart';
 import 'components/card_info_account.dart';
 import 'package:get/get.dart';
 
@@ -26,7 +31,14 @@ class _RealSectionState extends State<RealSection> {
       onRefresh: () async {},
       child: Obx(
         (){
-          if(tradingController.tradingAccountModels.value?.response.real?.length == 0){
+          if(tradingController.isLoading.value){
+            print("Masuk ke loading");
+            return SizedBox(
+              width: double.infinity,
+              height: double.infinity,
+              child: Center(child: Text("Getting Real Account...")),
+            );
+          }else if(tradingController.tradingAccountModels.value?.response.real?.length == 0){
             return SizedBox(
               width: double.infinity,
               height: double.maxFinite,
@@ -98,47 +110,87 @@ class _RealSectionState extends State<RealSection> {
     );
   }
 
-  CupertinoButton cardAccountReal({String? accountNumber, String? leverage, String? balance, String? type, String? currencyType}){
-    return CupertinoButton(
-      onPressed: (){},
-      padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(20.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.0),
-          color: Colors.white,
-          border: Border.all(color: Colors.black12)
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Logo
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(currencyType != null ? currencyType.toUpperCase() : "-", style: TextStyle(fontFamily: "OCRA", fontSize: 13, color: Colors.black54)),
-                Image.asset('assets/icons/ic_launcher.png', width: 40)
-              ],
-            ),
+  Container cardAccountReal({String? accountNumber, String? leverage, String? balance, String? type, String? currencyType}){
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
+      padding: const EdgeInsets.all(20.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20.0),
+        color: Colors.white,
+        border: Border.all(color: CustomColor.defaultColor)
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Logo
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(currencyType != null ? currencyType.toUpperCase() : "-", style: TextStyle(fontFamily: "OCRA", fontSize: 13, color: CustomColor.defaultColor)),
+              Image.asset('assets/icons/ic_launcher.png', width: 50)
+            ],
+          ),
 
-            // Number Account
-            Icon(Icons.candlestick_chart, color: CustomColor.defaultColor, size: 24),
-            const SizedBox(height: 10),
-            Text(accountNumber != null ? NumberFormatter.formatCardNumber(accountNumber) : "0", style: TextStyle(fontFamily: "OCRA", fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black54), maxLines: 1),
-            const SizedBox(height: 5),
-            Text(balance == null ? "\$0" : "\$${balance.split('.').first}", style: TextStyle(fontFamily: "OCRA", fontSize: 15, color: Colors.black45)),
-            const SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(type != null ? type.toUpperCase() : "-", style: TextStyle(fontFamily: "OCRA", fontSize: 13, color: Colors.black54)),
-                Text(" / ", style: TextStyle(fontFamily: "OCRA", fontSize: 13, color: Colors.black54)),
-                Text(leverage != null ? leverage.split('.').first : "1:100", style: TextStyle(fontFamily: "OCRA", fontSize: 13, color: Colors.black54)),
-              ],
-            )
-          ],
-        ),
+          // Number Account
+          Icon(Icons.candlestick_chart, color: CustomColor.defaultColor, size: 24),
+          const SizedBox(height: 10),
+          Text(accountNumber != null ? NumberFormatter.formatCardNumber(accountNumber) : "0", style: TextStyle(fontFamily: "OCRA", fontSize: 20, fontWeight: FontWeight.bold, color: CustomColor.defaultColor), maxLines: 1),
+          const SizedBox(height: 5),
+          Text(balance == null ? "\$0" : "\$${balance.split('.').first}", style: TextStyle(fontFamily: "OCRA", fontSize: 15, color: CustomColor.defaultColor)),
+          const SizedBox(height: 15),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(type != null ? type.toUpperCase() : "-", style: TextStyle(fontFamily: "OCRA", fontSize: 13, color: CustomColor.defaultColor)),
+              Text(" / ", style: TextStyle(fontFamily: "OCRA", fontSize: 13, color: Colors.black54)),
+              Text(leverage != null ? leverage.split('.').first : "1:100", style: TextStyle(fontFamily: "OCRA", fontSize: 13, color: CustomColor.defaultColor)),
+            ],
+          ),
+          const SizedBox(height: 15),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              GestureDetector(
+                onTap: (){
+                  Get.to(() => const Deposit());
+                },
+                child: Row(
+                  children: [
+                    Icon(CupertinoIcons.arrow_down_circle, color: CustomColor.defaultColor),
+                    const SizedBox(width: 2),
+                    Text("Deposit", style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w700, color: CustomColor.defaultColor))
+                  ],
+                ),
+              ),
+              const SizedBox(width: 5),
+              GestureDetector(
+                onTap: (){
+                  Get.to(() => const Withdrawal());
+                },
+                child: Row(
+                  children: [
+                    Icon(CupertinoIcons.arrow_up_circle, color: CustomColor.defaultColor),
+                    const SizedBox(width: 2),
+                    Text("Withdrawal", style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w700, color: CustomColor.defaultColor))
+                  ],
+                ),
+              ),
+              const SizedBox(width: 5),
+              GestureDetector(
+                onTap: (){
+                  Get.to(() => Documents(loginID: accountNumber));
+                },
+                child: Row(
+                  children: [
+                    Icon(MingCute.pdf_line, color: CustomColor.defaultColor),
+                    Text("Documents", style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w700, color: CustomColor.defaultColor))
+                  ],
+                ),
+              ),
+            ],
+          )
+        ],
       ),
     );
   }

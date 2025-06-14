@@ -8,6 +8,7 @@ import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/components/painters/loading_water.dart';
 import 'package:tridentpro/src/controllers/trading.dart';
 import 'package:tridentpro/src/views/accounts/demo_section.dart';
+import 'package:tridentpro/src/views/accounts/pending_account.dart';
 import 'package:tridentpro/src/views/accounts/real_section.dart';
 
 class Accounts extends StatefulWidget {
@@ -40,15 +41,15 @@ class _AccountsState extends State<Accounts> {
           Scaffold(
             appBar: CustomAppBar.defaultAppBar(
               title: LanguageGlobalVar.TRADING_ACCOUNT.tr,
-              autoImplyLeading: true,
-              actions: <Widget>[
-                IconButtons.defaultIconButton(
-                  onPressed: (){
-                    print(tradingController.tradingAccountModels.value?.response.real?.length);
-                  },
-                  icon: OctIcons.search
-                )
-              ],
+              autoImplyLeading: false,
+              // actions: <Widget>[
+              //   IconButtons.defaultIconButton(
+              //     onPressed: (){
+              //       print(tradingController.tradingAccountModels.value?.response.real?.length);
+              //     },
+              //     icon: OctIcons.search
+              //   )
+              // ],
               bottom: PreferredSize(
                 preferredSize: Size.fromHeight(50),
                 child: Obx(
@@ -69,6 +70,10 @@ class _AccountsState extends State<Accounts> {
                                   value: 'Demo',
                                   label: Text('Demo'),
                                 ),
+                                ButtonSegment(
+                                  value: 'Pending',
+                                  label: Text('Pending'),
+                                ),
                               ],
                               selected: <String>{selected},
                               onSelectionChanged: (newSelection) {
@@ -87,7 +92,22 @@ class _AccountsState extends State<Accounts> {
                 )
               )
             ),
-            body: Obx(() => tradingController.isLoading.value ? const SizedBox() : selected == "Demo" ? DemoSection() : RealSection())
+            body: Obx(() {
+              if(tradingController.isLoading.value){
+                return SizedBox();
+              }else if(selected == "Demo"){
+                return DemoSection();
+              }else if(selected == "Real"){
+                return RealSection();
+              }else if(selected == "Pending"){
+                return PendingAccount();
+              }else{
+                return SizedBox(
+                  child: Text("Tidak dikenali"),
+                );
+              }
+            }),
+            // body: Obx(() => tradingController.isLoading.value ? const SizedBox() : selected == "Demo" ? DemoSection() : RealSection())
           ),
           Obx(() => tradingController.isLoading.value ? LoadingWater() : const SizedBox())
         ],

@@ -15,15 +15,16 @@ import 'package:tridentpro/src/views/trade/trading_order_history.dart';
 import 'components/chart_section.dart';
 
 class DerivChartPage extends StatefulWidget {
-  const DerivChartPage({super.key, required this.login});
+  const DerivChartPage({super.key, required this.login, this.marketName});
   final int login;
+  final String? marketName;
 
   @override
   State<DerivChartPage> createState() => _DerivChartPageState();
 }
 
 class _DerivChartPageState extends State<DerivChartPage> {
-  final TradingController tradingController = Get.find();
+  final TradingController tradingController = Get.put(TradingController());
   final ChartController _controller = ChartController();
   final RxBool isLoading = true.obs;
   final RxDouble currentPrice = 0.0.obs;
@@ -121,6 +122,7 @@ class _DerivChartPageState extends State<DerivChartPage> {
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () async {
+      currentSymbol(widget.marketName ?? "GOLDUD");
       _loadChartData();
       await tradingController.getSymbols().then((result){});
       indicatorsRepo = AddOnsRepository<IndicatorConfig>(
@@ -217,7 +219,12 @@ class _DerivChartPageState extends State<DerivChartPage> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Obx(() => Text(currentSymbol.value)),
+        title: Column(
+          children: [
+            Obx(() => Text(currentSymbol.value)),
+            Text(widget.login.toString(), style: GoogleFonts.inter(fontWeight: FontWeight.w300, color: Colors.black54))
+          ],
+        ),
         actions: [
           Obx(() => isLoading.value 
             ? Padding(

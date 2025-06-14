@@ -16,10 +16,7 @@ class RegolController extends GetxController {
     try {
       Map<String, dynamic> result = await authService.get("regol/product");
       responseMessage(result['message']);
-      if (result['status'] != true) {
-        return false;
-      }
-
+      print("INI RESULT GET PRODUCT REGOL $result");
       // print(result);
       productModels(ProductModels.fromJson(result));
       return true;
@@ -33,6 +30,9 @@ class RegolController extends GetxController {
     try {
       /** Fetch data from api */
       Map<String, dynamic> result = await authService.get("regol/progressAccount");
+      print("INI RESULT GET PROGRESS REGOL $result");
+      responseMessage(result['message']);
+
       if(result['status'] != true) {
         return false;
       }
@@ -61,6 +61,7 @@ class RegolController extends GetxController {
       Map<String, dynamic> result = await authService.post("regol/accountType", {
         'account-type' : accountSuffix
       });
+      print("INI RESULT POST STEP ZERO $result");
 
       isLoading(false);
       responseMessage(result['message']);

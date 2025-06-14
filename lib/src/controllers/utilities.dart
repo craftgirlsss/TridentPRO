@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:tridentpro/src/helpers/variables/global_variables.dart';
+import 'package:tridentpro/src/models/auth/image_login_model.dart';
+import 'package:tridentpro/src/models/trades/market_model.dart';
+import 'package:tridentpro/src/models/utilities/MessagesModel.dart';
 import 'package:tridentpro/src/models/utilities/city_models.dart';
 import 'package:tridentpro/src/models/utilities/country_models.dart';
 import 'package:tridentpro/src/models/utilities/desa_models_api.dart';
@@ -9,9 +11,13 @@ import 'package:tridentpro/src/models/utilities/kabupaten_models_api.dart';
 import 'package:tridentpro/src/models/utilities/kabupaten_raja_models.dart';
 import 'package:tridentpro/src/models/utilities/kecamatan_models_api.dart';
 import 'package:tridentpro/src/models/utilities/kecamatan_raja_models.dart';
+import 'package:tridentpro/src/models/utilities/news_detail.dart';
+import 'package:tridentpro/src/models/utilities/news_model.dart';
 import 'package:tridentpro/src/models/utilities/province_models.dart';
 import 'package:tridentpro/src/models/utilities/province_models_api.dart';
 import 'package:tridentpro/src/models/utilities/province_raja_models.dart';
+import 'package:tridentpro/src/models/utilities/slide_model.dart';
+import 'package:tridentpro/src/models/utilities/trading_signals_model.dart';
 import 'package:tridentpro/src/service/auth_service.dart';
 
 class UtilitiesController extends GetxController {
@@ -22,12 +28,20 @@ class UtilitiesController extends GetxController {
   RxString selectedCountry = "".obs;
   RxString selectedProvince = "".obs;
   RxString selectedCity = "".obs;
+  RxBool loadingPrice = false.obs;
 
   AuthService authService = Get.find();
 
   Rxn<CountryModels> countryModels = Rxn<CountryModels>();
   Rxn<ProvinceModels> provinceModels = Rxn<ProvinceModels>();
   Rxn<CityModels> cityModels = Rxn<CityModels>();
+  Rxn<NewsModel> newsModel = Rxn<NewsModel>();
+  Rxn<NewsDetail> newsDetail = Rxn<NewsDetail>();
+  Rxn<MarketModel> marketModel = Rxn<MarketModel>();
+  Rxn<SlideListModel> slideModel = Rxn<SlideListModel>();
+  Rxn<ImageLoginModel> imageLoginModel = Rxn<ImageLoginModel>();
+  Rxn<TradingSignalsModel> tradingSignal = Rxn<TradingSignalsModel>();
+  Rxn<TicketModels> ticketModel = Rxn<TicketModels>();
 
   //Raja Class Models
   Rxn<ProvinceRajaModels> provinceRajaModels = Rxn<ProvinceRajaModels>();
@@ -269,6 +283,163 @@ class UtilitiesController extends GetxController {
       return true;
     } catch (e) {
       responseMessage(e.toString());
+      return false;
+    }
+  }
+
+
+  // Desa API
+  Future<bool> getNewsList() async {
+    try {
+      Map<String, dynamic> result = await authService.get("public/news");
+
+      if (result['status'] != true) {
+        return false;
+      }
+      newsModel(NewsModel.fromJson(result));
+      responseMessage(result['message']);
+      return true;
+    } catch (e) {
+      responseMessage(e.toString());
+      return false;
+    }
+  }
+
+  // Desa API
+  Future<bool> getSlideImageHome() async {
+    try {
+      Map<String, dynamic> result = await authService.get("public/slide");
+
+      if (result['status'] != true) {
+        return false;
+      }
+      slideModel(SlideListModel.fromJson(result));
+      responseMessage(result['message']);
+      return true;
+    } catch (e) {
+      responseMessage(e.toString());
+      return false;
+    }
+  }
+
+
+  // Desa API
+  Future<bool> chatList() async {
+    try {
+      Map<String, dynamic> result = await authService.get("profile/ticket-list");
+
+      if (result['status'] != true) {
+        return false;
+      }
+      responseMessage(result['message']);
+      ticketModel(TicketModels.fromJson(result));
+      return true;
+    } catch (e) {
+      responseMessage(e.toString());
+      return false;
+    }
+  }
+
+  // Desa API
+  Future<bool> sendMessage() async {
+    try {
+      Map<String, dynamic> result = await authService.get("profile/ticket-list");
+
+      if (result['status'] != true) {
+        return false;
+      }
+      responseMessage(result['message']);
+      ticketModel(TicketModels.fromJson(result));
+      return true;
+    } catch (e) {
+      responseMessage(e.toString());
+      return false;
+    }
+  }
+
+  // Desa API
+  Future<bool> getSlideImageLogin() async {
+    try {
+      Map<String, dynamic> result = await authService.get("public/slide-home");
+
+      if (result['status'] != true) {
+        return false;
+      }
+      imageLoginModel(ImageLoginModel.fromJson(result));
+      responseMessage(result['message']);
+      return true;
+    } catch (e) {
+      responseMessage(e.toString());
+      return false;
+    }
+  }
+
+  // Desa API
+  Future<bool> getNewsDetail({String? newsID}) async {
+    try {
+      Map<String, dynamic> result = await authService.post("public/news-detail", {
+        "id" : newsID
+      });
+
+      if (result['status'] != true) {
+        return false;
+      }
+      newsDetail(NewsDetail.fromJson(result));
+      responseMessage(result['message']);
+      return true;
+    } catch (e) {
+      responseMessage(e.toString());
+      return false;
+    }
+  }
+
+
+  Future<bool> getTradingSignals({String? timeFrame}) async {
+    try {
+      isLoading(true);
+      http.Response response = await http.get(
+        Uri.tryParse("https://api-mt5.techcrm.net/v5-terminal-analis/analysis_main?timeframe=${timeFrame ?? "H1"}")!,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      );
+      var result = jsonDecode(response.body);
+      print("INI RESULT TRADING SIGNAL $result");
+      isLoading(false);
+      if (response.statusCode == 200) {
+        tradingSignal(TradingSignalsModel.fromJson(result));
+        return true;
+      }
+      responseMessage.value = result['result'];
+      return false;
+    } catch (e) {
+      isLoading(false);
+      responseMessage.value = e.toString();
+      return false;
+    }
+  }
+
+  Future<bool> getMarketPrice() async {
+    try {
+      loadingPrice(true);
+      http.Response response = await http.get(
+        Uri.tryParse("https://api-mt5.techcrm.net/v5-terminal-analis/prices")!,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      );
+      var result = jsonDecode(response.body);
+      print("INI RESULT MARKET PRICE $result");
+      loadingPrice(false);
+      if (response.statusCode == 200) {
+        marketModel(MarketModel.fromJson(result));
+        return true;
+      }
+      responseMessage.value = result['result'];
+      return false;
+    } catch (e) {
+      loadingPrice(false);
+      responseMessage.value = e.toString();
       return false;
     }
   }

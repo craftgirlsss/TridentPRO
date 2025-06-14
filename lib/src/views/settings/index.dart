@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tridentpro/src/components/alerts/default.dart';
@@ -9,15 +8,18 @@ import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/controllers/home.dart';
 import 'package:tridentpro/src/views/authentications/onboarding.dart';
+import 'package:tridentpro/src/views/authentications/signin.dart';
 import 'package:tridentpro/src/views/settings/deposit_withdrawal_history.dart';
 import 'package:tridentpro/src/views/settings/edit_profile.dart';
 import 'package:tridentpro/src/views/settings/faq.dart';
+import 'package:tridentpro/src/views/settings/tickets.dart';
 import 'package:tridentpro/src/views/trade/deposit.dart';
 import 'package:tridentpro/src/views/trade/internal_transfer.dart';
 import 'package:tridentpro/src/views/trade/withdrawal.dart';
 
 import 'about_app.dart';
 import 'components/profile_listtile.dart';
+import 'components/settings_components.dart';
 import 'documents.dart';
 
 class Settings extends StatefulWidget {
@@ -56,7 +58,7 @@ class _SettingsState extends State<Settings> {
                   prefs.remove('accessToken');
                   prefs.remove('refreshToken');
                   prefs.remove('loggedIn');
-                  Get.offAll(() => const Onboarding());
+                  Get.offAll(() => const SignIn());
                 },
                 title: "Keluar",
                 textButton: "Ya"
@@ -149,16 +151,16 @@ class _SettingsState extends State<Settings> {
               spacing: 12,
               runSpacing: 12,
               children: [
-                storageCard("Withdrawal", Bootstrap.box_arrow_up, (){
+                SettingComponents.storageCard("Withdrawal", Bootstrap.box_arrow_up, (){
                   Get.to(() => const Withdrawal());
                 }),
-                storageCard("Deposit", Bootstrap.box_arrow_down, (){
+                SettingComponents.storageCard("Deposit", Bootstrap.box_arrow_down, (){
                   Get.to(() => const Deposit());
                 }),
-                storageCard("Transfer", BoxIcons.bx_transfer_alt, (){
+                SettingComponents.storageCard("Transfer", BoxIcons.bx_transfer_alt, (){
                   Get.to(() => const InternalTransfer());
                 }),
-                storageCard("Documents", Iconsax.document_outline, (){
+                SettingComponents.storageCard("Documents", Iconsax.document_outline, (){
                   Get.to(() => const Documents());
                 }),
               ],
@@ -173,52 +175,24 @@ class _SettingsState extends State<Settings> {
               ],
             ),
             SizedBox(height: 12),
-            listTileItem("Riwayat Deposit Withdrawal", "Semua riwayat deposit akun trading anda", AntDesign.transaction_outline, onTap: (){
+            SettingComponents.listTileItem("Riwayat Deposit Withdrawal", "Semua riwayat deposit akun trading anda", AntDesign.transaction_outline, onTap: (){
               Get.to(() => const DepositWithdrawalHistory());
             }),
-            listTileItem("Tickets", "Help your problem", LineAwesome.headset_solid),
-            listTileItem("FAQ", "All Frequently Asking Question", Bootstrap.question_circle, onTap: (){
+            SettingComponents.listTileItem("Tickets", "Help your problem", LineAwesome.headset_solid, onTap: () async {
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              String? token = prefs.getString('accessToken');
+              print(token);
+              Get.to(() => const Tickets());
+            }),
+            SettingComponents.listTileItem("FAQ", "All Frequently Asking Question", Bootstrap.question_circle, onTap: (){
               Get.to(() => const Faq());
             }),
-            listTileItem("About", "Information about this App", FontAwesome.app_store_brand, onTap: (){
+            SettingComponents.listTileItem("About", "Information about this App", FontAwesome.app_store_brand, onTap: (){
               Get.to(() => const AboutApp());
             }),
           ],
         ),
       ),
-    );
-  }
-
-  Widget storageCard(String title, IconData icon, Function()? onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 150,
-        padding: EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.grey[100],
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          children: [
-            Icon(icon, size: 32, color: CustomColor.defaultColor),
-            SizedBox(height: 8),
-            Text(title),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget listTileItem(String title, String subtitle, IconData icon, {Function()? onTap}) {
-    return ListTile(
-      dense: true,
-      contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-      leading: Icon(icon, size: 28),
-      title: Text(title, style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 15)),
-      subtitle: Text(subtitle, style: GoogleFonts.inter(color: Colors.black54)),
-      trailing: Icon(Icons.arrow_forward_ios, size: 16),
-      onTap: onTap,
     );
   }
 }

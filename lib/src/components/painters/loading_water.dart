@@ -9,7 +9,7 @@ class LoadingWater extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Container(
-      color: Colors.white70,
+      color: Colors.black12,
       child: Center(
         child: SizedBox(
           width: size.width / 2,
