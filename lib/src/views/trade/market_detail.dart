@@ -146,8 +146,7 @@ class _MarketDetailState extends State<MarketDetail> {
                 child: CustomOutlinedButton.defaultOutlinedButton(
                   onPressed: () async {
                     SharedPreferences prefs = await SharedPreferences.getInstance();
-                    String? access = prefs.getString('accessToken');
-                    print(access);
+                    prefs.getString('accessToken');
                     Get.to(() => TradingOrderHistory(accountID: widget.login));
                   },
                   title: "History"

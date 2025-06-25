@@ -21,7 +21,7 @@ class _PromotionSectionState extends State<PromotionSection> {
     Future.delayed(Duration.zero, (){
       utilitiesController.getSlideImageHome().then((result){
         if(!result){
-          print(utilitiesController.responseMessage.value);
+          debugPrint(utilitiesController.responseMessage.value);
         }
       });
     });
@@ -46,7 +46,6 @@ class _PromotionSectionState extends State<PromotionSection> {
                 itemBuilder: (context, index) => Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4.0),
                   child: NewsCard.blurredNews(onPressed: (){
-                    print("ditekan");
                     openInChrome(utilitiesController.slideModel.value?.response[index].link ?? 'https://tridentpro.com');
                   }, imageURL: utilitiesController.slideModel.value?.response[index].picture),
                 ),

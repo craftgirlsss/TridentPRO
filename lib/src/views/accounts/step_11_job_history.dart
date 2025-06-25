@@ -135,13 +135,6 @@ class _Step11JobHistory extends State<Step11JobHistory> {
             size: size,
             title: regolController.isLoading.value ? "Uploading..." : "Your Job Experience",
             onPressed: regolController.isLoading.value ? null : (){
-              print(businessNameController.text);
-              print(yourJobCategoryController.text);
-              print(currentAddressOffice.text);
-              print(categoryBusinessNameController.text);
-              print(durationOfWorkController.text);
-              print(durationOfLastWorkController.text);
-              print(categoryBusinessNameController.text);
               if(_formKey.currentState!.validate()){
                 regolController.postStepEight(
                   namaPekerjaan: yourJobCategoryController.text,

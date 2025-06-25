@@ -8,8 +8,9 @@ import 'package:tridentpro/src/controllers/authentication.dart';
 import 'package:tridentpro/src/controllers/home.dart';
 import 'package:tridentpro/src/helpers/get_utilities/routes.dart';
 import 'package:tridentpro/src/service/auth_service.dart';
-// import 'package:tridentpro/src/views/authentications/onboarding.dart';
 import 'package:tridentpro/src/views/authentications/splashscreen.dart';
+
+final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
 void main() {
   runApp(MyApp());
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      scaffoldMessengerKey: scaffoldMessengerKey,
       title: 'TridentPRO',
       getPages: GetUtilities.routes,
       defaultTransition: Transition.cupertino,

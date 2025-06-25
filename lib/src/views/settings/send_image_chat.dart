@@ -40,7 +40,7 @@ class _SendImageChatState extends State<SendImageChat> {
 
 /// Set of widget that contains TextField and Button to submit message
 class _MessageBar extends StatefulWidget {
-  const _MessageBar({super.key});
+  const _MessageBar();
 
   @override
   State<_MessageBar> createState() => _MessageBarState();
@@ -51,7 +51,6 @@ class _MessageBarState extends State<_MessageBar> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Material(
       color: Colors.grey[100],
       child: SafeArea(

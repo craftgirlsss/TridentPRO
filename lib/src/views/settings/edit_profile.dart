@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
+import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
 import 'package:tridentpro/src/components/buttons/outlined_button.dart';
 import 'package:tridentpro/src/components/containers/utilities.dart';
 import 'package:tridentpro/src/components/textfields/descriptive_textfield.dart';
@@ -8,7 +11,9 @@ import 'package:tridentpro/src/components/textfields/email_textfield.dart';
 import 'package:tridentpro/src/components/textfields/name_textfield.dart';
 import 'package:tridentpro/src/components/textfields/number_textfield.dart';
 import 'package:tridentpro/src/components/textfields/phone_textfield.dart';
+import 'package:tridentpro/src/components/textfields/void_textfield.dart';
 import 'package:tridentpro/src/controllers/home.dart';
+import 'package:tridentpro/src/helpers/handlers/date_pickers.dart';
 
 import 'bank_page.dart';
 
@@ -23,11 +28,15 @@ class _EditProfileState extends State<EditProfile> {
 
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
+  TextEditingController telephoneController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController addressController = TextEditingController();
+  TextEditingController jenisKelamin = TextEditingController();
+  TextEditingController tempatLahir = TextEditingController();
   TextEditingController countryController = TextEditingController();
   TextEditingController kabupatenController = TextEditingController();
   TextEditingController zipController = TextEditingController();
+  TextEditingController tanggalLahir = TextEditingController();
   HomeController homeController = Get.find();
 
   @override
@@ -41,12 +50,19 @@ class _EditProfileState extends State<EditProfile> {
         addressController.text = homeController.profileModel.value?.address ?? "";
         countryController.text = homeController.profileModel.value?.country ?? "";
         zipController.text = homeController.profileModel.value?.zip ?? "";
+        tanggalLahir.text = homeController.profileModel.value?.tglLahir ?? "";
+        tempatLahir.text = homeController.profileModel.value?.tmptLahir ?? "";
+        addressController.text = homeController.profileModel.value?.address ?? "";
       });
     });
   }
 
   @override
   void dispose() {
+    jenisKelamin.dispose();
+    tempatLahir.dispose();
+    tanggalLahir.dispose();
+    telephoneController.dispose();
     nameController.dispose();
     phoneController.dispose();
     addressController.dispose();
@@ -58,6 +74,7 @@ class _EditProfileState extends State<EditProfile> {
   }
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -78,31 +95,55 @@ class _EditProfileState extends State<EditProfile> {
         body: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
+          child: UtilitiesWidget.titleContent(
+            title: "Edit Profile Saya",
+            subtitle: "Mohon untuk penuhi semua field profile anda agar anda bisa melakukan pembuatan akun trading",
             children: [
-              UtilitiesWidget.titleContent(
-                title: "Edit Profile Saya",
-                subtitle: "Mohon untuk penuhi semua field profile anda agar anda bisa melakukan pembuatan akun trading",
-                children: [
-                  NameTextField(controller: nameController, fieldName: "Nama Lengkap", hintText: "Nama Lengkap Saya", labelText: "Nama Lengkap Saya"),
-                  EmailTextField(controller: emailController, fieldName: "Alamat Email", hintText: "Alamat Email", labelText: "Alamat Email"),
-                  PhoneTextField(controller: phoneController, fieldName: "Nomor WhatsApp", hintText: "Nomor WhatsApp", labelText: "Nomor WhatsApp"),
-                  DescriptiveTextField(controller: addressController, fieldName: "Alamat Lengkap", hintText: "Alamat Lengkap Saya", labelText: "Alamat Lengkap Saya"),
-                  NameTextField(controller: countryController, fieldName: "Country", hintText: "Country", labelText: "Country"),
-                  NumberTextField(controller: zipController, fieldName: "Kode Pos", hintText: "Kode Pos", labelText: "Kode Pos", maxLength: 4),
-                  SizedBox(
-                    width: double.infinity,
-                    child: CustomOutlinedButton.defaultOutlinedButton(
-                      onPressed: (){
-                        Get.to(() => const MyBankPage());
+              NameTextField(controller: nameController, fieldName: "Nama Lengkap", hintText: "Nama Lengkap Saya", labelText: "Nama Lengkap Saya", useValidator: false),
+              EmailTextField(controller: emailController, fieldName: "Alamat Email", hintText: "Alamat Email", labelText: "Alamat Email"),
+              PhoneTextField(controller: phoneController, fieldName: "Nomor WhatsApp", hintText: "Nomor WhatsApp", labelText: "Nomor WhatsApp", useValidator: false),
+              PhoneTextField(controller: telephoneController, fieldName: "Nomor Telepon", hintText: "Nomor Telepon", labelText: "Nomor Telepon", useValidator: false),
+              VoidTextField(controller: jenisKelamin, fieldName: "Jenis Kelamin", hintText: "Jenis Kelamin", labelText: "Jenis Kelamin", onPressed: () async {
+                CustomMaterialBottomSheets.defaultBottomSheet(context, isScrolledController: false, size: size, title: "Pilih jenis kelamin", children: List.generate(2, (i){
+                  if(i == 0){
+                    return ListTile(
+                      onTap: (){
+                        Navigator.pop(context);
+                        jenisKelamin.text = "Laki-laki";
                       },
-                      title: "Edit Bank Profil Saya"
-                    ),
-                  )
-                ]
-              )
-            ],
-          ),
+                      title: Text("Laki-laki", style: GoogleFonts.inter()),
+                    );
+                  }
+                  return ListTile(
+                    onTap: (){
+                      Navigator.pop(context);
+                      jenisKelamin.text = "Perempuan";
+                    },
+                    title: Text("Perempuan", style: GoogleFonts.inter()),
+                  );
+                }));
+              }),
+              VoidTextField(controller: tanggalLahir, fieldName: "Tanggal Lahir", hintText: "Tanggal Lahir", labelText: "Tanggal Lahir", onPressed: () async {
+                DateTime? selected;
+                selected = await CustomDatePicker.material(context);
+                if(selected != null) tanggalLahir.text = CustomDatePicker.formatIndonesiaDate(selected);
+              }),
+              NameTextField(controller: tempatLahir, fieldName: "Tempat Lahir", hintText: "Tempat Lahir", labelText: "Tempat Lahir", useValidator: false),
+              DescriptiveTextField(controller: addressController, fieldName: "Alamat Lengkap", hintText: "Alamat Lengkap Saya", labelText: "Alamat Lengkap Saya", useValidator: false),
+              NameTextField(controller: countryController, fieldName: "Country", hintText: "Country", labelText: "Country", useValidator: false),
+              NumberTextField(controller: zipController, fieldName: "Kode Pos", hintText: "Kode Pos", labelText: "Kode Pos", maxLength: 4, useValidator: false),
+              SizedBox(
+                width: double.infinity,
+                child: CustomOutlinedButton.defaultOutlinedButton(
+                  onPressed: (){
+                    Get.to(() => const MyBankPage());
+                  },
+                  title: "Edit Bank Profil Saya"
+                ),
+              ),
+              const SizedBox(height: 40.0),
+            ]
+          )
         ),
       ),
     );

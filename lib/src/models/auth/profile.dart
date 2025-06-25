@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class ProfileModel {
   ProfileModel({
     required this.name,

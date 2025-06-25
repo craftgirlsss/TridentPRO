@@ -41,7 +41,6 @@ class _InternalTransferState extends State<InternalTransfer> {
         if(!resultTrading){
           CustomAlert.alertError(message: tradingController.responseMessage.value);
         }
-        print(akunTradingList);
       });
     });
   }
@@ -71,12 +70,8 @@ class _InternalTransferState extends State<InternalTransfer> {
                   title: "Submit",
                   onPressed: () async {
                     SharedPreferences prefs = await SharedPreferences.getInstance();
-                    String? accessToken = prefs.getString('accessToken');
-                    print(accessToken);
+                    prefs.getString('accessToken');
                     isLoading(true);
-                    print("Trading ID Sender: ${selectedTradingIDSender.value}");
-                    print("Trading ID Receiver: ${selectedTradingIDReceiver.value}");
-                    print("Amount: ${amount.text}");
                     if(_formKey.currentState!.validate()){
                       settingController.internalTransfer(
                         amount: amount.text,

@@ -43,7 +43,6 @@ class _Step3Marital extends State<Step3Marital> {
   @override 
   void initState() {
     super.initState();
-    print(regolController.accountModel.value?.maritalStatus);
     maritalStatusController.text = regolController.accountModel.value?.maritalStatus ?? "";
     motherNameController.text = regolController.accountModel.value?.motherName ?? "";
     phoneHomeController.text = regolController.accountModel.value?.phoneHome ?? "";
@@ -136,7 +135,6 @@ class _Step3Marital extends State<Step3Marital> {
               size: size,
               title: "Marital Status",
               onPressed: (){
-                print("wifeName ${wifeHusbandName.text}");
                 if(!_formKey.currentState!.validate()){
                   CustomAlert.alertError(message: "Please fill all the fields");
                   return false;

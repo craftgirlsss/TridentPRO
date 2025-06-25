@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/controllers/trading.dart';
-import 'package:tridentpro/src/helpers/variables/dummy_ohlc.dart';
 import 'package:web_socket_channel/status.dart' as status;
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -110,6 +109,7 @@ DateTimeAxis buildDateTimeAxis({
 
 class TradingProperty {
   static RxDouble volumeInit = 0.01.obs;
+  static RxDouble currentPrice = 0.0.obs;
   static RxDouble volumeMin = 0.00.obs;
   static RxDouble volumeMax = 100.0.obs;
 

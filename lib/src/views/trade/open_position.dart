@@ -30,8 +30,6 @@ class _OpenPositionState extends State<OpenPosition> {
     Future.delayed(Duration.zero, (){
       isLoading(true);
       tradingController.openOrder(login: widget.loginID!).then((result){
-        print("ini result $result");
-        print("ini result length ${result['response'].length}");
         lengthOpenOrder(result['response'].length);
       });
       isLoading(false);

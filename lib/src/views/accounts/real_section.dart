@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/controllers/trading.dart';
 import 'package:tridentpro/src/helpers/formatters/number_formatter.dart';
@@ -10,8 +11,9 @@ import 'package:tridentpro/src/views/trade/deposit.dart';
 import 'package:tridentpro/src/views/trade/withdrawal.dart';
 import 'components/card_info_account.dart';
 import 'package:get/get.dart';
-
 import 'create_real.dart';
+
+RxList<Map<String, RxBool>> accountActive = <Map<String, RxBool>>[].obs;
 
 class RealSection extends StatefulWidget {
   const RealSection({super.key});
@@ -24,6 +26,21 @@ class _RealSectionState extends State<RealSection> {
   TradingController tradingController = Get.put(TradingController());
 
   @override
+  void initState() {
+    super.initState();
+    if(accountActive.isEmpty){
+      accountActive.value = [];
+      if(tradingController.tradingAccountModels.value?.response.real != null){
+        for(int i = 0; i < tradingController.tradingAccountModels.value!.response.real!.length; i++){
+          accountActive.add({
+            "active": false.obs,
+          });
+        }
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return RefreshIndicator(
@@ -32,13 +49,12 @@ class _RealSectionState extends State<RealSection> {
       child: Obx(
         (){
           if(tradingController.isLoading.value){
-            print("Masuk ke loading");
             return SizedBox(
               width: double.infinity,
               height: double.infinity,
               child: Center(child: Text("Getting Real Account...")),
             );
-          }else if(tradingController.tradingAccountModels.value?.response.real?.length == 0){
+          }else if(tradingController.tradingAccountModels.value?.response.demo?.length != 0 && tradingController.tradingAccountModels.value?.response.real?.length == 0){
             return SizedBox(
               width: double.infinity,
               height: double.maxFinite,
@@ -49,7 +65,7 @@ class _RealSectionState extends State<RealSection> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      doesntHaveAccount(isDemo: false, size: size)
+                      CardInfoAccount(isDemo: false)
                     ],
                   ),
                 ),
@@ -76,32 +92,48 @@ class _RealSectionState extends State<RealSection> {
                     ),
                   );
                 }
-                return cardAccountReal(
-                  accountNumber: tradingController.tradingAccountModels.value?.response.real?[i].login,
-                  type: tradingController.tradingAccountModels.value?.response.real?[i].namaTipeAkun,
-                  balance: tradingController.tradingAccountModels.value?.response.real?[i].balance,
-                  currencyType: tradingController.tradingAccountModels.value?.response.real?[i].currency,
-                  leverage: "1:${tradingController.tradingAccountModels.value?.response.real?[i].leverage}"
+                return Obx(
+                  () => cardAccountReal(
+                    onTap: (){
+                      CustomMaterialBottomSheets.defaultBottomSheet(
+                        context,
+                        size: size,
+                        title: "Hubungkan Akun ${tradingController.tradingAccountModels.value?.response.real?[i].login} untuk memulai trading?",
+                        isScrolledController: false,
+                        children: [
+                          Obx(
+                            () => ListTile(
+                              leading: Icon(Bootstrap.plug, color: CustomColor.defaultColor),
+                              title: accountActive[i]['active']?.value == true ? Text("Disconnect") : Text("Connect"),
+                              trailing: Obx(
+                                () => Switch(
+                                  activeColor: CustomColor.defaultColor,
+                                  value: accountActive[i]['active']!.value,
+                                  onChanged: (value) {
+                                    print(value);
+                                    accountActive[i]['active']!.value = !accountActive[i]['active']!.value;
+                                    if(value){
+                                      tradingController.connectTradingAccount(accountId: tradingController.tradingAccountModels.value!.response.real![i].id!).then((result){
+                                        print(result);
+                                        Get.back();
+                                      });
+                                    }
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                        ]
+                      );
+                    },
+                    isConnected: accountActive[i]['active']!.value,
+                    accountNumber: tradingController.tradingAccountModels.value?.response.real?[i].login,
+                    type: tradingController.tradingAccountModels.value?.response.real?[i].namaTipeAkun,
+                    balance: tradingController.tradingAccountModels.value?.response.real?[i].balance,
+                    currencyType: tradingController.tradingAccountModels.value?.response.real?[i].currency,
+                    leverage: "1:${tradingController.tradingAccountModels.value?.response.real?[i].leverage}"
+                  ),
                 );
-                // return Padding(
-                //   padding: const EdgeInsets.all(8.0),
-                //   child: ListTile(
-                //     tileColor: Colors.white,
-                //     onTap: (){},
-                //     splashColor: CustomColor.defaultColor,
-                //     shape: RoundedRectangleBorder(
-                //       side: BorderSide(color: CustomColor.defaultColor, width: 0.5),
-                //       borderRadius: BorderRadius.circular(15)
-                //     ),
-                //     title: Text(tradingController.tradingAccountModels.value?.response.real?[i].login ?? "-", style: GoogleFonts.inter(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black54)),
-                //     subtitle: Text(tradingController.tradingAccountModels.value?.response.real?[i].balance == null ? "\$0" : "\$${tradingController.tradingAccountModels.value!.response.real![i].balance!.split('.').first}", style: GoogleFonts.inter(fontSize: 17, color: Colors.black45)),
-                //     trailing: Icon(Icons.keyboard_arrow_right_sharp, size: 25, color: CustomColor.defaultColor),
-                //     leading: CircleAvatar(
-                //       backgroundColor: CustomColor.defaultColor,
-                //       child: Icon(Icons.candlestick_chart, color: Colors.white),
-                //     ),
-                //   ),
-                // );
               }),
             ),
           );
@@ -110,7 +142,7 @@ class _RealSectionState extends State<RealSection> {
     );
   }
 
-  Container cardAccountReal({String? accountNumber, String? leverage, String? balance, String? type, String? currencyType}){
+  Container cardAccountReal({String? accountNumber, String? leverage, String? balance, String? type, String? currencyType, bool isConnected = false, VoidCallback? onTap}){
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
@@ -128,7 +160,24 @@ class _RealSectionState extends State<RealSection> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(currencyType != null ? currencyType.toUpperCase() : "-", style: TextStyle(fontFamily: "OCRA", fontSize: 13, color: CustomColor.defaultColor)),
-              Image.asset('assets/icons/ic_launcher.png', width: 50)
+              // Image.asset('assets/icons/ic_launcher.png', width: 50)
+              GestureDetector(
+                onTap: onTap,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                    border: Border.all(color: isConnected ? Colors.green : Colors.red)
+                  ),
+                  child: Row(
+                    children: [
+                      isConnected ? Icon(Icons.circle, size: 14.0, color: Colors.green) : Icon(Icons.circle, size: 14.0, color: Colors.red),
+                      const SizedBox(width: 5.0),
+                      isConnected ? Text("Connected") : Text("Disconnected")
+                    ],
+                  ),
+                ),
+              )
             ],
           ),
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tridentpro/src/components/alerts/default.dart';
-import 'package:tridentpro/src/controllers/2_factory_auth.dart';
+import 'package:tridentpro/src/controllers/two_factory_auth.dart';
 import 'package:get/get.dart';
 import 'package:tridentpro/src/controllers/home.dart';
 import 'package:tridentpro/src/service/auth_service.dart';
@@ -30,13 +30,10 @@ class _SplashscreenState extends State<Splashscreen> {
   void initState() {
     super.initState();
     getLoggedIn().then((loggedIn) async {
-      print(loggedIn);
       if(loggedIn){
         Map<String, dynamic> result = await authService.get("profile/info");
-        print(result);
         if(result['statusCode'] == 200){
           homeController.profile().then((resultProfile){
-            print(resultProfile);
             if(!resultProfile){
               CustomAlert.alertError(message: homeController.responseMessage.value, onTap: (){
                 Get.offAll(() => const SignIn());

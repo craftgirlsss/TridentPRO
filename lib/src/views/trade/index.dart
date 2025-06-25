@@ -25,8 +25,8 @@ class _TradeState extends State<Trade> {
   HomeController homeController = Get.find();
   TradingController tradingController = Get.put(TradingController());
   RxBool isLoading = false.obs;
-  RxList<Map<String, dynamic>> accountTrading = <Map<String, dynamic>>[].obs;
-  RxList<Map<String, dynamic>> unAddedAccountTrading = <Map<String, dynamic>>[].obs;
+  RxList<Map<String, dynamic>> accountTrading = <Map<String, dynamic>>[].obs; // daftar akun trading
+  RxList<Map<String, dynamic>> unAddedAccountTrading = <Map<String, dynamic>>[].obs; // menampung akun real yang belum ada di akun trading
 
   Future<void> loadTradingAccount() async {
     tradingController.isLoading(true);
@@ -38,11 +38,11 @@ class _TradeState extends State<Trade> {
   void initState() {
     super.initState();
     () async {
-      await loadTradingAccount();
-      await tradingController.getTradingAccount().then((result) {
+      await loadTradingAccount(); // getting akun trading
+      await tradingController.getTradingAccount().then((result) { // getting akun real
         if(result) {
           tradingController.tradingAccountModels.value?.response.real?.forEach((element) {
-            if(accountTrading.where((e) => e['login'].toString() == element.login.toString()).isEmpty) {
+            if(accountTrading.where((e) => e['login'].toString() == element.login.toString()).isEmpty) { // membandingkan akun real dengan akun trading yang mana sebagia banding adalah akun login
               unAddedAccountTrading.add({
                 'id': element.id,
                 'login': element.login,
@@ -73,8 +73,7 @@ class _TradeState extends State<Trade> {
                     GestureDetector(
                       onTap: () async {
                         SharedPreferences prefs = await SharedPreferences.getInstance();
-                        String? accessToken = prefs.getString("accessToken");
-                        print(accessToken);
+                        prefs.getString("accessToken");
                       },
                       child: CircleAvatar(
                         backgroundImage: AssetImage('assets/images/promotion.jpg'), // ganti sesuai path gambar

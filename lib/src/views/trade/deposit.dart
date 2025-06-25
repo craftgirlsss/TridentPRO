@@ -111,11 +111,6 @@ class _DepositState extends State<Deposit> {
                   onPressed: settingController.isLoading.value ? null : () async {
                     isLoading(true);
                     if(_formKey.currentState!.validate()){
-                      print("validated");
-                      print("Trading ID: ${selectedTradingID.value}");
-                      print("Bank Admin ID: ${selectedBankAdminID.value}");
-                      print("Bank User ID: ${selectedBankUserID.value}");
-                      print("Amount: ${myAmount.text}");
                       if(selectedPhotoPath.value == ""){
                         CustomAlert.alertError(message: "Mohon unggah foto bukti transfer");
                         isLoading(false);
@@ -129,8 +124,8 @@ class _DepositState extends State<Deposit> {
                         bankUserID: selectedBankUserID.value,
                       ).then((result){
                         if(result){
-                          CustomAlert.alertDialogCustomSuccess(message: settingController.responseMessage.value, onTap: (){
-                          Get.back();
+                            CustomAlert.alertDialogCustomSuccess(message: settingController.responseMessage.value, onTap: (){
+                            Get.back();
                           });
                           isLoading(false);
                           return;

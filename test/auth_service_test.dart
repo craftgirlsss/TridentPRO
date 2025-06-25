@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
-import '../lib/src/service/auth_service.dart';
+import 'package:tridentpro/src/service/auth_service.dart';
 
 @GenerateMocks([AuthService])
 void main() {
@@ -30,10 +30,7 @@ void main() {
       final body = {
         'refresh_token': '',
       };
-
       final result = await authService.refreshingToken(body: body);
-
-      print(result);
       expect(result, isA<Map<String, dynamic>>());
       expect(result['status'], true);
     });
@@ -43,7 +40,6 @@ void main() {
       final authService = AuthService();
       
       final fetchProfile = await authService.get("profile/info");
-      print(fetchProfile);
 
       expect(fetchProfile, isA<Map<String, dynamic>>());
       expect(fetchProfile.containsKey("status"), true);

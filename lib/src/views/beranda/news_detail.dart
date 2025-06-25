@@ -23,7 +23,7 @@ class _NewsDetailState extends State<NewsDetail> {
     Future.delayed(Duration.zero, (){
       utilitiesController.getNewsDetail(newsID: widget.idNews).then((result){
         if(!result){
-          print(utilitiesController.responseMessage.value);
+          debugPrint(utilitiesController.responseMessage.value);
         }
       });
     });

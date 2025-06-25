@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -151,13 +150,11 @@ class _CreateRealState extends State<CreateReal> {
             child: Obx(
               () => DefaultButton.defaultElevatedButton(
                 onPressed: regolController.isLoading.value ? null : (){
-                  print("INI ACCOUNT SUFFIX $accountTypeSuffix");
-                  print("INI PRODUCT CONTROLLER ${productController.text}");
                   regolController.postStepZero(accountSuffix: accountTypeSuffix.value, accountType: productController.text).then((result){
                     if(result){
                       Get.to(() => const Step1UploadPhoto());
                     }else{
-                      CustomAlert.alertError(message: regolController.responseMessage.value);
+                      CustomAlert.alertWaiting(message: regolController.responseMessage.value);
                     }
                   });
                 },

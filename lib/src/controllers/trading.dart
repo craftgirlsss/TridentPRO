@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:get/get.dart';
-import 'package:tridentpro/src/controllers/2_factory_auth.dart';
+import 'package:tridentpro/src/controllers/two_factory_auth.dart';
 import 'package:tridentpro/src/controllers/authentication.dart';
 import 'package:tridentpro/src/models/trades/ohlc_models.dart';
 import 'package:tridentpro/src/models/trades/open_order_model.dart';
@@ -152,7 +152,6 @@ class TradingController extends GetxController {
 
   // Create Demo Trading API
   Future<bool> getTradingAccount() async {
-    print("GET TRADING AKUN DIJALANKAN");
     try {
       isLoading(true);
       Map<String, dynamic> result = await authService.get("account/info");
@@ -178,6 +177,8 @@ class TradingController extends GetxController {
       if (result['status'] != true) {
         return [];
       }
+      print("Ini result get trading account v2");
+      print(result);
 
       List<dynamic> rawList = result['response'];
       List<Map<String, dynamic>> json = rawList.map((e) => Map<String, dynamic>.from(e)).toList();
@@ -193,9 +194,10 @@ class TradingController extends GetxController {
     try {
       isLoading(true);
       Map<String, dynamic> result = await authService.post("regol/createDemo", {});
+      print(result);
       
       isLoading(false);
-      if (result['statusCode'] == 200) {
+      if (result['status']) {
         return true;
       }
       responseMessage(result['message']);
@@ -215,6 +217,19 @@ class TradingController extends GetxController {
 
       return result;
       
+    } catch (e) {
+      throw Exception("addTradingAccount error: $e");
+    }
+  }
+
+  Future<Map<String, dynamic>> connectTradingAccount({required String accountId}) async {
+    try {
+      Map<String, dynamic> result = await authService.post("market/account/connect", {
+        'account_id': accountId
+      });
+      print(result);
+      return result;
+
     } catch (e) {
       throw Exception("addTradingAccount error: $e");
     }
@@ -242,6 +257,7 @@ class TradingController extends GetxController {
         'volume': lot,
         'price': price
       });
+      print(result);
 
       return result;
       

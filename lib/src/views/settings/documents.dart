@@ -46,15 +46,12 @@ class _DocumentsState extends State<Documents> {
     Future.delayed(Duration.zero, (){
       loadTradingAccount().then((result){
         if(widget.loginID != null){
-          print("Masuk ke if");
           selectedAccountTrading(widget.loginID);
           for(int i = 0; i < tradingController.accountTrading.length; i++){
             if(tradingController.accountTrading[i]['login'] == widget.loginID){
               selectedIndexAccountTrading(i);
             }
           }
-          print(selectedAccountTrading);
-          print(selectedIndexAccountTrading);
         }else{
           selectedAccountTrading(tradingController.accountTrading[0]['login'].toString());
           selectedIndexAccountTrading(0);
@@ -73,7 +70,7 @@ class _DocumentsState extends State<Documents> {
         actions: [
           CupertinoButton(
             onPressed: (){
-              CustomMaterialBottomSheets.defaultBottomSheet(context, title: "Pilih Akun Trading", size: size, children: List.generate(tradingController.accountTrading.length ?? 0, (i){
+              CustomMaterialBottomSheets.defaultBottomSheet(context, title: "Pilih Akun Trading", size: size, children: List.generate(tradingController.accountTrading.length, (i){
                 return Obx(
                   () => ListTile(
                     title: Text(tradingController.accountTrading[i]['login'] != null ? tradingController.accountTrading[i]['login'].toString() : "0"),

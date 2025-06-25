@@ -3,7 +3,8 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:tridentpro/src/models/auth/image_login_model.dart';
 import 'package:tridentpro/src/models/trades/market_model.dart';
-import 'package:tridentpro/src/models/utilities/MessagesModel.dart';
+import 'package:tridentpro/src/models/utilities/chat_model_list.dart';
+import 'package:tridentpro/src/models/utilities/messages_model.dart';
 import 'package:tridentpro/src/models/utilities/city_models.dart';
 import 'package:tridentpro/src/models/utilities/country_models.dart';
 import 'package:tridentpro/src/models/utilities/desa_models_api.dart';
@@ -41,7 +42,10 @@ class UtilitiesController extends GetxController {
   Rxn<SlideListModel> slideModel = Rxn<SlideListModel>();
   Rxn<ImageLoginModel> imageLoginModel = Rxn<ImageLoginModel>();
   Rxn<TradingSignalsModel> tradingSignal = Rxn<TradingSignalsModel>();
-  Rxn<TicketModels> ticketModel = Rxn<TicketModels>();
+
+  // Ticket
+  Rxn<ListOfTicketsModel> listTicketModel = Rxn<ListOfTicketsModel>();
+  Rxn<MessagesModel> messagesModel = Rxn<MessagesModel>();
 
   //Raja Class Models
   Rxn<ProvinceRajaModels> provinceRajaModels = Rxn<ProvinceRajaModels>();
@@ -323,16 +327,17 @@ class UtilitiesController extends GetxController {
   }
 
 
-  // Desa API
-  Future<bool> chatList() async {
+  // Daftar Tickets API
+  Future<bool> ticketList() async {
     try {
-      Map<String, dynamic> result = await authService.get("profile/ticket-list");
+      Map<String, dynamic> result = await authService.get("ticket/list");
 
       if (result['status'] != true) {
         return false;
       }
+      print(result);
       responseMessage(result['message']);
-      ticketModel(TicketModels.fromJson(result));
+      listTicketModel(ListOfTicketsModel.fromJson(result));
       return true;
     } catch (e) {
       responseMessage(e.toString());
@@ -340,16 +345,77 @@ class UtilitiesController extends GetxController {
     }
   }
 
-  // Desa API
-  Future<bool> sendMessage() async {
+  // Create Tickets API
+  Future<bool> createTicket({String? subject}) async {
     try {
-      Map<String, dynamic> result = await authService.get("profile/ticket-list");
+      Map<String, dynamic> result = await authService.post("ticket/create", {
+        "subject" : subject
+      });
 
       if (result['status'] != true) {
         return false;
       }
       responseMessage(result['message']);
-      ticketModel(TicketModels.fromJson(result));
+      return true;
+    } catch (e) {
+      responseMessage(e.toString());
+      return false;
+    }
+  }
+
+
+  // Create Tickets API
+  Future<bool> closeTicket({String? code}) async {
+    try {
+      Map<String, dynamic> result = await authService.post("ticket/close", {
+        "code" : code
+      });
+      print(result);
+
+      if (result['status'] != true) {
+        return false;
+      }
+      responseMessage(result['message']);
+      return true;
+    } catch (e) {
+      responseMessage(e.toString());
+      return false;
+    }
+  }
+
+  // List Message of Ticket API
+  Future<bool> listMessageOfTicket({String? code}) async {
+    try {
+      Map<String, dynamic> result = await authService.get("ticket/chats?code=$code");
+
+      if (result['status'] != true) {
+        return false;
+      }
+      print(result);
+      responseMessage(result['message']);
+      messagesModel(MessagesModel.fromJson(result));
+      return true;
+    } catch (e) {
+      responseMessage(e.toString());
+      return false;
+    }
+  }
+
+  // Send Ticket Message API
+  Future<bool> sendMessage({String? code, String? message}) async {
+    try {
+      Map<String, dynamic> result = await authService.post("ticket/sendMessage", {
+        'code': code,
+        'message': message
+      });
+      print(code);
+      print(message);
+      print(result);
+
+      if (result['status'] != true) {
+        return false;
+      }
+      responseMessage(result['message']);
       return true;
     } catch (e) {
       responseMessage(e.toString());
@@ -429,7 +495,7 @@ class UtilitiesController extends GetxController {
         },
       );
       var result = jsonDecode(response.body);
-      print("INI RESULT MARKET PRICE $result");
+
       loadingPrice(false);
       if (response.statusCode == 200) {
         marketModel(MarketModel.fromJson(result));

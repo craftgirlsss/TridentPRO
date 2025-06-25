@@ -83,9 +83,6 @@ class _WithdrawalState extends State<Withdrawal> {
                   title: "Submit",
                   onPressed: (){
                     isLoading(true);
-                    print("Trading ID: ${selectedTradingID.value}");
-                    print("Bank User ID: ${selectedBankUserID.value}");
-                    print("Amount: ${myAmount.text}");
                     if(_formKey.currentState!.validate()){
                       settingController.withdrawal(
                         bankUserID: selectedBankUserID.value,

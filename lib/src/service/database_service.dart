@@ -1,6 +1,5 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:tridentpro/src/models/databases/account.dart';
 
 class DatabaseService {
   static final DatabaseService instance = DatabaseService._internal();

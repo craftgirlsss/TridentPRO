@@ -9,7 +9,7 @@ class LoadingWater extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Container(
-      color: Colors.black12,
+      color: Colors.white60,
       child: Center(
         child: SizedBox(
           width: size.width / 2,
@@ -71,19 +71,19 @@ class _CircularWaveProgressState extends State<CircularWaveProgress> with Ticker
     setState(() {});
   }
 
-  IconData get _icon {
+  IconData get icon {
     if (_progressController.isAnimating) return Icons.stop_rounded;
     if (_progressController.isCompleted) return Icons.refresh_rounded;
     return Icons.play_arrow_rounded;
   }
 
-  VoidCallback get _callback {
+  VoidCallback get callback {
     if (_progressController.isAnimating) return _stopAnimation;
     if (_progressController.isCompleted) return _refreshAnimation;
     return _runAnimation;
   }
 
-  Color get _buttonColor {
+  Color get buttonColor {
     if (_progressController.isAnimating) return const Color(0xFFF44336);
     if (_progressController.isCompleted) return const Color(0xFF2196F3);
     return const Color(0xFF4CAF50);

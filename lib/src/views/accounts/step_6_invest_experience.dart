@@ -104,7 +104,6 @@ class _Step6InvestmentExperience extends State<Step6InvestmentExperience> {
                         value: index + 1,
                         groupValue: selectedValue.value,
                         onChanged: (value) {
-                          print(value);
                           selectedValue(value);
                           if(index == 0){
                             showBrokerName(true);
@@ -141,8 +140,6 @@ class _Step6InvestmentExperience extends State<Step6InvestmentExperience> {
                 if(companyNameController.text == "" || companyNameController.length == 0){
                   CustomAlert.alertError(message: "Mohon nama perusahaan diisi");
                 }else{
-                  print(companyNameController.text);
-                  print(GlobalVariable.investExperienceIndo[selectedValue.value-1].toLowerCase());
                   regolController.postStepSix(companyName: companyNameController.text, experience: GlobalVariable.investExperienceIndo[selectedValue.value-1].toLowerCase()).then((result){
                     if(result){
                       // Get.to(() => const Step7BalanceSources());

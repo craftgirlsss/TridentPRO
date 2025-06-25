@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tridentpro/src/controllers/2_factory_auth.dart';
+import 'package:tridentpro/src/controllers/home.dart';
+import 'package:tridentpro/src/controllers/two_factory_auth.dart';
 import 'package:tridentpro/src/helpers/variables/global_variables.dart';
 import 'package:tridentpro/src/models/auth/personal_model.dart';
 
@@ -12,6 +13,7 @@ class AuthController extends GetxController {
   RxString responseMessage = "".obs;
   Rxn<PersonalModels> personalModel = Rxn<PersonalModels>();
   TwoFactoryAuth twoFactoryAuth = Get.put(TwoFactoryAuth());
+  HomeController homeController = Get.put(HomeController());
 
   /// Login API
   Future<bool> login({String? email, String? password}) async {
@@ -29,7 +31,6 @@ class AuthController extends GetxController {
         },
       );
       var result = jsonDecode(response.body);
-      print(result);
       isLoading(false);
       if (response.statusCode == 200) {
         personalModel(PersonalModels.fromJson(result));
@@ -40,6 +41,9 @@ class AuthController extends GetxController {
         twoFactoryAuth.refreshToken(personalModel.value!.response.refreshToken);
         twoFactoryAuth.accessToken(personalModel.value!.response.accessToken);
         responseMessage.value = result['message'];
+        homeController.profile().then((resultProfile){
+          print(resultProfile);
+        });
         return true;
       }
       responseMessage.value = result['message'];
@@ -77,7 +81,8 @@ class AuthController extends GetxController {
         responseMessage.value = result['message'];
         return true;
       }
-      responseMessage.value = result['message']['data']['id'];
+      responseMessage.value = result['message'];
+      // responseMessage.value = result['message']['data']['id'];
       return false;
     } catch (e) {
       isLoading(false);

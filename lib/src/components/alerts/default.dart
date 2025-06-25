@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
+import 'package:tridentpro/main.dart';
 
 class CustomAlert {
   static alertDialogSuccess(Function()? onTap){
@@ -166,6 +167,39 @@ class CustomAlert {
     );
   }
 
+
+  static alertWaiting({Function()? onTap, String? message, String? title}){
+    return Get.defaultDialog(
+        backgroundColor: CupertinoColors.lightBackgroundGray,
+        radius: 30,
+        barrierDismissible: false,
+        title: "",
+        content: Column(
+          children: [
+            Lottie.asset('assets/json/waiting.json', repeat: true,frameRate: const FrameRate(50)),
+            const SizedBox(height: 10),
+            Text(title ?? "Waiting", style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold),),
+            const SizedBox(height: 5),
+            Text(message ?? "Waiting", style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.normal), textAlign: TextAlign.center)
+          ],
+        ),
+        actions: [
+          SizedBox(
+            width: 120,
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    shape: const StadiumBorder(),
+                    elevation: 5,
+                    backgroundColor: Colors.green
+                ),
+                onPressed: onTap ?? (){Get.back();},
+                child: Text("Paham", style: GoogleFonts.inter(color: Colors.white
+                ))),
+          ),
+        ]
+    );
+  }
+
   static whatsNew({String? versionApp, DateTime? time}){
     Get.defaultDialog(
         contentPadding: const EdgeInsets.symmetric(horizontal: 20),
@@ -188,6 +222,12 @@ class CustomAlert {
 4. Halaman Detail Akun Real, Tap pada card akun real pada tab akun, maka anda akan diarahkan ke halaman detail tentang Real Akun,
 5. Pop up what's new setiap ada update terbaru
 """, style: TextStyle(color: Colors.white60, fontSize: 13))
+    );
+  }
+
+  static void showMySnackBar(String message) {
+    scaffoldMessengerKey.currentState?.showSnackBar(
+        SnackBar(content: Text(message))
     );
   }
 }

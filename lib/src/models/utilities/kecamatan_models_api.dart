@@ -22,12 +22,4 @@ class Response {
     code = json['code'];
     selected = json['selected'];
   }
-
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['name'] = name;
-    _data['code'] = code;
-    _data['selected'] = selected;
-    return _data;
-  }
 }

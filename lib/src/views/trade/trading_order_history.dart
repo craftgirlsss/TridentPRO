@@ -25,8 +25,7 @@ class _TradingOrderHistoryState extends State<TradingOrderHistory> {
           actions: [
             IconButton(onPressed: () async {
               SharedPreferences prefs = await SharedPreferences.getInstance();
-              String? id = prefs.getString('accessToken');
-              print(id);
+              prefs.getString('accessToken');
             }, icon: Icon(CupertinoIcons.info))
           ],
           bottom: TabBar(

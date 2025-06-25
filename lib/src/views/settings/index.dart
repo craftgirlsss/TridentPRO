@@ -6,17 +6,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
+import 'package:tridentpro/src/controllers/authentication.dart';
 import 'package:tridentpro/src/controllers/home.dart';
-import 'package:tridentpro/src/views/authentications/onboarding.dart';
 import 'package:tridentpro/src/views/authentications/signin.dart';
 import 'package:tridentpro/src/views/settings/deposit_withdrawal_history.dart';
 import 'package:tridentpro/src/views/settings/edit_profile.dart';
 import 'package:tridentpro/src/views/settings/faq.dart';
+import 'package:tridentpro/src/views/settings/ticket_rooms.dart';
 import 'package:tridentpro/src/views/settings/tickets.dart';
 import 'package:tridentpro/src/views/trade/deposit.dart';
 import 'package:tridentpro/src/views/trade/internal_transfer.dart';
 import 'package:tridentpro/src/views/trade/withdrawal.dart';
-
 import 'about_app.dart';
 import 'components/profile_listtile.dart';
 import 'components/settings_components.dart';
@@ -31,6 +31,7 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   HomeController homeController = Get.find();
+  AuthController authController = Get.find();
 
   @override
   void initState() {
@@ -44,6 +45,8 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
+    print(authController.personalModel.value?.response.personalDetail.email);
+    print(homeController.profileModel.value?.email);
     return Scaffold(
       appBar: CustomAppBar.defaultAppBar(
         title: "Settings",
@@ -179,10 +182,10 @@ class _SettingsState extends State<Settings> {
               Get.to(() => const DepositWithdrawalHistory());
             }),
             SettingComponents.listTileItem("Tickets", "Help your problem", LineAwesome.headset_solid, onTap: () async {
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              String? token = prefs.getString('accessToken');
-              print(token);
-              Get.to(() => const Tickets());
+              // SharedPreferences prefs = await SharedPreferences.getInstance();
+              // prefs.getString('accessToken');
+              // Get.to(() => const Tickets());
+              Get.to(() => const TicketRooms());
             }),
             SettingComponents.listTileItem("FAQ", "All Frequently Asking Question", Bootstrap.question_circle, onTap: (){
               Get.to(() => const Faq());

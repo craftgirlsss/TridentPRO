@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:tridentpro/src/models/auth/pending_model.dart';
 import 'package:tridentpro/src/models/auth/profile.dart';
@@ -13,7 +14,6 @@ class HomeController extends GetxController {
   Future<bool> profile() async {
     try {
       Map<String, dynamic> response = await authService.get("profile/info");
-      print("ini response profile => $response");
       responseMessage(response['message']);
       if(response['status'] != true) {
         return false;
@@ -26,7 +26,7 @@ class HomeController extends GetxController {
       return true;
 
     } catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
       return false;
     }
   }
@@ -36,7 +36,6 @@ class HomeController extends GetxController {
     isLoading(true);
     try {
       Map<String, dynamic> response = await authService.get("account/pending");
-      print(response);
       isLoading(false);
       responseMessage(response['message']);
       if(response['status'] != true) {
@@ -46,7 +45,7 @@ class HomeController extends GetxController {
       return true;
 
     } catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
       isLoading(false);
       return false;
     }

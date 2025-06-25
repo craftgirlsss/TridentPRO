@@ -29,28 +29,9 @@ class _BerandaState extends State<Beranda>{
   UtilitiesController utilitiesController = Get.put(UtilitiesController());
   TradingController tradingController = Get.put(TradingController());
 
-
   Future<void> loadTradingAccount() async {
     tradingController.accountTrading.value = await tradingController.getTradingAccountV2().then((result) => result);
   }
-
-  List<Map<String, String>> dataMarket = [
-    {
-      "market" : "USDJPY",
-      "flag_pair" : "US",
-      "flag_paired" : "JP"
-    },
-    {
-      "market" : "USDCAD",
-      "flag_pair" : "US",
-      "flag_paired" : "CA"
-    },
-    {
-      "market" : "EURUSD",
-      "flag_pair" : "NZ",
-      "flag_paired" : "US"
-    },
-  ];
 
   Map<String, String>? flag;
 
@@ -60,10 +41,7 @@ class _BerandaState extends State<Beranda>{
     Future.delayed(Duration.zero, (){
       utilitiesController.getTradingSignals().then((result){
         loadTradingAccount();
-        if(!result){
-          print("Masuk kesini");
-          print(utilitiesController.responseMessage.value);
-        }
+        if(!result){}
       });
     });
   }
@@ -104,11 +82,11 @@ class _BerandaState extends State<Beranda>{
                   padding: const EdgeInsets.only(right: 15, top: 15, bottom: 15),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    color: Colors.grey[100],
-                    border: Border.all(color: Colors.black12, width: 0.4),
-                    boxShadow: const [
-                      BoxShadow(color: Colors.black12, blurRadius: 20),
-                    ]
+                    color: Colors.grey[50],
+                    // border: Border.all(color: Colors.black12, width: 0.4),
+                    // boxShadow: const [
+                    //   BoxShadow(color: Colors.black12, blurRadius: 20),
+                    // ]
                   ),
                   child: Obx(
                     () => Column(

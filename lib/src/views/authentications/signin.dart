@@ -15,7 +15,6 @@ import 'package:tridentpro/src/components/textfields/password_textfield.dart';
 import 'package:tridentpro/src/controllers/authentication.dart';
 import 'package:tridentpro/src/controllers/utilities.dart';
 import 'package:tridentpro/src/views/authentications/forgot.dart';
-import 'package:tridentpro/src/views/authentications/onboarding.dart';
 import 'package:tridentpro/src/views/authentications/signup.dart';
 import 'package:tridentpro/src/views/mainpage.dart';
 
@@ -40,9 +39,7 @@ class _SignInState extends State<SignIn> {
     super.initState();
     Future.delayed(Duration.zero, (){
       utilitiesController.getSlideImageLogin().then((result){
-        if(!result){
-          print(utilitiesController.responseMessage.value);
-        }
+        if(!result){}
       });
     });
   }
@@ -76,7 +73,7 @@ class _SignInState extends State<SignIn> {
                         controller: pageController,
                         physics: const BouncingScrollPhysics(),
                         pageSnapping: true,
-                        itemCount: utilitiesController.imageLoginModel.value?.response?.length != null ? utilitiesController.imageLoginModel.value?.response?.length : imageURL.length,
+                        itemCount: utilitiesController.imageLoginModel.value?.response?.length ?? imageURL.length,
                         itemBuilder: (context, index) => Container(
                           width: size.width,
                           height: size.height / 2.8,
@@ -146,19 +143,21 @@ class _SignInState extends State<SignIn> {
                               ),
                               SizedBox(
                                 width: size.width,
-                                child: DefaultButton.defaultElevatedButton(
-                                  onPressed: (){
-                                    if(_formKey.currentState!.validate()){
-                                      authController.login(email: emailController.text, password: passwordController.text).then((result){
-                                        if(result){
-                                          Get.offAll(() => Mainpage());
-                                        }else{
-                                          CustomAlert.alertError(message: authController.responseMessage.value);
-                                        }
-                                      });
-                                    }
-                                  },
-                                  title: LanguageGlobalVar.MASUK.tr
+                                child: Obx(
+                                  () => DefaultButton.defaultElevatedButton(
+                                    onPressed: authController.isLoading.value ? null : (){
+                                      if(_formKey.currentState!.validate()){
+                                        authController.login(email: emailController.text, password: passwordController.text).then((result){
+                                          if(result){
+                                            Get.offAll(() => Mainpage());
+                                          }else{
+                                            CustomAlert.alertError(message: authController.responseMessage.value);
+                                          }
+                                        });
+                                      }
+                                    },
+                                    title: authController.isLoading.value ? "Processing..." : LanguageGlobalVar.MASUK.tr
+                                  ),
                                 ),
                               ),
                               Padding(
@@ -203,7 +202,7 @@ class _SignInState extends State<SignIn> {
             ),
           ),
         ),
-      Obx(() => authController.isLoading.value ? LoadingWater() : const SizedBox())
+      // Obx(() => authController.isLoading.value ? LoadingWater() : const SizedBox())
       ],
     );
   }

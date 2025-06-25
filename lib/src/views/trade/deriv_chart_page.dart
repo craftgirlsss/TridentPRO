@@ -124,7 +124,10 @@ class _DerivChartPageState extends State<DerivChartPage> {
     Future.delayed(Duration.zero, () async {
       currentSymbol(widget.marketName ?? "GOLDUD");
       _loadChartData();
-      await tradingController.getSymbols().then((result){});
+      await tradingController.getSymbols().then((result){
+        TradingProperty.volumeInit(double.parse(result[0]['volume_min'].toString()));
+        // TradingProperty.currentPrice();
+      });
       indicatorsRepo = AddOnsRepository<IndicatorConfig>(
         createAddOn: (Map<String, dynamic> map) => IndicatorConfig.fromJson(map),
         onEditCallback: (int index) {},
@@ -167,15 +170,15 @@ class _DerivChartPageState extends State<DerivChartPage> {
         }
         isLoading(false);
       } else {
-        print("Failed to load chart data");
+        debugPrint("Failed to load chart data");
       }
     } catch (e) {
-      print("Error loading chart data: $e");
+      debugPrint("Error loading chart data: $e");
       isLoading(true);
     }
   }
 
-  void _showDrawingToolsDialog() {
+  void showDrawingToolsDialog() {
     if (!isInitialized.value) {
       return;
     }
@@ -206,7 +209,7 @@ class _DerivChartPageState extends State<DerivChartPage> {
     });
   }
 
-  Widget _buildToolChip(String label, IconData icon) {
+  Widget buildToolChip(String label, IconData icon) {
     return Chip(
       avatar: Icon(icon, size: 18),
       label: Text(label),
@@ -300,7 +303,7 @@ class _DerivChartPageState extends State<DerivChartPage> {
                         setState(() {
                           selectedTf = tf!;
                         });
-                        print(selectedTf.name);
+                        debugPrint(selectedTf.name);
                       },
                     ),
                   ],
@@ -415,7 +418,7 @@ class _DerivChartPageState extends State<DerivChartPage> {
             Obx(() => TradingProperty.sellButton(price: double.tryParse(currentPrice.value.toStringAsFixed(2)), onPressed: (){
               CustomAlert.alertDialogCustomInfo(title: "Sell", message: "Apakah anda yakin ingin melanjutkan?", colorPositiveButton: Colors.red, onTap: () {
                 Get.back();
-                tradingController.executionOrder(symbol: currentSymbol.value, type: "sell", login: widget.login.toString(), lot: TradingProperty.volumeInit.value.toString()).then((result) {
+                tradingController.executionOrder(symbol: currentSymbol.value, type: "sell", login: widget.login.toString(), lot: TradingProperty.volumeInit.value.toString(), price: currentPrice.value.toString()).then((result) {
                   if(result['status'] != true){
                     CustomAlert.alertError(message: result['message']);
                     return false;
@@ -432,7 +435,7 @@ class _DerivChartPageState extends State<DerivChartPage> {
             Obx(() => TradingProperty.buyButton(price: double.tryParse(currentPrice.value.toStringAsFixed(2)), onPressed: () {
               CustomAlert.alertDialogCustomInfo(title: "Buy", message: "Apakah anda yakin ingin melanjutkan?", onTap: () {
                 Get.back();
-                tradingController.executionOrder(symbol: currentSymbol.value, type: "buy", login: widget.login.toString(), lot: TradingProperty.volumeInit.value.toString()).then((result) {
+                tradingController.executionOrder(symbol: currentSymbol.value, type: "buy", login: widget.login.toString(), lot: TradingProperty.volumeInit.value.toString(), price: currentPrice.value.toString()).then((result) {
                   if(result['status'] != true){
                     CustomAlert.alertError(message: result['message']);
                     return false;

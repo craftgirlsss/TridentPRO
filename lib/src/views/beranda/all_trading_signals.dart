@@ -30,9 +30,7 @@ class _AllTradingSignalsState extends State<AllTradingSignals> {
     Future.delayed(Duration.zero, (){
       utilitiesController.getTradingSignals().then((result){
         loadTradingAccount();
-        if(!result){
-          print(utilitiesController.responseMessage.value);
-        }
+        if(!result){}
       });
     });
   }

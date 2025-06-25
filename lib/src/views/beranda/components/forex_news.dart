@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:icons_plus/icons_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/controllers/utilities.dart';
@@ -26,9 +25,7 @@ class _ForexNewsState extends State<ForexNews> {
     super.initState();
     Future.delayed(Duration.zero, (){
       utilitiesController.getNewsList().then((result){
-        if(!result){
-          print(utilitiesController.responseMessage.value);
-        }
+        if(!result){}
       });
     });
   }
@@ -135,7 +132,7 @@ class _ForexNewsState extends State<ForexNews> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10.0),
                                   image: utilitiesController.newsModel.value?.response[index].picture != null ? DecorationImage(image: NetworkImage(utilitiesController.newsModel.value!.response[index].picture!), fit: BoxFit.cover, onError: (exception, stackTrace) {
-                                    print("exception => ${exception.hashCode}");
+                                    debugPrint("exception => ${exception.hashCode}");
                                   }) : DecorationImage(image: AssetImage('assets/images/ic_launcher.png'), fit: BoxFit.cover)
                                 ),
                               )

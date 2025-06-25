@@ -130,8 +130,8 @@ class _Step17UploadPhotoState extends State<Step17UploadPhoto> {
                                       Checkbox(
                                         fillColor: WidgetStatePropertyAll(Colors.white),
                                         checkColor: CustomColor.defaultColor,
-                                        side: WidgetStateBorderSide.resolveWith((Set<MaterialState> states) {
-                                          if (states.contains(MaterialState.selected)) {
+                                        side: WidgetStateBorderSide.resolveWith((Set<WidgetState> states) {
+                                          if (states.contains(WidgetState.selected)) {
                                             return const BorderSide(color: Colors.black45); // tetap tampil meski dicentang
                                           }
                                           return const BorderSide(color: Colors.black45); // tidak dicentang
@@ -150,7 +150,7 @@ class _Step17UploadPhotoState extends State<Step17UploadPhoto> {
                                       Checkbox(
                                         fillColor: WidgetStatePropertyAll(Colors.white),
                                         checkColor: CustomColor.defaultColor,
-                                        side: WidgetStateBorderSide.resolveWith((Set<MaterialState> states) {
+                                        side: WidgetStateBorderSide.resolveWith((Set<WidgetState> states) {
                                           if (states.contains(WidgetState.selected)) {
                                             return const BorderSide(color: Colors.black45); // tetap tampil meski dicentang
                                           }

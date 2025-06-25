@@ -7,7 +7,6 @@ import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/views/accounts/index.dart';
 import 'package:tridentpro/src/views/beranda/index.dart';
 import 'package:tridentpro/src/views/settings/index.dart';
-import 'package:tridentpro/src/views/trade/index.dart';
 import 'package:tridentpro/src/views/trade/index_v2.dart';
 
 class Mainpage extends StatefulWidget {
@@ -68,7 +67,7 @@ class _MainpageState extends State<Mainpage> {
             type: BottomNavigationBarType.fixed,
             unselectedFontSize: 12,
             selectedItemColor: CustomColor.defaultColor,
-            unselectedIconTheme: IconThemeData(color: CustomColor.textThemeLightSoftColor),
+            unselectedIconTheme: IconThemeData(color: Colors.black26),
             selectedIconTheme: IconThemeData(size: 25, color: CustomColor.defaultColor),
             unselectedItemColor: CustomColor.textThemeLightSoftColor,
             onTap: _onItemTapped,

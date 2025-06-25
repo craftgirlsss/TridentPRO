@@ -10,7 +10,7 @@ class SettingComponents {
         width: 150,
         padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.grey[100],
+          color: Colors.grey[50],
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(

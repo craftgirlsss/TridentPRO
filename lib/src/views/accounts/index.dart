@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:icons_plus/icons_plus.dart';
 import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
-import 'package:tridentpro/src/components/buttons/iconbuttons.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/components/painters/loading_water.dart';
 import 'package:tridentpro/src/controllers/trading.dart';
@@ -19,7 +17,8 @@ class Accounts extends StatefulWidget {
 }
 
 class _AccountsState extends State<Accounts> {
-  String selected = "Real";
+  String selected = "Demo";
+  RxBool isLoading = false.obs;
   TradingController tradingController = Get.put(TradingController());
 
   @override
@@ -60,29 +59,52 @@ class _AccountsState extends State<Accounts> {
                       child: Row(
                         children: [
                           Expanded(
-                            child: SegmentedButton<String>(
-                              segments: const <ButtonSegment<String>>[
-                                ButtonSegment(
-                                  value: 'Real',
-                                  label: Text('Real'),
-                                ),
-                                ButtonSegment(
-                                  value: 'Demo',
-                                  label: Text('Demo'),
-                                ),
-                                ButtonSegment(
-                                  value: 'Pending',
-                                  label: Text('Pending'),
-                                ),
-                              ],
-                              selected: <String>{selected},
-                              onSelectionChanged: (newSelection) {
-                                setState(() {
-                                  selected = newSelection.first;
-                                });
+                            child: Obx(
+                              () {
+                                if(tradingController.tradingAccountModels.value?.response.demo?.length == 0){
+                                  return SegmentedButton<String>(
+                                    segments: const <ButtonSegment<String>>[
+                                      ButtonSegment(
+                                        value: 'Demo',
+                                        label: Text('Demo'),
+                                      ),
+                                    ],
+                                    selected: <String>{selected},
+                                    onSelectionChanged: (newSelection) {
+                                      setState(() {
+                                        selected = newSelection.first;
+                                      });
+                                    },
+                                    multiSelectionEnabled: false,
+                                    showSelectedIcon: false,
+                                  );
+                                }
+                                return SegmentedButton<String>(
+                                  segments: const <ButtonSegment<String>>[
+                                    ButtonSegment(
+                                      value: 'Real',
+                                      label: Text('Real'),
+                                    ),
+                                    ButtonSegment(
+                                      value: 'Demo',
+                                      label: Text('Demo'),
+                                    ),
+                                    ButtonSegment(
+                                      value: 'Pending',
+                                      label: Text('Pending'),
+                                    ),
+
+                                  ],
+                                  selected: <String>{selected},
+                                  onSelectionChanged: (newSelection) {
+                                    setState(() {
+                                      selected = newSelection.first;
+                                    });
+                                  },
+                                  multiSelectionEnabled: false,
+                                  showSelectedIcon: false,
+                                );
                               },
-                              multiSelectionEnabled: false,
-                              showSelectedIcon: false,
                             ),
                           ),
                         ],

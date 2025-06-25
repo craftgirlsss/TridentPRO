@@ -157,20 +157,11 @@ class _SignupState extends State<Signup> {
                                       }else{
                                         if(kDebugMode){
                                           authController.sendOTPWA(phone: number.value, phoneCode: phoneCode.value).then((result){
-
-                                            if(result) {
-                                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(authController.responseMessage.value)));
-                                            }else{
-                                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(authController.responseMessage.value)));
-                                            }
+                                            CustomAlert.showMySnackBar(authController.responseMessage.value);
                                           });
                                         }else{
                                           authController.sendOTPSMS(phone: number.value, phoneCode: phoneCode.value).then((result){
-                                            if(result) {
-                                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(authController.responseMessage.value)));
-                                            }else{
-                                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(authController.responseMessage.value)));
-                                            }
+                                            CustomAlert.showMySnackBar(authController.responseMessage.value);
                                           });
                                         }
                                       }
@@ -282,12 +273,12 @@ class _SignupState extends State<Signup> {
                       }
                     }
                   },
-                  title: LanguageGlobalVar.SELANJUTNYA.tr
+                  title: authController.isLoading.value ? "Processing..." : LanguageGlobalVar.SELANJUTNYA.tr
                 ),
               ),
             ),
           ),
-          Obx(() => authController.isLoading.value ? LoadingWater() : const SizedBox())
+          // Obx(() => authController.isLoading.value ? LoadingWater() : const SizedBox())
         ],
       ),
     );

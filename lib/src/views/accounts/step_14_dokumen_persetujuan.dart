@@ -51,8 +51,7 @@ class _Step14PenyelesaianPerselisihan extends State<Step14PenyelesaianPerselisih
               CupertinoButton(
                 onPressed: () async {
                   SharedPreferences prefs = await SharedPreferences.getInstance();
-                  String? token = prefs.getString('accessToken');
-                  print(token);
+                  prefs.getString('accessToken');
                   Get.offAll(() => const Mainpage());
                 },
                 child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),

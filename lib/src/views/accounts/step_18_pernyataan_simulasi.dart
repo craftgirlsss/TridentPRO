@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,7 +13,7 @@ import 'package:tridentpro/src/components/painters/loading_water.dart';
 import 'package:tridentpro/src/components/textfields/descriptive_textfield.dart';
 import 'package:tridentpro/src/components/textfields/number_textfield.dart';
 import 'package:tridentpro/src/components/textfields/void_textfield.dart';
-import 'package:tridentpro/src/controllers/2_factory_auth.dart';
+import 'package:tridentpro/src/controllers/two_factory_auth.dart';
 import 'package:tridentpro/src/controllers/regol.dart';
 import 'package:tridentpro/src/controllers/utilities.dart';
 import 'package:tridentpro/src/helpers/handlers/image_picker.dart';
@@ -271,8 +270,8 @@ class _Step18PrenyataanSimulasiState extends State<Step18PrenyataanSimulasi> {
                                       Checkbox(
                                         fillColor: WidgetStatePropertyAll(Colors.white),
                                         checkColor: CustomColor.defaultColor,
-                                        side: WidgetStateBorderSide.resolveWith((Set<MaterialState> states) {
-                                          if (states.contains(MaterialState.selected)) {
+                                        side: WidgetStateBorderSide.resolveWith((Set<WidgetState> states) {
+                                          if (states.contains(WidgetState.selected)) {
                                             return const BorderSide(color: Colors.black45); // tetap tampil meski dicentang
                                           }
                                           return const BorderSide(color: Colors.black45); // tidak dicentang
@@ -291,7 +290,7 @@ class _Step18PrenyataanSimulasiState extends State<Step18PrenyataanSimulasi> {
                                       Checkbox(
                                         fillColor: WidgetStatePropertyAll(Colors.white),
                                         checkColor: CustomColor.defaultColor,
-                                        side: WidgetStateBorderSide.resolveWith((Set<MaterialState> states) {
+                                        side: WidgetStateBorderSide.resolveWith((Set<WidgetState> states) {
                                           if (states.contains(WidgetState.selected)) {
                                             return const BorderSide(color: Colors.black45); // tetap tampil meski dicentang
                                           }
@@ -319,8 +318,6 @@ class _Step18PrenyataanSimulasiState extends State<Step18PrenyataanSimulasi> {
                 size: size,
                 title: LanguageGlobalVar.VERIFICATION_IDENTITY.tr,
                 onPressed: regolController.isLoading.value ? null : (){
-                  print(zipController.text);
-                  print(provinceController.text);
                   if(_formKey.currentState!.validate()){
                     regolController.postStepNinePernyataanSimulasi(
                       urlPhoto: imageLoaded.value ? "" : simulasiAkunDemoURL.value,

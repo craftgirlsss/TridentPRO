@@ -120,8 +120,6 @@ class _Step19FamilyBappebti extends State<Step19FamilyBappebti> {
               size: size,
               title: regolController.isLoading.value ? "Loading..." : "Keluarga BAPPEBTI",
               onPressed: regolController.isLoading.value ? null : (){
-                print(familyBappebti.text);
-                print(pernyataanPailit.text);
                 regolController.postPernytaanPailit(keluargaBappebti: familyBappebti.text.toLowerCase(), pailit: pernyataanPailit.text.toLowerCase()).then((result){
                   if(result){
                     Get.to(() => const Step6InvestmentExperience());
