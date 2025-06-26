@@ -32,6 +32,7 @@ class _ForexNewsState extends State<ForexNews> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: Padding(
@@ -44,8 +45,9 @@ class _ForexNewsState extends State<ForexNews> {
             Text("Global Forex News", style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
             SizedBox(height: 10),
             SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
               child: Obx(
-                () => Column(
+                () => Row(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: List.generate(utilitiesController.newsModel.value?.response.length ?? 0, (index) {
@@ -55,32 +57,34 @@ class _ForexNewsState extends State<ForexNews> {
                         onPressed: (){
                           Get.to(() => NewsDetail(idNews: utilitiesController.newsModel.value?.response[index].id));
                         },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                        child: Container(
+                          width: size.width / 1.18,
+                          height: size.width / 2.5,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                              image: utilitiesController.newsModel.value?.response[index].picture != null ? DecorationImage(image: NetworkImage(utilitiesController.newsModel.value!.response[index].picture!), fit: BoxFit.cover) : DecorationImage(image: AssetImage('assets/images/ic_launcher.png'), fit: BoxFit.cover)
+                          ),
+                          child: Stack(
                             children: [
-                              Expanded(
+                              Container(
+                                width: size.width / 1.18,
+                                height: size.width / 2.5,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  color: Colors.black26,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(10.0),
                                 child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.end,
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Flexible(child: Obx(() => Text(utilitiesController.newsModel.value?.response[index].title ?? "Berita ke ${index + 1}", style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor), maxLines: 2))),
-                                    SizedBox(height: 4),
-                                    Flexible(child: Obx(() => Text("Published: ${DateFormat('EEEE, dd MMMM yyyy').add_jms().format(DateTime.parse(utilitiesController.newsModel.value!.response[index].tanggal!))}", style: GoogleFonts.inter(color: Colors.grey, fontSize: 12)))),
+                                    Flexible(child: Obx(() => Text(utilitiesController.newsModel.value?.response[index].title ?? "Berita ke ${index + 1}", style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: Colors.white), maxLines: 2, overflow: TextOverflow.ellipsis))),
+                                    Flexible(child: Obx(() => Text("Published: ${DateFormat('EEEE, dd MMMM yyyy').add_jms().format(DateTime.parse(utilitiesController.newsModel.value!.response[index].tanggal!))}", style: GoogleFonts.inter(color: Colors.white70, fontSize: 12)))),
                                   ],
                                 ),
                               ),
-                              const SizedBox(width: 5),
-                              Container(
-                                width: 100,
-                                height: 60,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  image: utilitiesController.newsModel.value?.response[index].picture != null ? DecorationImage(image: NetworkImage(utilitiesController.newsModel.value!.response[index].picture!), fit: BoxFit.cover) : DecorationImage(image: AssetImage('assets/images/ic_launcher.png'), fit: BoxFit.cover)
-                                ),
-                              )
                             ],
                           ),
                         ),
@@ -107,35 +111,34 @@ class _ForexNewsState extends State<ForexNews> {
                         onPressed: (){
                           Get.to(() => NewsDetail(idNews: utilitiesController.newsModel.value?.response[index].id));
                         },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                        child: Container(
+                          width: size.width / 1.18,
+                          height: size.width / 2.5,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            image: utilitiesController.newsModel.value?.response[index].picture != null ? DecorationImage(image: NetworkImage(utilitiesController.newsModel.value!.response[index].picture!), fit: BoxFit.cover) : DecorationImage(image: AssetImage('assets/images/ic_launcher.png'), fit: BoxFit.cover)
+                          ),
+                          child: Stack(
                             children: [
-                              // Icon(LineAwesome.newspaper, size: 30, color: CustomColor.defaultColor),
-                              Expanded(
+                              Container(
+                                width: size.width / 1.18,
+                                height: size.width / 2.5,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  color: Colors.black26,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(10.0),
                                 child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.end,
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Flexible(child: Obx(() => Text(utilitiesController.newsModel.value?.response[index].title ?? "Berita ke ${index + 1}", style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor), maxLines: 2))),
-                                    SizedBox(height: 4),
-                                    Flexible(child: Obx(() => Text("Published: ${DateFormat('EEEE, dd MMMM yyyy').add_jms().format(DateTime.parse(utilitiesController.newsModel.value!.response[index].tanggal!))}", style: GoogleFonts.inter(color: Colors.grey, fontSize: 12)))),
+                                    Flexible(child: Obx(() => Text(utilitiesController.newsModel.value?.response[index].title ?? "Berita ke ${index + 1}", style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: Colors.white), maxLines: 2, overflow: TextOverflow.ellipsis))),
+                                    Flexible(child: Obx(() => Text("Published: ${DateFormat('EEEE, dd MMMM yyyy').add_jms().format(DateTime.parse(utilitiesController.newsModel.value!.response[index].tanggal!))}", style: GoogleFonts.inter(color: Colors.white70, fontSize: 12)))),
                                   ],
                                 ),
                               ),
-                              const SizedBox(width: 5),
-                              Container(
-                                width: 100,
-                                height: 60,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  image: utilitiesController.newsModel.value?.response[index].picture != null ? DecorationImage(image: NetworkImage(utilitiesController.newsModel.value!.response[index].picture!), fit: BoxFit.cover, onError: (exception, stackTrace) {
-                                    debugPrint("exception => ${exception.hashCode}");
-                                  }) : DecorationImage(image: AssetImage('assets/images/ic_launcher.png'), fit: BoxFit.cover)
-                                ),
-                              )
                             ],
                           ),
                         ),
