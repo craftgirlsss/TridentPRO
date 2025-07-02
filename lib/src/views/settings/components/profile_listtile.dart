@@ -3,28 +3,31 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 
-Widget profileListTile({String? name, String? email, String? urlPhoto, Function()? onPressedPhoto}){
+Widget profileListTile({String? name, String? email, String? urlPhoto, Function()? onPressedPhoto, bool? imageOnline, Function()? onTapImage}){
   return Row(
     children: [
-      Stack(
-        children: [
-          CircleAvatar(
-            radius: 40,
-            backgroundImage: AssetImage('assets/images/ic_launcher.png'),
-          ),
-          Positioned(
-            right: 0,
-            bottom: 0,
-            child: Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white
-              ),
-              child: Icon(CupertinoIcons.camera_fill, color: CustomColor.defaultColor, size: 19)
+      GestureDetector(
+        onTap: onTapImage,
+        child: Stack(
+          children: [
+            CircleAvatar(
+              radius: 40,
+              backgroundImage: imageOnline == true ? NetworkImage(urlPhoto!) : AssetImage('assets/images/ic_launcher.png'),
             ),
-          )
-        ],
+            Positioned(
+              right: 0,
+              bottom: 0,
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white
+                ),
+                child: Icon(CupertinoIcons.camera_fill, color: CustomColor.defaultColor, size: 19)
+              ),
+            )
+          ],
+        ),
       ),
       const SizedBox(width: 20),
       Column(

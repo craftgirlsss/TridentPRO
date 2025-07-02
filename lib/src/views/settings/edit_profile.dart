@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tridentpro/src/components/alerts/default.dart';
+import 'package:tridentpro/src/components/alerts/scaffold_messanger_alert.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
 import 'package:tridentpro/src/components/buttons/outlined_button.dart';
@@ -13,6 +16,7 @@ import 'package:tridentpro/src/components/textfields/number_textfield.dart';
 import 'package:tridentpro/src/components/textfields/phone_textfield.dart';
 import 'package:tridentpro/src/components/textfields/void_textfield.dart';
 import 'package:tridentpro/src/controllers/home.dart';
+import 'package:tridentpro/src/controllers/user_controller.dart';
 import 'package:tridentpro/src/helpers/handlers/date_pickers.dart';
 
 import 'bank_page.dart';
@@ -26,9 +30,10 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfile> {
 
+  UserController userController = Get.put(UserController());
+
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
-  TextEditingController telephoneController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController jenisKelamin = TextEditingController();
@@ -38,12 +43,15 @@ class _EditProfileState extends State<EditProfile> {
   TextEditingController zipController = TextEditingController();
   TextEditingController tanggalLahir = TextEditingController();
   HomeController homeController = Get.find();
+  RxString selectedDateBirth = "".obs;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, (){
       setState(() {
+        jenisKelamin.text = homeController.profileModel.value?.gender ?? "-";
         nameController.text = homeController.profileModel.value?.name ?? "";
         phoneController.text = homeController.profileModel.value?.phone ?? "";
         emailController.text = homeController.profileModel.value?.email ?? "";
@@ -62,7 +70,6 @@ class _EditProfileState extends State<EditProfile> {
     jenisKelamin.dispose();
     tempatLahir.dispose();
     tanggalLahir.dispose();
-    telephoneController.dispose();
     nameController.dispose();
     phoneController.dispose();
     addressController.dispose();
@@ -84,9 +91,37 @@ class _EditProfileState extends State<EditProfile> {
           actions: [
             SizedBox(
               height: 30,
-              child: CustomOutlinedButton.defaultOutlinedButton(
-                title: "Simpan",
-                onPressed: (){}
+              child: Obx(
+                () => CustomOutlinedButton.defaultOutlinedButton(
+                  title: userController.isLoading.value ? "Processing..." : "Simpan",
+                  onPressed: userController.isLoading.value ? null : () async {
+                    if(_formKey.currentState!.validate()){
+                      if(jenisKelamin.text == "Laki-laki") jenisKelamin.text = "laki-laki";
+                      if(jenisKelamin.text == "Perempuan") jenisKelamin.text = "perempuan";
+                      userController.updateProfile(
+                        address: addressController.text,
+                        gender: jenisKelamin.text,
+                        dateOfBirth: selectedDateBirth.value,
+                        placeOfBirth: tempatLahir.text,
+                        country: countryController.text,
+                        fullname: nameController.text,
+                        zipcode: zipController.text
+                      ).then((result){
+                        print(result);
+                        if(result){
+                          CustomAlert.alertDialogCustomSuccess(onTap: (){
+                            userController.getProfile();
+                            Get.back();
+                          }, message: userController.responseMessage.value, title: "Berhasil", textButton: "Kembali");
+                        }else{
+                          CustomAlert.alertError(onTap: (){Get.back();}, message: userController.responseMessage.value, title: "Gagal");
+                        }
+                      });
+                    }else{
+                      CustomScaffoldMessanger.showAppSnackBar(context, message: "Form tidak boleh kosong");
+                    }
+                  }
+                ),
               ),
             ),
             const SizedBox(width: 10)
@@ -95,54 +130,59 @@ class _EditProfileState extends State<EditProfile> {
         body: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: UtilitiesWidget.titleContent(
-            title: "Edit Profile Saya",
-            subtitle: "Mohon untuk penuhi semua field profile anda agar anda bisa melakukan pembuatan akun trading",
-            children: [
-              NameTextField(controller: nameController, fieldName: "Nama Lengkap", hintText: "Nama Lengkap Saya", labelText: "Nama Lengkap Saya", useValidator: false),
-              EmailTextField(controller: emailController, fieldName: "Alamat Email", hintText: "Alamat Email", labelText: "Alamat Email"),
-              PhoneTextField(controller: phoneController, fieldName: "Nomor WhatsApp", hintText: "Nomor WhatsApp", labelText: "Nomor WhatsApp", useValidator: false),
-              PhoneTextField(controller: telephoneController, fieldName: "Nomor Telepon", hintText: "Nomor Telepon", labelText: "Nomor Telepon", useValidator: false),
-              VoidTextField(controller: jenisKelamin, fieldName: "Jenis Kelamin", hintText: "Jenis Kelamin", labelText: "Jenis Kelamin", onPressed: () async {
-                CustomMaterialBottomSheets.defaultBottomSheet(context, isScrolledController: false, size: size, title: "Pilih jenis kelamin", children: List.generate(2, (i){
-                  if(i == 0){
+          child: Form(
+            key: _formKey,
+            child: UtilitiesWidget.titleContent(
+              title: "Edit Profile Saya",
+              subtitle: "Mohon untuk penuhi semua field profile anda agar anda bisa melakukan pembuatan akun trading",
+              children: [
+                NameTextField(controller: nameController, fieldName: "Nama Lengkap", hintText: "Nama Lengkap Saya", labelText: "Nama Lengkap Saya", useValidator: false),
+                EmailTextField(controller: emailController, fieldName: "Alamat Email", hintText: "Alamat Email", labelText: "Alamat Email", readOnly: true, useValidator: false),
+                PhoneTextField(controller: phoneController, fieldName: "Nomor WhatsApp", hintText: "Nomor WhatsApp", labelText: "Nomor WhatsApp", useValidator: false),
+                VoidTextField(controller: jenisKelamin, fieldName: "Jenis Kelamin", hintText: "Jenis Kelamin", labelText: "Jenis Kelamin", onPressed: () async {
+                  CustomMaterialBottomSheets.defaultBottomSheet(context, isScrolledController: false, size: size, title: "Pilih jenis kelamin", children: List.generate(2, (i){
+                    if(i == 0){
+                      return ListTile(
+                        onTap: (){
+                          Navigator.pop(context);
+                          jenisKelamin.text = "Laki-laki";
+                        },
+                        title: Text("Laki-laki", style: GoogleFonts.inter()),
+                      );
+                    }
                     return ListTile(
                       onTap: (){
                         Navigator.pop(context);
-                        jenisKelamin.text = "Laki-laki";
+                        jenisKelamin.text = "Perempuan";
                       },
-                      title: Text("Laki-laki", style: GoogleFonts.inter()),
+                      title: Text("Perempuan", style: GoogleFonts.inter()),
                     );
+                  }));
+                }),
+                VoidTextField(controller: tanggalLahir, fieldName: "Tanggal Lahir", hintText: "Tanggal Lahir", labelText: "Tanggal Lahir", onPressed: () async {
+                  DateTime? selected;
+                  selected = await CustomDatePicker.material(context);
+                  if(selected != null){
+                    tanggalLahir.text = CustomDatePicker.formatIndonesiaDate(selected);
+                    selectedDateBirth(DateFormat('yyyy-MM-dd').format(selected));
                   }
-                  return ListTile(
-                    onTap: (){
-                      Navigator.pop(context);
-                      jenisKelamin.text = "Perempuan";
+                }),
+                NameTextField(controller: tempatLahir, fieldName: "Tempat Lahir", hintText: "Tempat Lahir", labelText: "Tempat Lahir", useValidator: false),
+                DescriptiveTextField(controller: addressController, fieldName: "Alamat Lengkap", hintText: "Alamat Lengkap Saya", labelText: "Alamat Lengkap Saya", useValidator: false),
+                NameTextField(controller: countryController, fieldName: "Country", hintText: "Country", labelText: "Country", useValidator: false),
+                NumberTextField(controller: zipController, fieldName: "Kode Pos", hintText: "Kode Pos", labelText: "Kode Pos", maxLength: 4, useValidator: false),
+                SizedBox(
+                  width: double.infinity,
+                  child: CustomOutlinedButton.defaultOutlinedButton(
+                    onPressed: (){
+                      Get.to(() => const MyBankPage());
                     },
-                    title: Text("Perempuan", style: GoogleFonts.inter()),
-                  );
-                }));
-              }),
-              VoidTextField(controller: tanggalLahir, fieldName: "Tanggal Lahir", hintText: "Tanggal Lahir", labelText: "Tanggal Lahir", onPressed: () async {
-                DateTime? selected;
-                selected = await CustomDatePicker.material(context);
-                if(selected != null) tanggalLahir.text = CustomDatePicker.formatIndonesiaDate(selected);
-              }),
-              NameTextField(controller: tempatLahir, fieldName: "Tempat Lahir", hintText: "Tempat Lahir", labelText: "Tempat Lahir", useValidator: false),
-              DescriptiveTextField(controller: addressController, fieldName: "Alamat Lengkap", hintText: "Alamat Lengkap Saya", labelText: "Alamat Lengkap Saya", useValidator: false),
-              NameTextField(controller: countryController, fieldName: "Country", hintText: "Country", labelText: "Country", useValidator: false),
-              NumberTextField(controller: zipController, fieldName: "Kode Pos", hintText: "Kode Pos", labelText: "Kode Pos", maxLength: 4, useValidator: false),
-              SizedBox(
-                width: double.infinity,
-                child: CustomOutlinedButton.defaultOutlinedButton(
-                  onPressed: (){
-                    Get.to(() => const MyBankPage());
-                  },
-                  title: "Edit Bank Profil Saya"
+                    title: "Edit Bank Profil Saya"
+                  ),
                 ),
-              ),
-              const SizedBox(height: 40.0),
-            ]
+                const SizedBox(height: 40.0),
+              ]
+            ),
           )
         ),
       ),

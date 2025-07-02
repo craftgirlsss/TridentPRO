@@ -10,8 +10,9 @@ class EmailTextField extends StatefulWidget {
   final String? labelText;
   final String? fieldName;
   final bool? readOnly;
+  final bool? useValidator;
   final TextEditingController? controller;
-  const EmailTextField({super.key, this.hintText, this.labelText, this.controller, this.readOnly, this.fieldName});
+  const EmailTextField({super.key, this.hintText, this.labelText, this.controller, this.readOnly, this.fieldName, this.useValidator});
 
   @override
   State<EmailTextField> createState() => _EmailTextFieldState();
@@ -33,10 +34,13 @@ class _EmailTextFieldState extends State<EmailTextField> {
         keyboardType: TextInputType.emailAddress,
         cursorColor: CustomColor.defaultColor,
         validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Mohon isikan ${widget.fieldName}';
-          }else if(validateEmailBool(value) == false){
-            return 'Mohon isikan ${widget.fieldName} yang benar';
+          if(widget.useValidator == true) {
+            if (value == null || value.isEmpty) {
+              return 'Mohon isikan ${widget.fieldName}';
+            } else if (validateEmailBool(value) == false) {
+              return 'Mohon isikan ${widget.fieldName} yang benar';
+            }
+            return null;
           }
           return null;
         },

@@ -168,6 +168,50 @@ class AuthService extends GetxController {
     }
   }
 
+  Future<Map<String, dynamic>> getCustomURL(String url, {int maxReload = 0}) async {
+    try {
+      await init();
+      headers['Authorization'] = 'Bearer $accessToken';
+
+      http.Response response = await http.get(
+        Uri.parse(url),
+        headers: headers,
+      );
+
+      if (response.statusCode == 300) {
+        if(maxReload > 3) {
+          throw Exception("Telah mencapai max reload, silahkan login kembali");
+        }
+
+        Map<String, dynamic> refreshTokenResponse = await refreshingToken(body: {
+          'refresh_token': refreshToken ?? "",
+        });
+
+        // Initialize new access & refresh token from response
+        accessToken = refreshTokenResponse['response']['access_token'];
+        refreshToken = refreshTokenResponse['response']['refresh_token'];
+
+        // Set new access & refresh token to SharedPreferences
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        preferences.setString('accessToken', accessToken!);
+        preferences.setString('refreshToken', refreshToken!);
+
+        return await get(url, maxReload: maxReload + 1);
+      }
+
+      Map<String, dynamic> respBody = jsonDecode(response.body);
+      return {
+        'status': respBody['status'],
+        'statusCode': response.statusCode,
+        'message': respBody['message'],
+        'response': respBody['response'],
+      };
+
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
   Future<Map<String, dynamic>> refreshingToken({required Map<String, dynamic> body}) async {
     try {
       // print("Token expired, refreshing token with: $refreshToken ");
