@@ -25,8 +25,7 @@ class _EmailTextFieldState extends State<EmailTextField> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
-      child: Obx(
-        () => TextFormField(
+      child: TextFormField(
         readOnly: widget.readOnly ?? false,
         controller: widget.controller,
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -53,14 +52,16 @@ class _EmailTextFieldState extends State<EmailTextField> {
           labelText: widget.labelText,
           labelStyle: const TextStyle(color: CustomColor.textThemeDarkSoftColor),
           filled: false,
-          suffix: AnimatedContainer(
-            duration: const Duration(milliseconds: 500),
-            padding: const EdgeInsets.all(2),
-            decoration:  BoxDecoration(
-              color: isEmail.value == false ? Colors.red : CustomColor.defaultColor,
-              shape: BoxShape.circle),
-            child: isEmail.value == false ? const Icon(Icons.close, color: Colors.white, size: 16) : const Icon(Icons.done, color: Colors.white, size: 16),
-          ),
+          suffix: widget.useValidator == true ? Obx(
+              () => AnimatedContainer(
+              duration: const Duration(milliseconds: 500),
+              padding: const EdgeInsets.all(2),
+              decoration:  BoxDecoration(
+                color: isEmail.value == false ? Colors.red : CustomColor.defaultColor,
+                shape: BoxShape.circle),
+              child: isEmail.value == false ? const Icon(Icons.close, color: Colors.white, size: 16) : const Icon(Icons.done, color: Colors.white, size: 16),
+            ),
+          ) : null,
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.0),
             borderSide: BorderSide(
@@ -88,7 +89,7 @@ class _EmailTextFieldState extends State<EmailTextField> {
             }
           },
         ),
-      ),
+
     );
   }
 }

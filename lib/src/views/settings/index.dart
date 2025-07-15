@@ -2,15 +2,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/controllers/authentication.dart';
 import 'package:tridentpro/src/controllers/home.dart';
 import 'package:tridentpro/src/controllers/user_controller.dart';
 import 'package:tridentpro/src/helpers/handlers/image_picker.dart';
+import 'package:tridentpro/src/views/accounts/step_14_dokumen_persetujuan.dart';
+import 'package:tridentpro/src/views/authentications/signin.dart';
 import 'package:tridentpro/src/views/settings/deposit_withdrawal_history.dart';
 import 'package:tridentpro/src/views/settings/edit_profile.dart';
 import 'package:tridentpro/src/views/settings/faq.dart';
+import 'package:tridentpro/src/views/settings/image_viewer_page.dart';
 import 'package:tridentpro/src/views/settings/ticket_rooms.dart';
 import 'package:tridentpro/src/views/trade/deposit.dart';
 import 'package:tridentpro/src/views/trade/internal_transfer.dart';
@@ -52,20 +57,20 @@ class _SettingsState extends State<Settings> {
           CupertinoButton(
             onPressed: () async {
               userController.getProfile();
-              // CustomAlert.alertDialogCustomInfo(
-              //   message: "Apakah anda yakin keluar dari aplikasi?",
-              //   moreThanOneButton: true,
-              //   onTap: () async {
-              //     SharedPreferences prefs = await SharedPreferences.getInstance();
-              //     print(prefs.getString("accessToken"));
-              //     prefs.remove('accessToken');
-              //     prefs.remove('refreshToken');
-              //     prefs.remove('loggedIn');
-              //     Get.offAll(() => const SignIn());
-              //   },
-              //   title: "Keluar",
-              //   textButton: "Ya"
-              // );
+              CustomAlert.alertDialogCustomInfo(
+                message: "Apakah anda yakin keluar dari aplikasi?",
+                moreThanOneButton: true,
+                onTap: () async {
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  print(prefs.getString("accessToken"));
+                  prefs.remove('accessToken');
+                  prefs.remove('refreshToken');
+                  prefs.remove('loggedIn');
+                  Get.offAll(() => const SignIn());
+                },
+                title: "Keluar",
+                textButton: "Ya"
+              );
             },
             child: Icon(MingCute.exit_line, color: CustomColor.defaultColor),
           )
@@ -78,19 +83,36 @@ class _SettingsState extends State<Settings> {
           children: [
             Obx(
             () => profileListTile(
+              changedImage: selectedImage.value != "" ? true : false,
               name: homeController.profileModel.value?.name,
               email: homeController.profileModel.value?.email,
               imageOnline: homeController.profileModel.value?.urlPhoto != null ? true : false,
-              urlPhoto: homeController.profileModel.value?.urlPhoto != null ? homeController.profileModel.value!.urlPhoto : 'assets/images/ic_launcher.png',
-              onPressedPhoto: (){
+              urlPhoto: selectedImage.value != "" ? selectedImage.value : homeController.profileModel.value?.urlPhoto != null ? homeController.profileModel.value!.urlPhoto : 'assets/images/ic_launcher.png',
+              onPressedEdit: (){
                 Get.to(() => const EditProfile());
+              },
+              onPressedPhoto: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ImageViewerPage(
+                      imageUrl: selectedImage.value != "" ? selectedImage.value : homeController.profileModel.value?.urlPhoto != null ? homeController.profileModel.value!.urlPhoto : 'assets/images/ic_launcher.png',
+                      title: '${homeController.profileModel.value?.name}\'s Profile Picture',
+                    ),
+                  ),
+                );
               },
               onTapImage: () async {
                 print("pressed");
                 selectedImage(await CustomImagePicker.pickImageFromCameraAndReturnUrl());
+                print(selectedImage.value);
                 userController.updateAvatar(urlImage: selectedImage.value).then((result) {
                   if(result){
-                    userController.getProfile();
+                    setState(() {
+                      userController.getProfile().then((r){
+                        print(r);
+                      });
+                    });
                   }
                 });}
               ),
@@ -172,6 +194,9 @@ class _SettingsState extends State<Settings> {
                 SettingComponents.storageCard("Transfer", BoxIcons.bx_transfer_alt, (){
                   Get.to(() => const InternalTransfer());
                 }),
+                // SettingComponents.storageCard("Internal Documents", ZondIcons.document, (){
+                //   Get.to(() => const Step14PenyelesaianPerselisihan());
+                // }),
                 SettingComponents.storageCard("Documents", Iconsax.document_outline, (){
                   Get.to(() => const Documents());
                 }),

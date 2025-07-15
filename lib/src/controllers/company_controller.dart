@@ -6,54 +6,46 @@ class CompanyController extends GetxController {
   RxString responseMessage = "".obs;
   AuthService authService = AuthService();
 
-  Future<bool> profilePerusahaan({String? acc}) async {
-    isLoading(true);
-    try {
-      Map<String, dynamic> response = await authService.getCustomURL("https://cabinet-tridentprofutures.techcrm.net/export/profile-perusahaan?acc=$acc");
-      print(response);
-      isLoading(false);
-      responseMessage(response['message']);
-      if(response['status'] != true) {
-        return false;
-      }
-      return true;
-    } catch (e) {
-      isLoading(false);
-      return false;
-    }
+  String profilePerusahaan({String? acc}) {
+    return "https://cabinet-tridentprofutures.techcrm.net/export/profile-perusahaan?acc=${acc ?? ''}";
   }
 
-  Future<bool> pernyataanSimulasi({String? acc}) async {
-    isLoading(true);
-    try {
-      Map<String, dynamic> response = await authService.getCustomURL("https://cabinet-tridentprofutures.techcrm.net/export/pernyataan-simulasi?acc=$acc");
-      print(response);
-      isLoading(false);
-      responseMessage(response['message']);
-      if(response['status'] != true) {
-        return false;
-      }
-      return true;
-    } catch (e) {
-      isLoading(false);
-      return false;
-    }
+  String pernyataanSimulasi({String? acc}) {return "https://cabinet-tridentprofutures.techcrm.net/export/pernyataan-simulasi?acc=${acc ?? ''}";
   }
 
-  Future<bool> pernyataanPengalaman({String? acc}) async {
-    isLoading(true);
-    try {
-      Map<String, dynamic> response = await authService.getCustomURL("https://cabinet-tridentprofutures.techcrm.net/export/pernyataan-pengalaman?acc=$acc");
-      print(response);
-      isLoading(false);
-      responseMessage(response['message']);
-      if(response['status'] != true) {
-        return false;
-      }
-      return true;
-    } catch (e) {
-      isLoading(false);
-      return false;
-    }
+  String pernyataanPengalaman({String? acc}) {
+    return "https://cabinet-tridentprofutures.techcrm.net/export/pernyataan-pengalaman?acc=${acc ?? ''}";
+  }
+
+  String aplikasiPembukaanRekening({String? acc}) {
+    return "https://cabinet-tridentprofutures.techcrm.net/export/aplikasi-pembukaan-rekening?acc=${acc ?? ''}";
+  }
+
+  String dokumenPemberitahuanAdanyaResiko({String? acc}) {
+    return "https://cabinet-tridentprofutures.techcrm.net/export/pemberitahuan-adanya-risiko?acc=${acc ?? ''}";
+  }
+
+  String perjanjianPemberianAmanat({String? acc}) {
+    return "https://cabinet-tridentprofutures.techcrm.net/export/perjanjian-pemberian-amanat?acc=${acc ?? ''}";
+  }
+
+  String tradingRules({String? acc}) {
+    return "https://cabinet-tridentprofutures.techcrm.net/export/trading-rules?acc=${acc ?? ''}";
+  }
+
+  String personalAccessPassword({String? acc}) {
+    return "https://cabinet-tridentprofutures.techcrm.net/export/personal-access-password?acc=${acc ?? ''}";
+  }
+
+  String pernyataanDanaNasabah({String? acc}) {
+    return "https://cabinet-tridentprofutures.techcrm.net/export/pernyataan-dana-nasabah?acc=${acc ?? ''}";
+  }
+
+  String suratPernyataanPenerimaanNasabah({String? acc}) {
+    return "https://cabinet-tridentprofutures.techcrm.net/export/surat-pernyataan?acc=${acc ?? ''}";
+  }
+
+  String formulirVerifikasiKelengkapan({String? acc}) {
+    return "https://cabinet-tridentprofutures.techcrm.net/export/kelengkapan-formulir?acc=${acc ?? ''}";
   }
 }

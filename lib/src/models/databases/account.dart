@@ -4,6 +4,7 @@ class AccountModel {
   String? typeAcc;
   String? country;
   String? idType;
+  String? idHash;
   String? idNumber;
   String? appFotoIdentitas;
   String? appFotoTerbaru;
@@ -62,6 +63,7 @@ class AccountModel {
     this.app_foto_simulasi,
     this.typeAcc,
     this.country,
+    this.idHash,
     this.idType,
     this.idNumber,
     this.appFotoIdentitas,
@@ -119,6 +121,7 @@ class AccountModel {
     return AccountModel(
       id: json['id'],
       type: json['type'],
+      idHash: json['id_hash'],
       typeAcc: json['type_acc'],
       country: json['country'],
       idType: json['id_type'],

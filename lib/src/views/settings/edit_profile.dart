@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/components/alerts/scaffold_messanger_alert.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
@@ -101,7 +100,7 @@ class _EditProfileState extends State<EditProfile> {
                       userController.updateProfile(
                         address: addressController.text,
                         gender: jenisKelamin.text,
-                        dateOfBirth: selectedDateBirth.value,
+                        dateOfBirth: selectedDateBirth.value == "" ? tanggalLahir.text : selectedDateBirth.value,
                         placeOfBirth: tempatLahir.text,
                         country: countryController.text,
                         fullname: nameController.text,

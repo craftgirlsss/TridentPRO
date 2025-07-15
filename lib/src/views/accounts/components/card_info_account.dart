@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:tridentpro/src/components/alerts/scaffold_messanger_alert.dart';
-import 'package:tridentpro/src/components/buttons/elevated_button.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/components/containers/icon_container.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';

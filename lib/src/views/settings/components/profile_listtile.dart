@@ -1,18 +1,26 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 
-Widget profileListTile({String? name, String? email, String? urlPhoto, Function()? onPressedPhoto, bool? imageOnline, Function()? onTapImage}){
+Widget profileListTile({String? name, String? email, String? urlPhoto, Function()? onPressedPhoto, bool? imageOnline, Function()? onTapImage, bool? changedImage, Function()? onPressedEdit}){
   return Row(
     children: [
       GestureDetector(
         onTap: onTapImage,
         child: Stack(
           children: [
-            CircleAvatar(
-              radius: 40,
-              backgroundImage: imageOnline == true ? NetworkImage(urlPhoto!) : AssetImage('assets/images/ic_launcher.png'),
+            GestureDetector(
+              onTap: onPressedPhoto,
+              child: Hero(
+                tag: 'profileImage',
+                child: CircleAvatar(
+                  radius: 40,
+                  backgroundImage: changedImage == true ? FileImage(File(urlPhoto!)) : imageOnline == true ? NetworkImage(urlPhoto!) : AssetImage('assets/images/ic_launcher.png'),
+                ),
+              ),
             ),
             Positioned(
               right: 0,
@@ -39,7 +47,7 @@ Widget profileListTile({String? name, String? email, String? urlPhoto, Function(
           SizedBox(
             height: 20,
             child: ElevatedButton(
-              onPressed: onPressedPhoto,
+              onPressed: onPressedEdit,
               style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 3)
               ),

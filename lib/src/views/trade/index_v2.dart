@@ -53,9 +53,12 @@ class _MetaQuotesPageState extends State<MetaQuotesPage> {
           selectedIndexAccountTrading(0);
           selectedBalanceAccount(tradingController.accountTrading[0]['balance'].toString());
         });
-        utilitiesController.getMarketPrice();
-        _refreshTimer = Timer.periodic(const Duration(seconds: 5), (_) {
-          utilitiesController.getMarketPrice();
+        utilitiesController.getMarketPrice().then((r){
+          if(r){
+            _refreshTimer = Timer.periodic(const Duration(seconds: 5), (_) {
+              utilitiesController.getMarketPrice();
+            });
+          }
         });
       });
     }

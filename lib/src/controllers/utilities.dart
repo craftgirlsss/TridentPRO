@@ -486,6 +486,7 @@ class UtilitiesController extends GetxController {
   }
 
   Future<bool> getMarketPrice() async {
+    print("fungsi get market price dijalankan");
     try {
       loadingPrice(true);
       http.Response response = await http.get(
@@ -497,6 +498,7 @@ class UtilitiesController extends GetxController {
       var result = jsonDecode(response.body);
 
       loadingPrice(false);
+      print("ini result price list => $result");
       if (response.statusCode == 200) {
         marketModel(MarketModel.fromJson(result));
         return true;
@@ -505,6 +507,7 @@ class UtilitiesController extends GetxController {
       return false;
     } catch (e) {
       loadingPrice(false);
+      print(e.toString());
       responseMessage.value = e.toString();
       return false;
     }
