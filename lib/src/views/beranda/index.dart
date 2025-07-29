@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:intl/intl.dart';
+import 'package:tridentpro/src/components/alerts/scaffold_messanger_alert.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/controllers/trading.dart';
 import 'package:tridentpro/src/controllers/utilities.dart';
@@ -28,6 +29,7 @@ class Beranda extends StatefulWidget {
 class _BerandaState extends State<Beranda>{
   UtilitiesController utilitiesController = Get.put(UtilitiesController());
   TradingController tradingController = Get.put(TradingController());
+  RxBool haveRealAccount = false.obs;
 
   Future<void> loadTradingAccount() async {
     tradingController.accountTrading.value = await tradingController.getTradingAccountV2().then((result) => result);
@@ -40,8 +42,14 @@ class _BerandaState extends State<Beranda>{
     super.initState();
     Future.delayed(Duration.zero, (){
       utilitiesController.getTradingSignals().then((result){
+        print("Ini result tradingSignals => $result");
         loadTradingAccount();
         if(!result){}
+      });
+      tradingController.getTradingAccount().then((result){
+        if(tradingController.tradingAccountModels.value?.response.real?.length != 0){
+          haveRealAccount(true);
+        }
       });
     });
   }
@@ -141,18 +149,41 @@ class _BerandaState extends State<Beranda>{
                 spacing: 12,
                 runSpacing: 12,
                 children: [
-                  SettingComponents.storageCard("Withdrawal", Bootstrap.box_arrow_up, (){
-                    Get.to(() => const Withdrawal());
-                  }),
-                  SettingComponents.storageCard("Deposit", Bootstrap.box_arrow_down, (){
-                    Get.to(() => const Deposit());
-                  }),
-                  SettingComponents.storageCard("Transfer", BoxIcons.bx_transfer_alt, (){
-                    Get.to(() => const InternalTransfer());
-                  }),
-                  SettingComponents.storageCard("Documents", Iconsax.document_outline, (){
-                    Get.to(() => const Documents());
-                  }),
+                  Obx(
+                        () => SettingComponents.storageCard(
+                        "Withdrawal",
+                        Bootstrap.box_arrow_up,
+                        haveRealAccount.value
+                            ? () => Get.to(() => const Withdrawal())
+                            : () => CustomScaffoldMessanger.showAppSnackBar(context, message: "Anda belum memiliki akun real", type: SnackBarType.error)
+                    ),
+                  ),
+                  Obx(
+                        () => SettingComponents.storageCard(
+                        "Deposit",
+                        Bootstrap.box_arrow_down, haveRealAccount.value
+                        ? () => Get.to(() => const Deposit())
+                        : () => CustomScaffoldMessanger.showAppSnackBar(context, message: "Anda belum memiliki akun real", type: SnackBarType.error)
+                    ),
+                  ),
+                  Obx(
+                        () => SettingComponents.storageCard(
+                        "Transfer",
+                        BoxIcons.bx_transfer_alt,
+                        haveRealAccount.value
+                            ? () => Get.to(() => const InternalTransfer())
+                            : () => CustomScaffoldMessanger.showAppSnackBar(context, message: "Anda belum memiliki akun real", type: SnackBarType.error)
+                    ),
+                  ),
+                  Obx(
+                        () => SettingComponents.storageCard(
+                        "Documents",
+                        Iconsax.document_outline,
+                        haveRealAccount.value
+                            ? () => Get.to(() => const Documents())
+                            : () => CustomScaffoldMessanger.showAppSnackBar(context, message: "Anda belum memiliki akun real", type: SnackBarType.error)
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 20),

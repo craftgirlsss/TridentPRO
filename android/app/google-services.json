@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "119674371416",
+    "project_id": "tridentpro-3664c",
+    "storage_bucket": "tridentpro-3664c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:119674371416:android:53ed44554cd1fe7f89792d",
+        "android_client_info": {
+          "package_name": "com.tridentpro.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "119674371416-v5ag8gkrl954c9607sb35us4hnsdpakb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxMHtUXoMxK_XVq2ygovqL8yY37RLmork"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "119674371416-v5ag8gkrl954c9607sb35us4hnsdpakb.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "119674371416-s6l5tnk5pa9hjpjskru41kup23c3tgg1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tridentpro.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,14 +1,15 @@
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:intl/intl.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/controllers/trading.dart';
 import 'package:tridentpro/src/controllers/utilities.dart';
 import 'package:get/get.dart';
+import 'package:tridentpro/src/controllers/websocket_controller.dart';
 import 'package:tridentpro/src/helpers/formatters/currency.dart';
 import 'deriv_chart_page.dart';
 
@@ -23,6 +24,7 @@ class _MetaQuotesPageState extends State<MetaQuotesPage> {
   final double appBarHeight = 66.0;
   Timer? _refreshTimer;
   UtilitiesController utilitiesController = Get.put(UtilitiesController());
+  MarketWebSocketController controller = Get.put(MarketWebSocketController());
   TradingController tradingController = Get.find();
   RxInt selectedIndexAccountTrading = 0.obs;
   RxString selectedAccountTrading = "-".obs;
@@ -37,32 +39,18 @@ class _MetaQuotesPageState extends State<MetaQuotesPage> {
   // ambil 2 karakter dari 3 karakter di belakang
   //
 
-  Future<void> loadTradingAccount() async {
-    tradingController.accountTrading.value = await tradingController.getTradingAccountV2().then((result) => result);
-  }
-
-
   @override
   void initState() {
     super.initState();
-    if(tradingController.accountTrading.isNotEmpty){
-      print("Masuk ke IF karena accountTrading isNotEmpty");
-      Future.delayed(Duration.zero, (){
-        loadTradingAccount().then((result){
-          selectedAccountTrading(tradingController.accountTrading[0]['login'].toString());
+      tradingController.getTradingAccount().then((result){
+        print("INI RESULT GET TRADING ACCOUNT $result");
+        if(tradingController.tradingAccountModels.value?.response.real?.length != 0){
+          selectedAccountTrading(tradingController.tradingAccountModels.value?.response.real?[0].login);
           selectedIndexAccountTrading(0);
-          selectedBalanceAccount(tradingController.accountTrading[0]['balance'].toString());
-        });
-        utilitiesController.getMarketPrice().then((r){
-          if(r){
-            _refreshTimer = Timer.periodic(const Duration(seconds: 5), (_) {
-              utilitiesController.getMarketPrice();
-            });
-          }
-        });
+          selectedBalanceAccount(tradingController.tradingAccountModels.value?.response.real?[0].balance);
+        }
       });
-    }
-    print("Masuk ke ELSE karena accountTrading isEmpty");
+
   }
 
   @override
@@ -88,7 +76,11 @@ class _MetaQuotesPageState extends State<MetaQuotesPage> {
                 children: [
                   Icon(Icons.wallet, color: Colors.white),
                   const SizedBox(width: 5.0),
-                  Text("My Digital Currency", style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 16)),
+                  GestureDetector(
+                    onTap: () {
+                      Get.to(() => DerivChartPage(login: int.parse(tradingController.tradingAccountModels.value?.response.real?[selectedIndexAccountTrading.value].login ?? '0') ?? 0, marketName: utilitiesController.marketModel.value?.message[0].currency, balance: tradingController.tradingAccountModels.value?.response.real?[selectedIndexAccountTrading.value].balance));
+                    },
+                    child: Text("My Digital Currency", style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 16))),
                 ],
               ),
               CupertinoButton(
@@ -99,11 +91,11 @@ class _MetaQuotesPageState extends State<MetaQuotesPage> {
                         title: Text(tradingController.accountTrading[i]['login'] != null ? tradingController.accountTrading[i]['login'].toString() : "0"),
                         onTap: (){
                           Get.back();
-                          selectedAccountTrading(tradingController.accountTrading[i]['login'].toString());
+                          selectedAccountTrading(tradingController.tradingAccountModels.value?.response.real?[i].login);
                           selectedIndexAccountTrading(i);
-                          selectedBalanceAccount(tradingController.accountTrading[i]['balance'].toString());
+                          selectedBalanceAccount(tradingController.tradingAccountModels.value?.response.real?[i].balance);
                         },
-                        leading: Icon(TeenyIcons.candle_chart, color: CustomColor.defaultColor),
+                        leading: Icon(Icons.group, color: CustomColor.defaultColor),
                         trailing: Icon(AntDesign.arrow_right_outline, color: CustomColor.defaultColor),
                       ),
                     );
@@ -142,90 +134,187 @@ class _MetaQuotesPageState extends State<MetaQuotesPage> {
             ),
           ),
         ),
-
         Obx(
-          () => utilitiesController.marketModel.value?.message.length == null ? SliverList(
+        () => SliverList(
             delegate: SliverChildListDelegate(
-              [
-                SizedBox(
-                  width: 200,
-                  height: size.height / 1.6,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(Icons.candlestick_chart_rounded, color: CustomColor.defaultColor),
-                      const SizedBox(height: 10),
-                      Text("Tidak ada market"),
-                    ],
-                  ),
-                ),
-              ]
-            ),
-          ) : SliverList(
-            delegate: SliverChildListDelegate(
-              List.generate(utilitiesController.marketModel.value?.message.length ?? 0, (i){
-                // PriceParts bid = processAndExtractPriceParts(utilitiesController.marketModel.value?.message[i].bid != null ? utilitiesController.marketModel.value!.message[i].bid.toString() : "0", currency: utilitiesController.marketModel.value?.message[i].currency ?? "EURUSD");
-                // PriceParts ask = processAndExtractPriceParts(utilitiesController.marketModel.value?.message[i].ask != null ? utilitiesController.marketModel.value!.message[i].ask.toString() : "0", currency: utilitiesController.marketModel.value?.message[i].currency ?? "EURUSD");
-                return CupertinoButton(
-                  onPressed: (){
-                    Get.to(() => DerivChartPage(login: tradingController.accountTrading[selectedIndexAccountTrading.value]['login'] ?? 0, marketName: utilitiesController.marketModel.value?.message[i].currency));
-                  },
-                  padding: EdgeInsets.zero,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Obx(() => Text(utilitiesController.marketModel.value?.message[i].currency ?? "EURUSD", style: GoogleFonts.inter(fontWeight: FontWeight.w700, color: Colors.black, fontSize: 17))),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Icon(Icons.space_bar_rounded, size: 12, color: Colors.black38),
-                                const SizedBox(width: 3),
-                                Text(utilitiesController.marketModel.value?.message[i].spread != null ? utilitiesController.marketModel.value!.message[i].spread.toString() : "0", style: GoogleFonts.inter(fontWeight: FontWeight.w400, color: Colors.black38, fontSize: 10))
-                              ],
-                            )
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                // BID Price
-                                PriceDisplayWidget(
-                                  fullPriceString: formatPrices(utilitiesController.marketModel.value?.message[i].bid != null ? utilitiesController.marketModel.value!.message[i].bid.toString() : "0", currency: "USD"), // Hasilnya "1.15490"
-                                ),
-                                const SizedBox(width: 10),
-                                // ASK Price
-                                PriceDisplayWidget(
-                                  fullPriceString: formatPrices(utilitiesController.marketModel.value?.message[i].ask != null ? utilitiesController.marketModel.value!.message[i].ask.toString() : "0", currency: "USD"), // Hasilnya "1.15490"
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Obx(() => Text("L: ${utilitiesController.marketModel.value?.message[i].low != null ? utilitiesController.marketModel.value!.message[i].low.toString() : '0'}", style: GoogleFonts.inter(fontWeight: FontWeight.w400, color: Colors.black38, fontSize: 10))),
-                                const SizedBox(width: 10),
-                                Obx(() => Text("H: ${utilitiesController.marketModel.value?.message[i].high != null ? utilitiesController.marketModel.value!.message[i].high.toString() : '0'}", style: GoogleFonts.inter(fontWeight: FontWeight.w400, color: Colors.black38, fontSize: 10))),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
+                  () {
+                if (controller.status.value == WebSocketStatus.connecting) {
+                  return [
+                    const Center(child: CircularProgressIndicator()),
+                  ];
+                }
+
+                if (controller.status.value == WebSocketStatus.failed) {
+                  return [
+                    Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.warning, color: Colors.red),
+                          const SizedBox(height: 10),
+                          const Text("Failed to connect to WebSocket", style: TextStyle(color: Colors.red)),
+                          const SizedBox(height: 10),
+                          CupertinoButton(
+                            onPressed: controller.reconnect,
+                            child: const Text("Retry"),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              })
-            )
+                  ];
+                }
+
+                if (controller.marketData.isEmpty) {
+                  return [
+                    const Center(child: Text("Waiting for data...")),
+                  ];
+                }
+
+                return controller.marketData.entries.map((entry) {
+                  final symbol = entry.key;
+                  final data = entry.value;
+                  Icon? icon;
+                  Color? color;
+                  if(data.direction == "DOWN"){
+                    color = Colors.red;
+                    icon = Icon(TeenyIcons.down, color: color, size: 15.0);
+                  }else if(data.direction == "UP"){
+                    color = Colors.green;
+                    icon = Icon(TeenyIcons.up, color: color, size: 15.0);
+                  }else{
+                    color = Colors.blue;
+                    icon = Icon(TeenyIcons.line, color: color, size: 15.0);
+                  }
+
+                  return CupertinoButton(
+                    onPressed: () {
+                      Get.to(() => DerivChartPage(login: int.parse(selectedAccountTrading.value), marketName: data.symbol, ));
+                    },
+                    padding: EdgeInsets.zero,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // Symbol & Direction
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(symbol, style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 17, color: color)),
+                                  const SizedBox(width: 5.0),
+                                  icon
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Icon(Icons.space_bar_rounded, size: 12.0),
+                                  Text(" : ", style: TextStyle(fontSize: 12.0)),
+                                  Text("${data.spreadPips.toStringAsFixed(1)} pips", style: GoogleFonts.inter(fontSize: 12.0, color: Colors.black54)),
+                                ],
+                              )
+                            ],
+                          ),
+                          // Prices
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Row(
+                                children: [
+                                PriceDisplayWidget(fullPriceString: formatPrices(data.bid.toString(), currency: "USD"), color: color),
+                                PriceDisplayWidget(fullPriceString: formatPrices(data.ask.toString(), currency: "USD"), color: color),
+                                // Text("Bid: ${data.bid.toStringAsFixed(4)}", style: GoogleFonts.inter(fontSize: 12)),
+                                // const SizedBox(width: 10),
+                                // Text("Ask: ${data.ask.toStringAsFixed(4)}", style: GoogleFonts.inter(fontSize: 12)),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text("L: ${data.bidLow.toStringAsFixed(4)}", style: GoogleFonts.inter(fontSize: 10, color: Colors.black38)),
+                                  const SizedBox(width: 10),
+                                  Text("H: ${data.bidHigh.toStringAsFixed(4)}", style: GoogleFonts.inter(fontSize: 10, color: Colors.black38)),
+                                ],
+                              ),
+                              Text("Time: ${DateFormat('EEEE, dd MMMM yyyy').add_jms().format(DateTime.fromMillisecondsSinceEpoch(data.datetime * 1000))}", style: GoogleFonts.inter(fontSize: 10, color: Colors.black38),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }).toList();
+              }(),
+            ),
           ),
         )
+
+          // : SliverList(
+          //   delegate: SliverChildListDelegate(
+          //     List.generate(utilitiesController.marketModel.value?.message.length ?? 0, (i){
+          //       // PriceParts bid = processAndExtractPriceParts(utilitiesController.marketModel.value?.message[i].bid != null ? utilitiesController.marketModel.value!.message[i].bid.toString() : "0", currency: utilitiesController.marketModel.value?.message[i].currency ?? "EURUSD");
+          //       // PriceParts ask = processAndExtractPriceParts(utilitiesController.marketModel.value?.message[i].ask != null ? utilitiesController.marketModel.value!.message[i].ask.toString() : "0", currency: utilitiesController.marketModel.value?.message[i].currency ?? "EURUSD");
+          //       return CupertinoButton(
+          //         onPressed: (){
+          //           Get.to(() => DerivChartPage(login: int.parse(tradingController.tradingAccountModels.value?.response.real?[selectedIndexAccountTrading.value].login ?? '0') ?? 0, marketName: utilitiesController.marketModel.value?.message[i].currency));
+          //         },
+          //         padding: EdgeInsets.zero,
+          //         child: Padding(
+          //           padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 10.0),
+          //           child: Row(
+          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //             children: [
+          //               Column(
+          //                 crossAxisAlignment: CrossAxisAlignment.start,
+          //                 children: [
+          //                   Obx(() => Text(utilitiesController.marketModel.value?.message[i].currency ?? "EURUSD", style: GoogleFonts.inter(fontWeight: FontWeight.w700, color: Colors.black, fontSize: 17))),
+          //                   Row(
+          //                     mainAxisAlignment: MainAxisAlignment.start,
+          //                     children: [
+          //                       Icon(Icons.space_bar_rounded, size: 12, color: Colors.black38),
+          //                       const SizedBox(width: 3),
+          //                       Text(utilitiesController.marketModel.value?.message[i].spread != null ? utilitiesController.marketModel.value!.message[i].spread.toString() : "0", style: GoogleFonts.inter(fontWeight: FontWeight.w400, color: Colors.black38, fontSize: 10))
+          //                     ],
+          //                   )
+          //                 ],
+          //               ),
+          //               Column(
+          //                 crossAxisAlignment: CrossAxisAlignment.center,
+          //                 children: [
+          //                   Row(
+          //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //                     children: [
+          //                       // BID Price
+          //                       PriceDisplayWidget(
+          //                         fullPriceString: formatPrices(utilitiesController.marketModel.value?.message[i].bid != null ? utilitiesController.marketModel.value!.message[i].bid.toString() : "0", currency: "USD"), // Hasilnya "1.15490"
+          //                       ),
+          //                       const SizedBox(width: 10),
+          //                       // ASK Price
+          //                       PriceDisplayWidget(
+          //                         fullPriceString: formatPrices(utilitiesController.marketModel.value?.message[i].ask != null ? utilitiesController.marketModel.value!.message[i].ask.toString() : "0", currency: "USD"), // Hasilnya "1.15490"
+          //                       ),
+          //                     ],
+          //                   ),
+          //                   Row(
+          //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //                     children: [
+          //                       Obx(() => Text("L: ${utilitiesController.marketModel.value?.message[i].low != null ? utilitiesController.marketModel.value!.message[i].low.toString() : '0'}", style: GoogleFonts.inter(fontWeight: FontWeight.w400, color: Colors.black38, fontSize: 10))),
+          //                       const SizedBox(width: 10),
+          //                       Obx(() => Text("H: ${utilitiesController.marketModel.value?.message[i].high != null ? utilitiesController.marketModel.value!.message[i].high.toString() : '0'}", style: GoogleFonts.inter(fontWeight: FontWeight.w400, color: Colors.black38, fontSize: 10))),
+          //                     ],
+          //                   ),
+          //                 ],
+          //               ),
+          //             ],
+          //           ),
+          //         ),
+          //       );
+          //     })
+          //   )
+          // ),
+
       ],
     );
   }

@@ -1,0 +1,11 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.tridentpro.app",
+    "sha256_cert_fingerprints": [
+      "3E:1D:69:70:43:B8:9E:BC:06:37:0B:E1:BD:05:A7:7D:03:7A:4E:B6:61:D5:00:2D:BC:01:89:72:3F:46:B3:A6",
+      "5F:43:50:85:1E:D2:0C:12:5A:6B:8E:50:BA:6B:B9:5D:D1:30:57:D5:6B:A6:85:CD:58:C4:29:99:A3:9D:42:DA"
+    ]
+  }
+}]

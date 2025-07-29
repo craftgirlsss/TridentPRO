@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -112,6 +114,61 @@ class TradingProperty {
   static RxDouble currentPrice = 0.0.obs;
   static RxDouble volumeMin = 0.00.obs;
   static RxDouble volumeMax = 100.0.obs;
+  static const double _absoluteMinLot = 1.0;
+  static const double _lotStep = 0.01;
+  static const Duration _longPressInterval = Duration(milliseconds: 100); // Interval per 100ms
+  // Timer untuk long press increment dan decrement
+  static Timer? _incrementTimer;
+  static Timer? _decrementTimer;
+  static const double _longPressStep = 0.10; // Langkah untuk long press (0.10)
+
+  // --- Fungsi untuk Long Press (Mulai Timer) ---
+  static void startIncrementLongPress() {
+    // Pastikan tidak ada timer yang berjalan ganda
+    _incrementTimer?.cancel();
+
+    _incrementTimer = Timer.periodic(_longPressInterval, (timer) {
+      // Logic increment dengan _longPressStep
+      if ((volumeInit.value + _longPressStep) <= volumeMax.value) {
+        volumeInit.value += _longPressStep;
+      } else {
+        volumeInit.value = volumeMax.value; // Pastikan tidak melebihi batas maks
+        _incrementTimer?.cancel(); // Hentikan timer jika sudah mencapai batas
+      }
+    });
+  }
+
+  static void startDecrementLongPress() {
+    _decrementTimer?.cancel();
+
+    _decrementTimer = Timer.periodic(_longPressInterval, (timer) {
+      // Logic decrement dengan _longPressStep
+      double currentVolume = volumeInit.value;
+
+      if (currentVolume <= _absoluteMinLot) {
+        volumeInit.value = _absoluteMinLot; // Pastikan nilainya tepat 1.0
+        _decrementTimer?.cancel(); // Hentikan timer jika sudah mencapai batas min
+        return;
+      }
+
+      double potentialNewVolume = currentVolume - _longPressStep;
+
+      if (potentialNewVolume < _absoluteMinLot) {
+        volumeInit.value = _absoluteMinLot; // Setel ke 1.0 jika akan jatuh di bawah
+        _decrementTimer?.cancel(); // Hentikan timer
+      } else {
+        volumeInit.value = potentialNewVolume;
+      }
+    });
+  }
+
+  // --- Fungsi untuk Menghentikan Long Press (Hentikan Timer) ---
+  static void stopLongPressTimers(details) {
+    _incrementTimer?.cancel();
+    _incrementTimer = null;
+    _decrementTimer?.cancel();
+    _decrementTimer = null;
+  }
 
   static void incrementLot() {
     if((volumeInit.value + 0.01) <= volumeMax.value) {
@@ -120,9 +177,20 @@ class TradingProperty {
   }
 
   static void decrementLot() {
-    if((volumeInit.value - 0.01) >= volumeMin.value) {
-      volumeInit.value -= 0.01;
+    double currentVolume = volumeInit.value;
+    if (currentVolume <= _absoluteMinLot) {
+      volumeInit.value = _absoluteMinLot; // Pastikan nilainya tepat 1.0
+      return;
     }
+    double potentialNewVolume = currentVolume - _lotStep;
+    if (potentialNewVolume < _absoluteMinLot) {
+      volumeInit.value = _absoluteMinLot;
+    } else {
+      volumeInit.value = potentialNewVolume;
+    }
+    // if((volumeInit.value - 0.01) >= volumeMin.value) {
+    //   volumeInit.value -= 0.01;
+    // }
   }
 
   // WebSocket Connector
@@ -246,15 +314,15 @@ class TradingProperty {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.red,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
           padding: EdgeInsets.symmetric(vertical: 8),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0), bottomLeft: Radius.circular(10.0))
+          ),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Sell', style: GoogleFonts.inter(color: CustomColor.textThemeDarkColor, fontWeight: FontWeight.bold)),
+            Text('SELL', style: GoogleFonts.inter(color: CustomColor.textThemeDarkColor, fontWeight: FontWeight.bold)),
             Text(price.toString(), style: TextStyle(color: CustomColor.textThemeDarkColor, fontWeight: FontWeight.bold)),
           ],
         ),
@@ -269,14 +337,14 @@ class TradingProperty {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.green,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.only(topRight: Radius.circular(10.0), bottomRight: Radius.circular(10.0))
           ),
           padding: EdgeInsets.symmetric(vertical: 8),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Buy', style: GoogleFonts.inter(color: CustomColor.textThemeDarkColor, fontWeight: FontWeight.bold)),
+            Text('BUY', style: GoogleFonts.inter(color: CustomColor.textThemeDarkColor, fontWeight: FontWeight.bold)),
             Text(price.toString(), style: TextStyle(color: CustomColor.textThemeDarkColor, fontWeight: FontWeight.bold)),
           ],
         ),
@@ -287,16 +355,18 @@ class TradingProperty {
   static Container lotButton(){
     return Container(
       width: 130,
-      height: 50,
+      height: 44,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.black12),
-        borderRadius: BorderRadius.circular(16),
         color: Colors.white,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Expanded(child: IconButton(onPressed: decrementLot, icon: Icon(Icons.remove))),
+          Expanded(child: GestureDetector(
+            onLongPress: startDecrementLongPress,
+            onLongPressEnd: stopLongPressTimers,
+            onTap: decrementLot, child: Icon(Icons.remove, color: Colors.red,))),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -304,7 +374,10 @@ class TradingProperty {
               Obx(() => Text(volumeInit.value.toStringAsFixed(2), style: TextStyle(fontWeight: FontWeight.bold))),
             ],
           ),
-          Expanded(child: IconButton(onPressed: incrementLot, icon: Icon(Icons.add))),
+          Expanded(child: GestureDetector(
+            onLongPress: startIncrementLongPress,
+            onLongPressEnd: stopLongPressTimers,
+            onTap: incrementLot, child: Icon(Icons.add, color: Colors.green,))),
         ],
       ),
     );

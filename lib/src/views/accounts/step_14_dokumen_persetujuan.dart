@@ -2,16 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:icons_plus/icons_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
-import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/components/containers/utilities.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/controllers/company_controller.dart';
 import 'package:tridentpro/src/controllers/regol.dart';
-import 'package:tridentpro/src/controllers/trading.dart';
 import 'package:tridentpro/src/helpers/variables/global_variables.dart';
 import 'package:tridentpro/src/views/accounts/pdf_viewers_page.dart';
 import 'package:tridentpro/src/views/accounts/step_16_success.dart';
@@ -84,7 +81,7 @@ class _Step14PenyelesaianPerselisihan extends State<Step14PenyelesaianPerselisih
               onPressed: () async {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 String? accessToken = prefs.getString('accessToken');
-                print(accessToken);
+                debugPrint(accessToken);
                 // Get.offAll(() => const Mainpage());
               },
               child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),

@@ -4,13 +4,14 @@ import 'package:get/get.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tridentpro/src/components/alerts/default.dart';
+import 'package:tridentpro/src/components/alerts/scaffold_messanger_alert.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/controllers/authentication.dart';
 import 'package:tridentpro/src/controllers/home.dart';
+import 'package:tridentpro/src/controllers/trading.dart';
 import 'package:tridentpro/src/controllers/user_controller.dart';
 import 'package:tridentpro/src/helpers/handlers/image_picker.dart';
-import 'package:tridentpro/src/views/accounts/step_14_dokumen_persetujuan.dart';
 import 'package:tridentpro/src/views/authentications/signin.dart';
 import 'package:tridentpro/src/views/settings/deposit_withdrawal_history.dart';
 import 'package:tridentpro/src/views/settings/edit_profile.dart';
@@ -37,10 +38,19 @@ class _SettingsState extends State<Settings> {
   AuthController authController = Get.find();
   RxString selectedImage = "".obs;
   UserController userController = Get.put(UserController());
+  TradingController tradingController = Get.put(TradingController());
+  RxBool haveRealAccount = false.obs;
 
   @override
   void initState() {
     super.initState();
+    Future.delayed(Duration.zero, (){
+      tradingController.getTradingAccount().then((result){
+        if(tradingController.tradingAccountModels.value?.response.real?.length != 0){
+          haveRealAccount(true);
+        }
+      });
+    });
   }
 
   @override
@@ -62,7 +72,7 @@ class _SettingsState extends State<Settings> {
                 moreThanOneButton: true,
                 onTap: () async {
                   SharedPreferences prefs = await SharedPreferences.getInstance();
-                  print(prefs.getString("accessToken"));
+                  debugPrint(prefs.getString("accessToken"));
                   prefs.remove('accessToken');
                   prefs.remove('refreshToken');
                   prefs.remove('loggedIn');
@@ -82,15 +92,15 @@ class _SettingsState extends State<Settings> {
         child: Column(
           children: [
             Obx(
-            () => profileListTile(
-              changedImage: selectedImage.value != "" ? true : false,
-              name: homeController.profileModel.value?.name,
-              email: homeController.profileModel.value?.email,
-              imageOnline: homeController.profileModel.value?.urlPhoto != null ? true : false,
-              urlPhoto: selectedImage.value != "" ? selectedImage.value : homeController.profileModel.value?.urlPhoto != null ? homeController.profileModel.value!.urlPhoto : 'assets/images/ic_launcher.png',
-              onPressedEdit: (){
-                Get.to(() => const EditProfile());
-              },
+              () => profileListTile(
+                changedImage: selectedImage.value != "" ? true : false,
+                name: homeController.profileModel.value?.name,
+                email: homeController.profileModel.value?.email,
+                imageOnline: homeController.profileModel.value?.urlPhoto != null ? true : false,
+                urlPhoto: selectedImage.value != "" ? selectedImage.value : homeController.profileModel.value?.urlPhoto != null ? homeController.profileModel.value!.urlPhoto : 'assets/images/ic_launcher.png',
+                onPressedEdit: (){
+                  Get.to(() => const EditProfile());
+                },
               onPressedPhoto: (){
                 Navigator.push(
                   context,
@@ -103,14 +113,14 @@ class _SettingsState extends State<Settings> {
                 );
               },
               onTapImage: () async {
-                print("pressed");
+                debugPrint("pressed");
                 selectedImage(await CustomImagePicker.pickImageFromCameraAndReturnUrl());
-                print(selectedImage.value);
+                debugPrint(selectedImage.value);
                 userController.updateAvatar(urlImage: selectedImage.value).then((result) {
                   if(result){
                     setState(() {
                       userController.getProfile().then((r){
-                        print(r);
+                        debugPrint(r.toString());
                       });
                     });
                   }
@@ -185,21 +195,41 @@ class _SettingsState extends State<Settings> {
               spacing: 12,
               runSpacing: 12,
               children: [
-                SettingComponents.storageCard("Withdrawal", Bootstrap.box_arrow_up, (){
-                  Get.to(() => const Withdrawal());
-                }),
-                SettingComponents.storageCard("Deposit", Bootstrap.box_arrow_down, (){
-                  Get.to(() => const Deposit());
-                }),
-                SettingComponents.storageCard("Transfer", BoxIcons.bx_transfer_alt, (){
-                  Get.to(() => const InternalTransfer());
-                }),
-                // SettingComponents.storageCard("Internal Documents", ZondIcons.document, (){
-                //   Get.to(() => const Step14PenyelesaianPerselisihan());
-                // }),
-                SettingComponents.storageCard("Documents", Iconsax.document_outline, (){
-                  Get.to(() => const Documents());
-                }),
+                Obx(
+                  () => SettingComponents.storageCard(
+                    "Withdrawal",
+                    Bootstrap.box_arrow_up,
+                    haveRealAccount.value
+                      ? () => Get.to(() => const Withdrawal())
+                      : () => CustomScaffoldMessanger.showAppSnackBar(context, message: "Anda belum memiliki akun real", type: SnackBarType.error)
+                  ),
+                ),
+                Obx(
+                  () => SettingComponents.storageCard(
+                    "Deposit",
+                    Bootstrap.box_arrow_down, haveRealAccount.value
+                      ? () => Get.to(() => const Deposit())
+                      : () => CustomScaffoldMessanger.showAppSnackBar(context, message: "Anda belum memiliki akun real", type: SnackBarType.error)
+                    ),
+                ),
+                Obx(
+                  () => SettingComponents.storageCard(
+                    "Transfer",
+                    BoxIcons.bx_transfer_alt,
+                    haveRealAccount.value
+                      ? () => Get.to(() => const InternalTransfer())
+                      : () => CustomScaffoldMessanger.showAppSnackBar(context, message: "Anda belum memiliki akun real", type: SnackBarType.error)
+                    ),
+                ),
+                Obx(
+                  () => SettingComponents.storageCard(
+                    "Documents",
+                    Iconsax.document_outline,
+                    haveRealAccount.value
+                      ? () => Get.to(() => const Documents())
+                      : () => CustomScaffoldMessanger.showAppSnackBar(context, message: "Anda belum memiliki akun real", type: SnackBarType.error)
+                    ),
+                ),
               ],
             ),
             SizedBox(height: 30),

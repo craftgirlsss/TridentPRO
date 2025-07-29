@@ -8,6 +8,7 @@ class PriceDisplayWidget extends StatelessWidget {
   final Color textColor;
   final double mainFontSize;
   final double superscriptFontSize;
+  final Color color;
   final double superscriptOffsetY; // Seberapa tinggi superscript dinaikkan (nilai negatif)
 
   const PriceDisplayWidget({super.key,
@@ -15,7 +16,8 @@ class PriceDisplayWidget extends StatelessWidget {
     this.textColor = Colors.blue, // Warna default seperti gambar
     this.mainFontSize = 36.0,    // Ukuran font utama
     this.superscriptFontSize = 20.0, // Ukuran font superscript
-    this.superscriptOffsetY = -12.0, // Sesuaikan nilai ini untuk mengatur posisi Y
+    this.superscriptOffsetY = -12.0,
+    required this.color, // Sesuaikan nilai ini untuk mengatur posisi Y
   });
 
   @override
@@ -39,7 +41,7 @@ class PriceDisplayWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 18.0, // Contoh 15px, sesuaikan nilai piksel sesuai kebutuhan
               fontWeight: FontWeight.bold,
-              color: Colors.blue, // Warna sesuai gambar
+              color: color, // Warna sesuai gambar
             ),
           ),
           TextSpan(
@@ -47,7 +49,7 @@ class PriceDisplayWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 25.0, // Contoh 20px, sesuaikan nilai piksel
               fontWeight: FontWeight.bold, // Terlihat lebih tebal di gambar
-              color: Colors.blue, // Warna sesuai gambar
+              color: color, // Warna sesuai gambar
             ),
           ),
           // WidgetSpan untuk digit superscript (misal: "2" atau "0")

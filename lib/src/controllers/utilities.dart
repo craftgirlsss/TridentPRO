@@ -479,6 +479,7 @@ class UtilitiesController extends GetxController {
       responseMessage.value = result['result'];
       return false;
     } catch (e) {
+      print(e);
       isLoading(false);
       responseMessage.value = e.toString();
       return false;

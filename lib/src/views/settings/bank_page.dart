@@ -6,10 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
-import 'package:tridentpro/src/components/buttons/outlined_button.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/components/containers/utilities.dart';
-import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/components/textfields/name_textfield.dart';
 import 'package:tridentpro/src/components/textfields/number_textfield.dart';
 import 'package:tridentpro/src/components/textfields/phone_textfield.dart';
@@ -32,6 +30,7 @@ class _MyBankPage extends State<MyBankPage> {
   TextEditingController currencyController = TextEditingController();
   TextEditingController bankNameController = TextEditingController();
   TextEditingController cityController = TextEditingController();
+  TextEditingController ownerController = TextEditingController();
   TextEditingController rootController = TextEditingController();
   TextEditingController jenisRekening = TextEditingController();
   TextEditingController nomorRekening = TextEditingController();
@@ -62,6 +61,7 @@ class _MyBankPage extends State<MyBankPage> {
           rootController.text = settingController.userBankModel.value?.response?[0].branch ?? "";
           jenisRekening.text = settingController.userBankModel.value?.response?[0].type ?? "";
           nomorRekening.text = settingController.userBankModel.value?.response?[0].account ?? "";
+          ownerController.text = settingController.userBankModel.value?.response?[0].userName ?? "";
           if(settingController.userBankModel.value!.response!.length > 1){
             bankNameController2.text = settingController.userBankModel.value?.response?[1].name ?? "";
             rootController2.text = settingController.userBankModel.value?.response?[1].branch ?? "";
@@ -107,8 +107,22 @@ class _MyBankPage extends State<MyBankPage> {
                 onPressed: () async {
                   SharedPreferences prefs = await SharedPreferences.getInstance();
                   prefs.getString('accessToken');
+                  if(_formKey.currentState!.validate()){
+                    settingController.editBank(
+                      type: jenisRekening.text,
+                      bankName: bankNameController.text,
+                      branch: rootController.text,
+                      city: cityController.text,
+                      number: nomorRekening.text,
+                      currencyType: currencyController.text,
+                      owner: ownerController.text,
+                      bankID: ''
+                    ).then((result){
+                      print(result);
+                    });
+                  }
                 },
-                child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
+                child: Text("Simpan", style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
               )
             ]
         ),
@@ -147,6 +161,7 @@ class _MyBankPage extends State<MyBankPage> {
                               );
                             }));
                           }),
+                          NameTextField(controller: ownerController, fieldName: "Nama Pemilik Rekening", hintText: "Nama Pemilik Rekening", labelText: "Nama Pemilik Rekening"),
                           NameTextField(controller: cityController, fieldName: "City", hintText: "City", labelText: "City"),
                           NameTextField(controller: rootController, fieldName: "Cabang", hintText: "Cabang", labelText: "Cabang", useValidator: false),
                           VoidTextField(controller: jenisRekening, fieldName: "Jenis Rekening", hintText: "Jenis Rekening", labelText: "Jenis Rekening", onPressed: () async {
@@ -161,18 +176,18 @@ class _MyBankPage extends State<MyBankPage> {
                             }));
                           }),
                           NumberTextField(controller: nomorRekening, fieldName: "Nomor Rekening", hintText: "Nomor Rekening", labelText: "Nomor Rekening", useValidator: false),
-                          SizedBox(
-                            height: 40,
-                            width: size.width / 1.7,
-                            child: Obx(
-                                  () => CustomOutlinedButton.defaultOutlinedButton(
-                                  onPressed: (){
-                                    addedBank.value = !addedBank.value;
-                                  },
-                                  title: addedBank.value ? "Hapus Bank" : "Tambah Informasi Bank"
-                              ),
-                            ),
-                          ),
+                          // SizedBox(
+                          //   height: 40,
+                          //   width: size.width / 1.7,
+                          //   child: Obx(
+                          //   () => CustomOutlinedButton.defaultOutlinedButton(
+                          //     onPressed: (){
+                          //       addedBank.value = !addedBank.value;
+                          //     },
+                          //     title: addedBank.value ? "Hapus Bank" : "Tambah Informasi Bank"
+                          //     ),
+                          //   ),
+                          // ),
                         ]
                     ),
                   ],

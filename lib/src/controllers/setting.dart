@@ -33,6 +33,46 @@ class SettingController extends GetxController{
   }
 
   // Pernataan Pailit
+  Future<bool> editBank(
+    {
+      String? bankID,
+      String? currencyType,
+      String? bankName,
+      String? owner,
+      String? city,
+      String? branch,
+      String? type,
+      String? number
+    }
+  ) async {
+    try {
+      isLoading(true);
+      Map<String, dynamic> result = await authService.post("bank/update", {
+        'bank_id': bankID,
+        'currency': currencyType,
+        'bank_name': bankName,
+        'bank_branch': branch,
+        'bank_holder': owner,
+        'type': type,
+        'account': number
+      });
+
+      isLoading(false);
+      print(result);
+      responseMessage(result['message']);
+      if (result['status'] != true) {
+        return false;
+      }
+      getUserBank();
+      return true;
+    } catch (e) {
+      isLoading(false);
+      responseMessage(e.toString());
+      return false;
+    }
+  }
+
+  // Pernataan Pailit
   Future<bool> getAdminBank() async {
     try {
       isLoading(true);

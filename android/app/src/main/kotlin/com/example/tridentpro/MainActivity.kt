@@ -1,4 +1,4 @@
-package com.example.tridentpro
+package com.tridentpro.app
 
 import io.flutter.embedding.android.FlutterActivity
 

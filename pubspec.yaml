@@ -41,6 +41,16 @@ dependencies:
   path_provider: ^2.1.5
   device_info_plus: ^11.5.0
   cached_network_image: ^3.4.1
+  flutter_localization: ^0.3.3
+  firebase_core: ^3.15.2
+  firebase_messaging: ^15.2.10
+  flutter_local_notifications: ^19.3.1
+  app_links: ^6.4.0
+  audioplayers: ^6.5.0
+  google_sign_in: ^7.1.1
+  firebase_auth: ^5.7.0
+  dio: ^5.8.0+1
+  syncfusion_flutter_pdfviewer: ^29.2.11
 
 dev_dependencies:
   flutter_test:
@@ -58,7 +68,7 @@ flutter:
     - assets/icons/
     - assets/json/
     - assets/fonts/
-
+    - assets/sounds/
 
   fonts:
     - family: OCRA

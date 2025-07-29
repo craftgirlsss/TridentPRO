@@ -10,14 +10,16 @@ import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.da
 import 'package:tridentpro/src/components/buttons/outlined_button.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/controllers/trading.dart';
+import 'package:tridentpro/src/controllers/websocket_controller.dart';
 import 'package:tridentpro/src/views/trade/trading_order_history.dart';
 
 import 'components/chart_section.dart';
 
 class DerivChartPage extends StatefulWidget {
-  const DerivChartPage({super.key, required this.login, this.marketName});
+  const DerivChartPage({super.key, required this.login, this.marketName, this.balance});
   final int login;
   final String? marketName;
+  final dynamic balance;
 
   @override
   State<DerivChartPage> createState() => _DerivChartPageState();
@@ -26,6 +28,9 @@ class DerivChartPage extends StatefulWidget {
 class _DerivChartPageState extends State<DerivChartPage> {
   final TradingController tradingController = Get.put(TradingController());
   final ChartController _controller = ChartController();
+  MarketWebSocketController webSocketController = Get.find();
+  String? marketSymbol; // simbol dari user
+  dynamic ohlcData;
   final RxBool isLoading = true.obs;
   final RxDouble currentPrice = 0.0.obs;
   final RxDouble lotSize = 0.01.obs;
@@ -100,6 +105,7 @@ class _DerivChartPageState extends State<DerivChartPage> {
   Repository<DrawingToolConfig>? _drawingToolsRepo;
   final DrawingTools _drawingTools = DrawingTools();
   DrawingToolConfig? _selectedDrawingTool;
+  RxString balanceAccount = "0".obs;
 
   void _initializeDrawingTools() {
     if (isInitialized.value) {
@@ -121,6 +127,19 @@ class _DerivChartPageState extends State<DerivChartPage> {
   @override
   void initState() {
     super.initState();
+    // marketSymbol = widget.marketName; // simbol dari user
+    // ohlcData = webSocketController.generateOHLCFromTicks(marketSymbol!, const Duration(minutes: 1));
+    print(ohlcData);
+    print(marketSymbol);
+    tradingController.getTradingAccount().then((result){
+      if(tradingController.tradingAccountModels.value?.response.real?.length != 0){
+        for(int i = 0; i < tradingController.tradingAccountModels.value!.response.real!.length; i++){
+          if(widget.login.toString() == tradingController.tradingAccountModels.value!.response.real?[i].login){
+            balanceAccount(tradingController.tradingAccountModels.value?.response.real?[i].balance);
+          }
+        }
+      }
+    });
     Future.delayed(Duration.zero, () async {
       currentSymbol(widget.marketName ?? "GOLDUD");
       _loadChartData();
@@ -136,7 +155,7 @@ class _DerivChartPageState extends State<DerivChartPage> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _initializeDrawingTools();
       });
-      _refreshTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      _refreshTimer = Timer.periodic(const Duration(seconds: 60), (_) {
         _loadChartData();
       });
     });
@@ -225,7 +244,16 @@ class _DerivChartPageState extends State<DerivChartPage> {
         title: Column(
           children: [
             Obx(() => Text(currentSymbol.value)),
-            Text(widget.login.toString(), style: GoogleFonts.inter(fontWeight: FontWeight.w300, color: Colors.black54))
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(widget.login.toString(), style: GoogleFonts.inter(fontWeight: FontWeight.w300, color: Colors.black54)),
+                const SizedBox(width: 5.0),
+                Text("-"),
+                const SizedBox(width: 5.0),
+                Obx(() => Text("\$ $balanceAccount"))
+              ],
+            )
           ],
         ),
         actions: [
@@ -380,6 +408,7 @@ class _DerivChartPageState extends State<DerivChartPage> {
                         theme: ChartDefaultLightTheme(),
                         drawingTools: _drawingTools,
                         mainSeries: CandleSeries(tradingController.ohlcDataDeriv),
+                        // mainSeries: CandleSeries(ohlcData),
                         granularity: granulity.value,
                         pipSize: 2,
                         opacity: 0.8,
@@ -416,7 +445,7 @@ class _DerivChartPageState extends State<DerivChartPage> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Obx(() => TradingProperty.sellButton(price: double.tryParse(currentPrice.value.toStringAsFixed(2)), onPressed: (){
-              CustomAlert.alertDialogCustomInfo(title: "Sell", message: "Apakah anda yakin ingin melanjutkan?", colorPositiveButton: Colors.red, onTap: () {
+              CustomAlert.alertDialogCustomInfo(title: "SELL", message: "Apakah anda yakin ingin melanjutkan?", colorPositiveButton: Colors.red, onTap: () {
                 Get.back();
                 tradingController.executionOrder(symbol: currentSymbol.value, type: "sell", login: widget.login.toString(), lot: TradingProperty.volumeInit.value.toString(), price: currentPrice.value.toString()).then((result) {
                   if(result['status'] != true){
@@ -429,13 +458,12 @@ class _DerivChartPageState extends State<DerivChartPage> {
                 });
               });
             })),
-            SizedBox(width: 8),
             TradingProperty.lotButton(),
-            SizedBox(width: 8),
             Obx(() => TradingProperty.buyButton(price: double.tryParse(currentPrice.value.toStringAsFixed(2)), onPressed: () {
-              CustomAlert.alertDialogCustomInfo(title: "Buy", message: "Apakah anda yakin ingin melanjutkan?", onTap: () {
+              String? finalLot = TradingProperty.volumeInit.value.toStringAsFixed(2);
+              CustomAlert.alertDialogCustomInfo(title: "BUY", message: "Apakah anda yakin ingin melanjutkan?", onTap: () {
                 Get.back();
-                tradingController.executionOrder(symbol: currentSymbol.value, type: "buy", login: widget.login.toString(), lot: TradingProperty.volumeInit.value.toString(), price: currentPrice.value.toString()).then((result) {
+                tradingController.executionOrder(symbol: currentSymbol.value, type: "buy", login: widget.login.toString(), lot: finalLot, price: currentPrice.value.toString()).then((result) {
                   if(result['status'] != true){
                     CustomAlert.alertError(message: result['message']);
                     return false;

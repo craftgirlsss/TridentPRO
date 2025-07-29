@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,11 +10,12 @@ import 'package:tridentpro/src/components/buttons/elevated_button.dart';
 import 'package:tridentpro/src/components/buttons/iconbuttons.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
-import 'package:tridentpro/src/components/painters/loading_water.dart';
 import 'package:tridentpro/src/components/textfields/email_textfield.dart';
 import 'package:tridentpro/src/components/textfields/password_textfield.dart';
 import 'package:tridentpro/src/controllers/authentication.dart';
+import 'package:tridentpro/src/controllers/google_auth_controller.dart';
 import 'package:tridentpro/src/controllers/utilities.dart';
+import 'package:tridentpro/src/helpers/handlers/sound_handler.dart';
 import 'package:tridentpro/src/views/authentications/forgot.dart';
 import 'package:tridentpro/src/views/authentications/signup.dart';
 import 'package:tridentpro/src/views/mainpage.dart';
@@ -28,7 +30,9 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   List<IconData> imageURL = [CupertinoIcons.phone, CupertinoIcons.add_circled_solid];
   PageController pageController = PageController();
+  GoogleSignInController googleSignInController = Get.put(GoogleSignInController());
   final _formKey = GlobalKey<FormState>();
+  final AudioPlayer _audioPlayer = AudioPlayer();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   UtilitiesController utilitiesController = Get.put(UtilitiesController());
@@ -48,6 +52,7 @@ class _SignInState extends State<SignIn> {
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
+    _audioPlayer.dispose();
     super.dispose();
   }
 
@@ -186,7 +191,20 @@ class _SignInState extends State<SignIn> {
                                 padding: const EdgeInsets.symmetric(vertical: 16),
                                 child: Center(
                                   child: IconButtons.defaultIconButton(
-                                    onPressed: (){},
+                                    onPressed: () async {
+                                      try {
+                                        final userCredential = await googleSignInController.signInWithGoogle();
+                                        if (userCredential.user != null) {
+                                          print("Berhasil login dengan nama akun ${userCredential.user?.email}");
+                                          SoundHandler.playSuccessSound(audioPlayer: _audioPlayer);
+                                        }
+                                      } catch (e) {
+                                        debugPrint('Login gagal: $e');
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text("Login gagal. Silakan coba lagi.")),
+                                        );
+                                      }
+                                    },
                                     icon: Bootstrap.google
                                   ),
                                 ),
