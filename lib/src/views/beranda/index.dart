@@ -42,7 +42,6 @@ class _BerandaState extends State<Beranda>{
     super.initState();
     Future.delayed(Duration.zero, (){
       utilitiesController.getTradingSignals().then((result){
-        print("Ini result tradingSignals => $result");
         loadTradingAccount();
         if(!result){}
       });

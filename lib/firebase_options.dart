@@ -50,20 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAxMHtUXoMxK_XVq2ygovqL8yY37RLmork',
-    appId: '1:119674371416:android:53ed44554cd1fe7f89792d',
-    messagingSenderId: '119674371416',
-    projectId: 'tridentpro-3664c',
-    storageBucket: 'tridentpro-3664c.firebasestorage.app',
+    apiKey: 'AIzaSyBLdJvDNVFBZc0SgN2GOy1f2UPs1meOais',
+    appId: '1:792822151078:android:cfc77381fcbe9b342dc167',
+    messagingSenderId: '792822151078',
+    projectId: 'rrfx-cf118',
+    storageBucket: 'rrfx-cf118.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDQ3juobg6zMorImAxF9Q9da6Jw0OtmUQc',
-    appId: '1:119674371416:ios:8dbad5467c23fb5189792d',
-    messagingSenderId: '119674371416',
-    projectId: 'tridentpro-3664c',
-    storageBucket: 'tridentpro-3664c.firebasestorage.app',
-    iosBundleId: 'com.tridentpro.app',
+    apiKey: 'AIzaSyCuNeuRI2qKUB29m1ucxVpvHdYc4RJ0uA8',
+    appId: '1:792822151078:ios:2ed9bb572302b8552dc167',
+    messagingSenderId: '792822151078',
+    projectId: 'rrfx-cf118',
+    storageBucket: 'rrfx-cf118.firebasestorage.app',
+    iosBundleId: 'com.rrfx.rrfx',
   );
 
 }

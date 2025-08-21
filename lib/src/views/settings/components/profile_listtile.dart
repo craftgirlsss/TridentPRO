@@ -17,7 +17,15 @@ Widget profileListTile({String? name, String? email, String? urlPhoto, Function(
                 tag: 'profileImage',
                 child: CircleAvatar(
                   radius: 40,
-                  backgroundImage: changedImage == true ? FileImage(File(urlPhoto!)) : imageOnline == true ? NetworkImage(urlPhoto!) : AssetImage('assets/images/ic_launcher.png'),
+                  backgroundImage: changedImage == true
+                    ? FileImage(File(urlPhoto!))
+                    : (imageOnline == true && urlPhoto != null && urlPhoto.isNotEmpty)
+                        ? NetworkImage(urlPhoto)
+                        : const AssetImage('assets/images/logo-rrfx.png')
+                            as ImageProvider,
+                  onBackgroundImageError: (error, stackTrace) {
+                    debugPrint("Image load failed: $error");
+                  },
                 ),
               ),
             ),
@@ -30,7 +38,7 @@ Widget profileListTile({String? name, String? email, String? urlPhoto, Function(
                   shape: BoxShape.circle,
                   color: Colors.white
                 ),
-                child: Icon(CupertinoIcons.camera_fill, color: CustomColor.defaultColor, size: 19)
+                child: Icon(CupertinoIcons.camera_fill, color: CustomColor.secondaryColor, size: 19)
               ),
             )
           ],
@@ -48,7 +56,8 @@ Widget profileListTile({String? name, String? email, String? urlPhoto, Function(
             child: ElevatedButton(
               onPressed: onPressedEdit,
               style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 3)
+                backgroundColor: CustomColor.secondaryColor,
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 3)
               ),
               child: Text("Edit Profile", style: GoogleFonts.inter(fontSize: 10, color: Colors.white))
             ),

@@ -82,7 +82,15 @@ class _Step11JobHistory extends State<Step11JobHistory> {
             actions: [
               CupertinoButton(
                 onPressed: (){
-                  Get.offAll(() => const Mainpage());
+                  CustomAlert.alertDialogCustomInfo(
+                    title: "Confirmation",
+                    message: "Are you sure you want to cancel? All data will be lost.",
+                    moreThanOneButton: true,
+                    onTap: () {
+                      Get.offAll(() => const Mainpage());
+                    },
+                    textButton: "Yes",
+                  );
                 },
                 child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
               )

@@ -31,7 +31,7 @@ class _CardInfoAccountState extends State<CardInfoAccount> {
         children: [
           IconContainer.defaultIconContainer(
             size: size,
-            icon: Clarity.lightbulb_solid
+            icon: Clarity.lightbulb_solid,
           ),
           const SizedBox(height: 32.0),
           Text(widget.isDemo ? LanguageGlobalVar.NOT_HAVE_ACCOUNT_DEMO.tr : LanguageGlobalVar.NOT_HAVE_ACCOUNT_REAL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 18.0), textAlign: TextAlign.center),
@@ -41,10 +41,8 @@ class _CardInfoAccountState extends State<CardInfoAccount> {
           Obx(
             () => ElevatedButton(
               onPressed: tradingController.isLoading.value ? null : (){
-                print(widget.isDemo);
                 if(widget.isDemo){
                   tradingController.createDemo().then((result){
-                    print(result);
                     if (mounted) {
                       CustomScaffoldMessanger.showAppSnackBar(context, message: tradingController.responseMessage.value, type: result ? SnackBarType.success : SnackBarType.error, action: SnackBarAction(label: "Okay", onPressed: (){}));
                     }
@@ -59,7 +57,7 @@ class _CardInfoAccountState extends State<CardInfoAccount> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)
                 ),
-                backgroundColor: CustomColor.defaultColor,
+                backgroundColor: CustomColor.secondaryColor,
               ),
               child: Text(widget.isDemo ? "Buka Demo Account" : "Buka Real Account", style: GoogleFonts.inter(
                 color: CustomColor.textThemeDarkColor,

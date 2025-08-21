@@ -11,6 +11,7 @@ import 'package:tridentpro/src/controllers/utilities.dart';
 import 'package:get/get.dart';
 import 'package:tridentpro/src/controllers/websocket_controller.dart';
 import 'package:tridentpro/src/helpers/formatters/currency.dart';
+import 'package:tridentpro/src/helpers/formatters/number_formatter.dart';
 import 'deriv_chart_page.dart';
 
 class MetaQuotesPage extends StatefulWidget {
@@ -42,15 +43,13 @@ class _MetaQuotesPageState extends State<MetaQuotesPage> {
   @override
   void initState() {
     super.initState();
-      tradingController.getTradingAccount().then((result){
-        print("INI RESULT GET TRADING ACCOUNT $result");
-        if(tradingController.tradingAccountModels.value?.response.real?.length != 0){
-          selectedAccountTrading(tradingController.tradingAccountModels.value?.response.real?[0].login);
-          selectedIndexAccountTrading(0);
-          selectedBalanceAccount(tradingController.tradingAccountModels.value?.response.real?[0].balance);
-        }
-      });
-
+    tradingController.getTradingAccount().then((result){
+      if(tradingController.tradingAccountModels.value?.response.real?.length != 0){
+        selectedAccountTrading(tradingController.tradingAccountModels.value?.response.real?[0].login);
+        selectedIndexAccountTrading(0);
+        selectedBalanceAccount(tradingController.tradingAccountModels.value?.response.real?[0].balance);
+      }
+    });
   }
 
   @override
@@ -67,7 +66,7 @@ class _MetaQuotesPageState extends State<MetaQuotesPage> {
       slivers: [
         SliverAppBar(
           actionsPadding: EdgeInsets.zero,
-          backgroundColor: CustomColor.defaultColor,
+          backgroundColor: CustomColor.secondaryColor,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -78,26 +77,26 @@ class _MetaQuotesPageState extends State<MetaQuotesPage> {
                   const SizedBox(width: 5.0),
                   GestureDetector(
                     onTap: () {
-                      Get.to(() => DerivChartPage(login: int.parse(tradingController.tradingAccountModels.value?.response.real?[selectedIndexAccountTrading.value].login ?? '0') ?? 0, marketName: utilitiesController.marketModel.value?.message[0].currency, balance: tradingController.tradingAccountModels.value?.response.real?[selectedIndexAccountTrading.value].balance));
+                      Get.to(() => DerivChartPage(login: int.parse(tradingController.tradingAccountModels.value?.response.real?[selectedIndexAccountTrading.value].login ?? '0'), marketName: utilitiesController.marketModel.value?.message[0].currency, balance: tradingController.tradingAccountModels.value?.response.real?[selectedIndexAccountTrading.value].balance));
                     },
                     child: Text("My Digital Currency", style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 16))),
                 ],
               ),
               CupertinoButton(
                 onPressed: (){
-                  CustomMaterialBottomSheets.defaultBottomSheet(context, title: "Pilih Akun Trading", size: size, children: List.generate(tradingController.accountTrading.length, (i){
-                    return Obx(
-                      () => ListTile(
-                        title: Text(tradingController.accountTrading[i]['login'] != null ? tradingController.accountTrading[i]['login'].toString() : "0"),
-                        onTap: (){
-                          Get.back();
-                          selectedAccountTrading(tradingController.tradingAccountModels.value?.response.real?[i].login);
-                          selectedIndexAccountTrading(i);
-                          selectedBalanceAccount(tradingController.tradingAccountModels.value?.response.real?[i].balance);
-                        },
-                        leading: Icon(Icons.group, color: CustomColor.defaultColor),
-                        trailing: Icon(AntDesign.arrow_right_outline, color: CustomColor.defaultColor),
-                      ),
+                  CustomMaterialBottomSheets.defaultBottomSheet(context, title: "Pilih Akun Trading", size: size, children: List.generate(tradingController.tradingAccountModels.value?.response.real?.length ?? 0, (i){
+                    final account = tradingController.tradingAccountModels.value?.response.real?[i];
+                    return ListTile(
+                      subtitle: Text("${account?.currency} - ${account?.login ?? "-"}", style: GoogleFonts.inter(fontWeight: FontWeight.w400, color: Colors.black45)),
+                      title: Text("${account?.namaTipeAkun ?? "-"} (1:${NumberFormatter.cleanNumber(account?.leverage ?? '0')})", style: GoogleFonts.inter(fontWeight: FontWeight.w700)),
+                      onTap: (){
+                        Get.back();
+                        selectedAccountTrading(tradingController.tradingAccountModels.value?.response.real?[i].login);
+                        selectedIndexAccountTrading(i);
+                        selectedBalanceAccount(tradingController.tradingAccountModels.value?.response.real?[i].balance);
+                      },
+                      leading: Icon(Icons.group, color: CustomColor.secondaryColor),
+                      trailing: Icon(AntDesign.arrow_right_outline, color: CustomColor.secondaryColor),
                     );
                   }));
                 },
@@ -110,7 +109,7 @@ class _MetaQuotesPageState extends State<MetaQuotesPage> {
           expandedHeight: 210.0,
           flexibleSpace: FlexibleSpaceBar(
             background: Container(
-              color: CustomColor.defaultColor,
+              color: CustomColor.secondaryColor,
               padding: EdgeInsets.only(top: appBarHeight),
               height: appBarHeight + paddingTop,
               child: Center(
@@ -137,28 +136,45 @@ class _MetaQuotesPageState extends State<MetaQuotesPage> {
         Obx(
         () => SliverList(
             delegate: SliverChildListDelegate(
-                  () {
+              () {
                 if (controller.status.value == WebSocketStatus.connecting) {
                   return [
-                    const Center(child: CircularProgressIndicator()),
+                    SizedBox(
+                      width: size.width,
+                      height: size.height / 2,
+                      child: const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircularProgressIndicator(color: CustomColor.secondaryColor, strokeWidth: 1.0),
+                            SizedBox(height: 10.0),
+                            Text("Getting Market...")
+                          ],
+                        )
+                      )
+                    ),
                   ];
                 }
 
                 if (controller.status.value == WebSocketStatus.failed) {
                   return [
-                    Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.warning, color: Colors.red),
-                          const SizedBox(height: 10),
-                          const Text("Failed to connect to WebSocket", style: TextStyle(color: Colors.red)),
-                          const SizedBox(height: 10),
-                          CupertinoButton(
-                            onPressed: controller.reconnect,
-                            child: const Text("Retry"),
-                          ),
-                        ],
+                    SizedBox(
+                      width: size.width,
+                      height: size.height / 2,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.warning, color: Colors.red, size: 30.0),
+                            const SizedBox(height: 10),
+                            const Text("Failed to connect to WebSocket", style: TextStyle(color: Colors.red)),
+                            const SizedBox(height: 10),
+                            CupertinoButton(
+                              onPressed: controller.reconnect,
+                              child: Text("Retry", style: GoogleFonts.inter(color: CustomColor.defaultColor)),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ];
@@ -225,9 +241,6 @@ class _MetaQuotesPageState extends State<MetaQuotesPage> {
                                 children: [
                                 PriceDisplayWidget(fullPriceString: formatPrices(data.bid.toString(), currency: "USD"), color: color),
                                 PriceDisplayWidget(fullPriceString: formatPrices(data.ask.toString(), currency: "USD"), color: color),
-                                // Text("Bid: ${data.bid.toStringAsFixed(4)}", style: GoogleFonts.inter(fontSize: 12)),
-                                // const SizedBox(width: 10),
-                                // Text("Ask: ${data.ask.toStringAsFixed(4)}", style: GoogleFonts.inter(fontSize: 12)),
                                 ],
                               ),
                               Row(

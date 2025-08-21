@@ -5,7 +5,7 @@ import 'package:icons_plus/icons_plus.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/views/accounts/index.dart';
-import 'package:tridentpro/src/views/beranda/index.dart';
+import 'package:tridentpro/src/views/beranda/index_v2.dart';
 import 'package:tridentpro/src/views/settings/index.dart';
 import 'package:tridentpro/src/views/trade/index_v2.dart';
 
@@ -19,7 +19,8 @@ class Mainpage extends StatefulWidget {
 class _MainpageState extends State<Mainpage> {
   int _selectedIndex = 0;
   static final List<Widget> _widgetOptions = <Widget>[
-    const Beranda(),
+    // const Beranda(),
+    const IndexV2(),
     const Accounts(),
     // const Trade(),
     const MetaQuotesPage(),
@@ -66,10 +67,10 @@ class _MainpageState extends State<Mainpage> {
             showSelectedLabels: true,
             type: BottomNavigationBarType.fixed,
             unselectedFontSize: 12,
-            selectedItemColor: CustomColor.defaultColor,
-            unselectedIconTheme: IconThemeData(color: Colors.black26),
-            selectedIconTheme: IconThemeData(size: 25, color: CustomColor.defaultColor),
-            unselectedItemColor: CustomColor.textThemeLightSoftColor,
+            selectedItemColor: CustomColor.secondaryColor,
+            unselectedIconTheme: IconThemeData(color: CustomColor.secondaryBackground),
+            selectedIconTheme: IconThemeData(size: 25, color: CustomColor.secondaryColor),
+            unselectedItemColor: CustomColor.secondaryBackground,
             onTap: _onItemTapped,
           ),
         ),

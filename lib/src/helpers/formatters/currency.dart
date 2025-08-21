@@ -79,7 +79,6 @@ String formatPrices(String price, {required String currency}) {
   double? value = double.tryParse(price);
 
   if (value == null) {
-    print("Warning: '$price' is not a valid number for formatting.");
     return price; // Mengembalikan string asli jika tidak valid
   }
 

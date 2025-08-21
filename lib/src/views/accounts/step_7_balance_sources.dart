@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
@@ -35,7 +36,15 @@ class _Step7BalanceSources extends State<Step7BalanceSources> {
             actions: [
               CupertinoButton(
                 onPressed: (){
-                  Get.offAll(() => const Mainpage());
+                  CustomAlert.alertDialogCustomInfo(
+                    title: "Confirmation",
+                    message: "Are you sure you want to cancel? All data will be lost.",
+                    moreThanOneButton: true,
+                    onTap: () {
+                      Get.offAll(() => const Mainpage());
+                    },
+                    textButton: "Yes",
+                  );
                 },
                 child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
               )

@@ -73,11 +73,13 @@ class CustomAlert {
 
   static alertDialogCustomInfo({Function()? onTap, String? message, String? title, String? textButton, bool? moreThanOneButton, Color? colorPositiveButton}){
     return Get.defaultDialog(
-        backgroundColor: CupertinoColors.lightBackgroundGray,
-        radius: 30,
-        barrierDismissible: false,
-        title: "",
-        content: Column(
+      backgroundColor: CupertinoColors.lightBackgroundGray,
+      radius: 10,
+      barrierDismissible: false,
+      title: "",
+      content: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Column(
           children: [
             const Icon(CupertinoIcons.info, size: 60, color: Colors.black87),
             const SizedBox(height: 10),
@@ -86,32 +88,31 @@ class CustomAlert {
             Text(message ?? "Berhasil", style: const TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: Colors.black54), textAlign: TextAlign.center)
           ],
         ),
-        actions: [
-          moreThanOneButton != null || moreThanOneButton == true ? SizedBox(
-            width: 120,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: const StadiumBorder(),
-                elevation: 5,
-                backgroundColor: Colors.red
-              ),
-              onPressed: (){Get.back();},
-              child: Text("Tidak", style: GoogleFonts.inter(color: Colors.white
-              ))),
-          ) : const SizedBox(),
-          SizedBox(
-            width: 120,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: const StadiumBorder(),
-                elevation: 5,
-                backgroundColor: colorPositiveButton ?? Colors.green
-              ),
-              onPressed: onTap,
-              child: Text(textButton ?? "Lanjutkan", style: GoogleFonts.inter(color: Colors.white
-              ))),
-          ),
-        ]
+      ),
+      actions: [
+        moreThanOneButton != null || moreThanOneButton == true ? SizedBox(
+          width: 120,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shape: const StadiumBorder(),
+              backgroundColor: Colors.red
+            ),
+            onPressed: (){Get.back();},
+            child: Text("Tidak", style: GoogleFonts.inter(color: Colors.white
+            ))),
+        ) : const SizedBox(),
+        SizedBox(
+          width: 120,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shape: const StadiumBorder(),
+              backgroundColor: colorPositiveButton ?? Colors.green
+            ),
+            onPressed: onTap,
+            child: Text(textButton ?? "Lanjutkan", style: GoogleFonts.inter(color: Colors.white
+            ))),
+        ),
+      ]
     );
   }
 

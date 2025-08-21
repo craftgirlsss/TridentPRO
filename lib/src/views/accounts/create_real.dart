@@ -120,10 +120,11 @@ class _CreateRealState extends State<CreateReal> {
                                 () => RadioListTile(
                                   enableFeedback: true,
                                   toggleable: false,
+                                  activeColor: CustomColor.secondaryColor,
                                   selected: false,
-                                  selectedTileColor: CustomColor.defaultColor,
+                                  selectedTileColor: CustomColor.secondaryColor,
                                   shape: StadiumBorder(
-                                    side: BorderSide(color: CustomColor.defaultColor)
+                                    side: BorderSide(color: CustomColor.secondaryColor)
                                   ),
                                   title: Text(regolController.productModels.value?.response[selectedIndex.value].products?[index].name ?? "-"),
                                   value: index + 1,

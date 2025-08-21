@@ -27,9 +27,7 @@ class _TicketRoomsState extends State<TicketRooms> {
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, (){
-      utilitiesController.ticketList().then((result){
-        print(result);
-      });
+      utilitiesController.ticketList().then((result){});
     });
   }
 
@@ -92,8 +90,7 @@ class _TicketRoomsState extends State<TicketRooms> {
         isExtended: true,
         onPressed: () async {
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          String? accessToken = prefs.getString("accessToken");
-          print(accessToken);
+          prefs.getString("accessToken");
           CustomMaterialBottomSheets.defaultBottomSheet(
             context,
             size: size,

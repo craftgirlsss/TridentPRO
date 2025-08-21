@@ -43,18 +43,24 @@ class GoogleSignInController extends GetxController {
     prefs.setString('displayPicture', displayPicture);
   }
 
-  Future<UserCredential> signInWithGoogle() async {
-    // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn.instance.authenticate();
+  Future signInWithGoogle() async {
+    try{
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn.instance.authenticate();
+      // print(googleUser?.authentication.idToken);
 
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication googleAuth = googleUser!.authentication;
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication googleAuth = googleUser!.authentication;
 
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(idToken: googleAuth.idToken);
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(idToken: googleAuth.idToken);
 
-    // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+      // Once signed in, return the UserCredential
+      return await FirebaseAuth.instance.signInWithCredential(credential);
+    } catch (e){
+      // print(e);
+      return;
+    }
   }
 
   Future<void> signOut() async {
@@ -62,6 +68,6 @@ class GoogleSignInController extends GetxController {
     final FirebaseAuth auth = FirebaseAuth.instance;
     await googleSignIn.signOut();
     await auth.signOut();
-    print("User Signed Out");
+    // print("User Signed Out");
   }
 }

@@ -2,8 +2,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 
-const foregroundWaveColor = CustomColor.defaultColor;
-const backgroundWaveColor = CustomColor.defaultSoftColor;
+const foregroundWaveColor = CustomColor.secondaryColor;
+const backgroundWaveColor = CustomColor.backgroundIcon;
 
 class WavePainter extends CustomPainter {
   final Animation<double> progress;

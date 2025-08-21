@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 
-const circleProgressColor = CustomColor.defaultColor;
+const circleProgressColor = CustomColor.secondaryColor;
 const circleBgColor = Colors.white;
 
 const progressTextColor = Colors.white;

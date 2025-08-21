@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/controllers/trading.dart';
 import 'package:get/get.dart';
+import 'package:tridentpro/src/views/accounts/demo_account_information.dart';
 
 import 'components/card_info_account.dart';
 
@@ -51,21 +52,26 @@ class _DemoSectionState extends State<DemoSection> {
           }
           return ListView(
             children: List.generate(tradingController.tradingAccountModels.value?.response.demo?.length ?? 0, (i){
+              var result = tradingController.tradingAccountModels.value?.response.demo?[i];
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ListTile(
                   tileColor: Colors.white,
-                  onTap: (){},
-                  splashColor: CustomColor.defaultColor,
+                  onTap: (){
+                    if(result != null){
+                      Get.to(() => DemoAccountInformation(loginID: result.login));
+                    }
+                  },
+                  splashColor: CustomColor.secondaryColor,
                   shape: RoundedRectangleBorder(
-                    side: BorderSide(color: CustomColor.defaultColor, width: 0.5),
+                    side: BorderSide(color: CustomColor.secondaryColor, width: 0.5),
                     borderRadius: BorderRadius.circular(15)
                   ),
-                  title: Text(tradingController.tradingAccountModels.value?.response.demo?[i].login ?? "-", style: GoogleFonts.inter(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black54)),
-                  subtitle: Text(tradingController.tradingAccountModels.value?.response.demo?[i].balance == null ? "\$0" : "\$${tradingController.tradingAccountModels.value!.response.demo![i].balance!.split('.').first}", style: GoogleFonts.inter(fontSize: 17, color: Colors.black45)),
-                  trailing: Icon(Icons.keyboard_arrow_right_sharp, size: 25, color: CustomColor.defaultColor),
+                  title: Text(result?.login ?? "-", style: GoogleFonts.inter(fontSize: 17, fontWeight: FontWeight.bold, color: CustomColor.secondaryColor)),
+                  subtitle: Text(result?.balance == null ? "\$0" : "\$${tradingController.tradingAccountModels.value!.response.demo![i].balance!.split('.').first}", style: GoogleFonts.inter(fontSize: 17, color: Colors.black45)),
+                  trailing: Icon(Icons.keyboard_arrow_right_sharp, size: 25, color: CustomColor.secondaryColor),
                   leading: CircleAvatar(
-                    backgroundColor: CustomColor.defaultColor,
+                    backgroundColor: CustomColor.secondaryColor,
                     child: Icon(Icons.candlestick_chart, color: Colors.white),
                   ),
                 ),

@@ -4,7 +4,6 @@ import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:get/get.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/components/alerts/scaffold_messanger_alert.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
@@ -60,9 +59,7 @@ class _TicketsState extends State<Tickets> {
             child: Icon(Icons.arrow_back_ios_rounded, size: 18)),
           actions: [
             widget.closed == true ? const SizedBox() : IconButton(
-              onPressed: () async {
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                print(prefs.getString('accessToken'));
+              onPressed: () {
                 CustomAlert.alertDialogCustomInfo(
                   onTap: (){
                     utilitiesController.closeTicket(code: widget.ticketCode).then((result){
@@ -322,7 +319,6 @@ class _MessageBarState extends State<_MessageBar> {
                         _textController.clear();
                         isLoading(false);
                         utilitiesController.listMessageOfTicket(code: widget.code).then((result){
-                          print("Fungsi dijalankan");
                           totalMessages(utilitiesController.messagesModel.value?.response?.length);
                           if(!result) {
                             return;

@@ -1,4 +1,35 @@
+import 'package:intl/intl.dart';
+
 class NumberFormatter {
+
+  static String formatWithoutTrailingZeros(dynamic value) {
+    double number = _toDouble(value);
+    
+    // Jika bilangan bulat, tampilkan tanpa desimal
+    if (number == number.toInt()) {
+      return number.toInt().toString();
+    }
+
+    // Jika ada desimal, tampilkan maksimal 2 digit
+    return number.toStringAsFixed(2);
+  }
+  static double _toDouble(dynamic value) {
+    if (value is String) return double.tryParse(value) ?? 0.0;
+    if (value is int) return value.toDouble();
+    if (value is double) return value;
+    return 0.0;
+  }
+  static String formatCurrency(dynamic value, {String currency = 'IDR'}) {
+    double number = _toDouble(value);
+
+    switch (currency.toUpperCase()) {
+      case 'USD':
+        return NumberFormat.currency(locale: 'en_US', symbol: '\$', decimalDigits: 2).format(number);
+      case 'IDR':
+      default:
+        return NumberFormat.currency(locale: 'id_ID', symbol: 'IDR ', decimalDigits: 0).format(number);
+    }
+  }
   static String formatCardNumber(String number) {
     return number.replaceAllMapped(
         RegExp(r".{1,4}"), (match) => "${match.group(0)} ").trim();
@@ -23,6 +54,11 @@ class NumberFormatter {
       // For other currencies, format to 5 decimal places
       return value.toStringAsFixed(5);
     }
+  }
+
+  static String cleanNumber(String input) {
+    final d = double.parse(input);
+    return d == d.toInt() ? d.toInt().toString() : d.toString();
   }
 }
 

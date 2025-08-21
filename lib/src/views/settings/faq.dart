@@ -23,9 +23,9 @@ class _FaqState extends State<Faq> {
       'Anda dapat membuka akun langsung melalui aplikasi dengan mengisi formulir pendaftaran, mengunggah dokumen KYC (seperti KTP dan NPWP), dan menunggu proses verifikasi dari tim kami.',
     },
     {
-      'question': 'Apakah dana saya aman di PT Tridentpro Futures?',
+      'question': 'Apakah dana saya aman di PT. RRFX Investasi Berjangka?',
       'answer':
-      'Ya, PT Tridentpro Futures terdaftar dan diawasi oleh BAPPEBTI dan merupakan anggota resmi dari Bursa Berjangka Jakarta (BBJ) serta Kliring Berjangka Indonesia (KBI). Dana nasabah disimpan di rekening terpisah (segregated account).',
+      'Ya, PT. RRFX Investasi Berjangka terdaftar dan diawasi oleh BAPPEBTI dan merupakan anggota resmi dari Bursa Berjangka Jakarta (BBJ) serta Kliring Berjangka Indonesia (KBI). Dana nasabah disimpan di rekening terpisah (segregated account).',
     },
     {
       'question': 'Apakah aplikasi ini menyediakan akun demo?',

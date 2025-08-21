@@ -1,18 +1,18 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/components/buttons/elevated_button.dart';
 import 'package:tridentpro/src/components/buttons/outlined_button.dart';
-import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/components/languages/language_variable.dart';
 import 'package:tridentpro/src/components/textfields/email_textfield.dart';
 import 'package:tridentpro/src/components/textfields/label_textfield.dart';
 import 'package:tridentpro/src/components/textfields/name_textfield.dart';
 import 'package:tridentpro/src/components/textfields/otp_textfield.dart';
 import 'package:tridentpro/src/components/textfields/password_textfield.dart';
+import 'package:tridentpro/src/components/utilities/utilities.dart';
 import 'package:tridentpro/src/controllers/authentication.dart';
 import 'package:tridentpro/src/views/authentications/signin.dart';
 
@@ -56,36 +56,30 @@ class _SignupState extends State<Signup> {
       child: Stack(
         children: [
           Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              elevation: 0,
+              forceMaterialTransparency: true,
+            ),
             body: SafeArea(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 child: Form(
                   key: _formKey,
                   child: Padding(
-                    padding: const EdgeInsets.all(24.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          width: size.width,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(LanguageGlobalVar.REGIST_NOW.tr, style: GoogleFonts.inter(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold
-                              )),
-                              const SizedBox(height: 8),
-                              Text(LanguageGlobalVar.CREATE_ACCOUNT_FOR_START.tr, style: GoogleFonts.inter(
-                                fontSize: 14,
-                                color: CustomColor.textThemeDarkSoftColor
-                              ))
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 24),
+                        Text("Hello", style: GoogleFonts.inter(fontSize: 50, fontWeight: FontWeight.w700, color: CustomColor.secondaryColor, height: 1.0,)),
+                        Text("there!", style: GoogleFonts.inter(fontSize: 50, fontWeight: FontWeight.w700, color: Colors.black)),
+                        const SizedBox(height: 5.0),
+                        Text("Lihat pergerakan harga pasar global secara langsung, dengan chart interaktif dan analisis teknikal lengkap.", style: TextStyle(color: CustomColor.textThemeLightSoftColor, fontSize: 15)),
+                        const SizedBox(height: 30.0),
                         LabelTextField.labelName(
                           label: LanguageGlobalVar.FULL_NAME.tr,
                           child: NameTextField(
+                            useValidator: true,
                             fieldName: LanguageGlobalVar.FULL_NAME.tr,
                             controller: fullNameController,
                             hintText: LanguageGlobalVar.FULL_NAME.tr,
@@ -94,6 +88,7 @@ class _SignupState extends State<Signup> {
                         LabelTextField.labelName(
                           label: LanguageGlobalVar.EMAIL_ADDRESS.tr,
                           child: EmailTextField(
+                            useValidator: true,
                             fieldName: LanguageGlobalVar.EMAIL_ADDRESS.tr,
                             controller: emailController,
                             hintText: "name@email.com",
@@ -107,6 +102,12 @@ class _SignupState extends State<Signup> {
                               Expanded(
                                 child: Obx(
                                   () => isLoading.value ? const SizedBox() : IntlPhoneField(
+                                    validator: (value) {
+                                      if (value!.countryCode.isEmpty) {
+                                        return 'Mohon isikan nomor HP';
+                                      }
+                                      return null;
+                                    },
                                     dropdownIcon: Icon(Icons.keyboard_arrow_down_sharp, color: Colors.black26),
                                     dropdownDecoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
@@ -124,7 +125,7 @@ class _SignupState extends State<Signup> {
                                     focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12.0),
                                       borderSide: BorderSide(
-                                        color: CustomColor.defaultColor
+                                        color: CustomColor.secondaryColor
                                       )
                                     ),
                                     enabledBorder: OutlineInputBorder(
@@ -154,16 +155,16 @@ class _SignupState extends State<Signup> {
                                           message: LanguageGlobalVar.ERROR_PHONE_NULL.tr
                                         );
                                       }else{
-                                        if(kDebugMode){
+                                       //if(kDebugMode){
                                           authController.sendOTPWA(phone: number.value, phoneCode: phoneCode.value).then((result){
                                             CustomAlert.showMySnackBar(authController.responseMessage.value);
                                           });
-                                        }else{
-                                          authController.sendOTPSMS(phone: number.value, phoneCode: phoneCode.value).then((result){
-                                            CustomAlert.showMySnackBar(authController.responseMessage.value);
-                                          });
+                                        // }else{
+                                        //   authController.sendOTPSMS(phone: number.value, phoneCode: phoneCode.value).then((result){
+                                        //     CustomAlert.showMySnackBar(authController.responseMessage.value);
+                                        //   });
                                         }
-                                      }
+                                      //}
                                     },
                                     title: authController.isLoadingOTP.value ? "Sending OTP..." : LanguageGlobalVar.SEND_OTP.tr
                                   ),
@@ -196,40 +197,7 @@ class _SignupState extends State<Signup> {
                             hintText: LanguageGlobalVar.REPEAT_PASSWORD.tr,
                           )
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Obx(
-                              () => Checkbox(
-                              side: BorderSide(width: 1.0, color: CustomColor.textThemeDarkSoftColor),
-                              activeColor: CustomColor.defaultColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(6.0)
-                              ),
-                              value: checkedRead.value, onChanged: (value) => checkedRead.value = !checkedRead.value),
-                            ),
-                            Flexible(
-                              child: Wrap(
-                                crossAxisAlignment: WrapCrossAlignment.center,
-                                alignment: WrapAlignment.start,
-                                children: [
-                                  Text(LanguageGlobalVar.HAVE_READ.tr, style: GoogleFonts.inter(color: CustomColor.textThemeDarkSoftColor)),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                                    child: GestureDetector(
-                                      child: Text(LanguageGlobalVar.TERMS_AND_CONDITIONS.tr, style: GoogleFonts.inter(color: CustomColor.defaultColor, fontWeight: FontWeight.bold, fontSize: 12)), onTap: (){}),
-                                  ),
-                                  Text(LanguageGlobalVar.AND.tr, style: GoogleFonts.inter(color: CustomColor.textThemeDarkSoftColor)),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 5.0),
-                                    child: GestureDetector(
-                                      child: Text(LanguageGlobalVar.PRIVACY_AND_POLICY.tr, style: GoogleFonts.inter(color: CustomColor.defaultColor, fontWeight: FontWeight.bold, fontSize: 12)), onTap: (){}),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        )
+                        UtilitiesComponents.checkBoxAgreement(context, checkedRead: checkedRead)
                       ],
                     ),
                   )
@@ -240,7 +208,7 @@ class _SignupState extends State<Signup> {
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               child: Obx(
                 () => DefaultButton.defaultElevatedButton(
-                  onPressed: authController.isLoading.value ? null : (){
+                  onPressed: authController.isLoading.value ? null : checkedRead.value ? (){
                     if(_formKey.currentState!.validate()){
                       if(confirmPasswordController.text != passwordController.text){
                         CustomAlert.alertError(
@@ -271,7 +239,7 @@ class _SignupState extends State<Signup> {
                         });
                       }
                     }
-                  },
+                  } : null,
                   title: authController.isLoading.value ? "Processing..." : LanguageGlobalVar.SELANJUTNYA.tr
                 ),
               ),

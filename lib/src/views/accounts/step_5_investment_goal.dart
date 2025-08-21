@@ -59,16 +59,24 @@ class _Step5InvestmentGoal extends State<Step5InvestmentGoal> {
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: CustomAppBar.defaultAppBar(
-            autoImplyLeading: true,
-            title: "Investment",
-            actions: [
-              CupertinoButton(
-                onPressed: (){
-                  Get.offAll(() => const Mainpage());
-                },
-                child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
-              )
-            ]
+          autoImplyLeading: true,
+          title: "Investment",
+          actions: [
+            CupertinoButton(
+              onPressed: (){
+                CustomAlert.alertDialogCustomInfo(
+                  title: "Confirmation",
+                  message: "Are you sure you want to cancel? All data will be lost.",
+                  moreThanOneButton: true,
+                  onTap: () {
+                    Get.offAll(() => const Mainpage());
+                  },
+                  textButton: "Yes",
+                );
+              },
+              child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
+            )
+          ]
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -91,9 +99,12 @@ class _Step5InvestmentGoal extends State<Step5InvestmentGoal> {
                       enableFeedback: true,
                       toggleable: false,
                       selected: false,
-                      selectedTileColor: CustomColor.defaultColor,
+                      activeColor: CustomColor.secondaryColor,
+                      hoverColor: CustomColor.secondaryColor.withOpacity(0.2),
+                      overlayColor: WidgetStatePropertyAll(CustomColor.secondaryColor.withOpacity(0.2)),
+                      selectedTileColor: CustomColor.secondaryColor,
                       shape: StadiumBorder(
-                        side: BorderSide(color: CustomColor.defaultColor)
+                        side: BorderSide(color: CustomColor.secondaryColor)
                       ),
                       title: Text(GlobalVariable.investmentGoalIndonesia[index]),
                       value: index + 1,

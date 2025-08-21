@@ -33,7 +33,7 @@ class CustomMaterialBottomSheets {
                         height: 5,
                         padding: const EdgeInsets.all(3),
                         decoration: BoxDecoration(
-                          color: CustomColor.defaultColor,
+                          color: CustomColor.secondaryColor,
                           borderRadius: BorderRadius.circular(6)
                         ),
                       ),
@@ -43,7 +43,7 @@ class CustomMaterialBottomSheets {
                           Container(
                             padding: const EdgeInsets.all(3),
                             decoration: BoxDecoration(
-                                color: CustomColor.defaultSoftColor,
+                                color: CustomColor.backgroundIcon,
                                 border: Border.all(color: Colors.black12, width: 0.5),
                                 shape: BoxShape.circle
                             ),
@@ -51,7 +51,7 @@ class CustomMaterialBottomSheets {
                               onTap: (){
                                 Navigator.pop(context);
                               },
-                              child: Icon(Icons.close, color: Colors.black45, size: 17)),
+                              child: Icon(Icons.close, color: CustomColor.secondaryColor, size: 17)),
                           )
                         ],
                       ),

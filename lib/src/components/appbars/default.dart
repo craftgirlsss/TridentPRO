@@ -5,10 +5,11 @@ import 'package:tridentpro/src/components/colors/default.dart';
 class CustomAppBar {
   static AppBar defaultAppBar({String? title, List<Widget>? actions, bool? autoImplyLeading, PreferredSize? bottom}){
     return AppBar(
-      title: Text(title ?? "AppBar"),
+      title: Text(title ?? ""),
       surfaceTintColor: CustomColor.backgroundIcon,
       actions: actions,
-      leading: autoImplyLeading == true ? IconButton(onPressed: () => Get.back(), icon: Icon(Icons.arrow_back_ios_new_rounded, size: 17, color: CustomColor.defaultColor)) : const SizedBox(),
+      forceMaterialTransparency: true,
+      leading: autoImplyLeading == true ? IconButton(onPressed: () => Get.back(), icon: Icon(Icons.arrow_back_ios_new_rounded, size: 17, color: CustomColor.secondaryColor)) : const SizedBox(),
       bottom: bottom,
     );
   }

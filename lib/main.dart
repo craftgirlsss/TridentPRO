@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:app_links/app_links.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -24,7 +23,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterL
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  print('Handling background message: ${message.messageId}');
+  // print('Handling background message: ${message.messageId}');
 }
 
 Future<void> main() async {
@@ -74,7 +73,7 @@ class _MyAppState extends State<MyApp> {
       Get.toNamed('/home'); // Navigate to home page
     }
     // Add more logic here to handle different deep link paths
-    print('Deep link received: $uri');
+    // print('Deep link received: $uri');
   }
 
   @override
@@ -102,7 +101,7 @@ class _MyAppState extends State<MyApp> {
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('Notification clicked!');
+      // print('Notification clicked!');
     });
   }
 
@@ -117,8 +116,7 @@ class _MyAppState extends State<MyApp> {
       translations: Languages(),
       locale: Get.deviceLocale,
       theme: CustomTheme.defaultLightTheme(),
-      // darkTheme: CustomTheme.defaultDarkTheme(),
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.dark,
       localizationsDelegates: const [
         chart_l10n.ChartLocalization.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -128,7 +126,7 @@ class _MyAppState extends State<MyApp> {
       supportedLocales: const [
         Locale('en', ''), // English
       ],
-      home: const Splashscreen(),
+      home: Splashscreen(),
     );
   }
 }

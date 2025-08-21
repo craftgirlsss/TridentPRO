@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tridentpro/src/views/authentications/introduction_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/controllers/two_factory_auth.dart';
@@ -6,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:tridentpro/src/controllers/home.dart';
 import 'package:tridentpro/src/helpers/handlers/permissions.dart';
 import 'package:tridentpro/src/service/auth_service.dart';
-import 'package:tridentpro/src/views/authentications/signin.dart';
+import 'package:tridentpro/src/views/authentications/introductionv2.dart';
 import 'package:tridentpro/src/views/mainpage.dart';
 
 class Splashscreen extends StatefulWidget {
@@ -38,7 +39,8 @@ class _SplashscreenState extends State<Splashscreen> {
           homeController.profile().then((resultProfile){
             if(!resultProfile){
               CustomAlert.alertError(message: homeController.responseMessage.value, onTap: (){
-                Get.offAll(() => const SignIn());
+                // Get.offAll(() => const IntroductionScreen());
+                Get.offAll(() => const Introductionv2());
               });
               return;
             }
@@ -46,9 +48,11 @@ class _SplashscreenState extends State<Splashscreen> {
           });
           return;
         }
-        Get.offAll(() => const SignIn());
+        Get.offAll(() => const Introductionv2());
+        // Get.offAll(() => const IntroductionScreen());
       }else{
-        Get.offAll(() => const SignIn());
+        Get.offAll(() => const Introductionv2());
+        // Get.offAll(() => const IntroductionScreen());
       }
     });
   }
@@ -64,7 +68,7 @@ class _SplashscreenState extends State<Splashscreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset('assets/icons/ic_launcher.png', width: size.width / 2),
+            Image.asset('assets/images/ic_launcher.png', width: size.width / 2),
           ],
         ),
       ),

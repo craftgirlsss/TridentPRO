@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tridentpro/src/components/loadings/default.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
@@ -14,7 +15,9 @@ import 'package:tridentpro/src/controllers/setting.dart';
 import 'package:tridentpro/src/controllers/trading.dart';
 
 class InternalTransfer extends StatefulWidget {
-  const InternalTransfer({super.key});
+  const InternalTransfer({super.key, this.loginID, this.loginNumber});
+  final String? loginNumber;
+  final String? loginID;
 
   @override
   State<InternalTransfer> createState() => _InternalTransferState();
@@ -36,12 +39,18 @@ class _InternalTransferState extends State<InternalTransfer> {
   @override
   void initState() {
     super.initState();
+    isLoading(true);
     Future.delayed(Duration.zero, (){
       tradingController.getTradingAccount().then((resultTrading){
+        if(widget.loginID != null && widget.loginNumber != null){
+          myAccountTradingSender.text = widget.loginNumber!;
+          selectedTradingIDSender(widget.loginID!);
+        }
         if(!resultTrading){
           CustomAlert.alertError(message: tradingController.responseMessage.value);
         }
       });
+      isLoading(false);
     });
   }
 
@@ -97,64 +106,69 @@ class _InternalTransferState extends State<InternalTransfer> {
             const SizedBox(width: 10)
           ]
         ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                UtilitiesWidget.titleContent(
-                  title: "Akun Trading Pengirim",
-                  subtitle: "Pastikan jumlah balance anda mencukupi untuk proses internal transfer",
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
                   children: [
-                    Obx(
-                      () => VoidTextField(controller: myAccountTradingSender, fieldName: "Akun Trading Pengirim", hintText: "Akun Trading Pengirim", labelText: "Akun Trading Pengirim", onPressed: settingController.isLoading.value ? null : () async {
-                        CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Pilih Akun Trading Pengirim", children: List.generate(tradingController.tradingAccountModels.value?.response.real?.length ?? 0, (i){
-                          return ListTile(
-                            onTap: (){
-                              Navigator.pop(context);
-                              myAccountTradingSender.text = "${tradingController.tradingAccountModels.value?.response.real?[i].login} - \$${tradingController.tradingAccountModels.value?.response.real?[i].balance}";
-                              selectedTradingIDSender(tradingController.tradingAccountModels.value?.response.real?[i].id);
-                            },
-                            title: Text("${tradingController.tradingAccountModels.value?.response.real?[i].login} - \$${tradingController.tradingAccountModels.value?.response.real?[i].balance}", style: GoogleFonts.inter()),
-                          );
-                        }));
-                      }),
+                    UtilitiesWidget.titleContent(
+                      title: "Akun Trading Pengirim",
+                      subtitle: "Pastikan jumlah balance anda mencukupi untuk proses internal transfer",
+                      children: [
+                        Obx(
+                          () => VoidTextField(controller: myAccountTradingSender, fieldName: "Akun Trading Pengirim", hintText: "Akun Trading Pengirim", labelText: "Akun Trading Pengirim", onPressed: settingController.isLoading.value ? null : () async {
+                            CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Pilih Akun Trading Pengirim", children: List.generate(tradingController.tradingAccountModels.value?.response.real?.length ?? 0, (i){
+                              return ListTile(
+                                onTap: (){
+                                  Navigator.pop(context);
+                                  myAccountTradingSender.text = "${tradingController.tradingAccountModels.value?.response.real?[i].login} - \$${tradingController.tradingAccountModels.value?.response.real?[i].balance}";
+                                  selectedTradingIDSender(tradingController.tradingAccountModels.value?.response.real?[i].id);
+                                },
+                                title: Text("${tradingController.tradingAccountModels.value?.response.real?[i].login} - \$${tradingController.tradingAccountModels.value?.response.real?[i].balance}", style: GoogleFonts.inter()),
+                              );
+                            }));
+                          }),
+                        ),
+                      ]
                     ),
-                  ]
-                ),
-
-                UtilitiesWidget.titleContent(
-                  title: "Akun Trading Penerima",
-                  subtitle: "Pastikan jumlah balance anda mencukupi untuk proses internal transfer",
-                  children: [
-                    Obx(
-                      () => VoidTextField(controller: myAccountTradingReceiver, fieldName: "Akun Trading Pengirim", hintText: "Akun Trading Pengirim", labelText: "Akun Trading Pengirim", onPressed: settingController.isLoading.value ? null : () async {
-                        CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Pilih Akun Trading Pengirim", children: List.generate(tradingController.tradingAccountModels.value?.response.real?.length ?? 0, (i){
-                          return ListTile(
-                            onTap: (){
-                              Navigator.pop(context);
-                              myAccountTradingReceiver.text = "${tradingController.tradingAccountModels.value?.response.real?[i].login} - \$${tradingController.tradingAccountModels.value?.response.real?[i].balance}";
-                              selectedTradingIDReceiver(tradingController.tradingAccountModels.value?.response.real?[i].id);
-                            },
-                            title: Text("${tradingController.tradingAccountModels.value?.response.real?[i].login} - \$${tradingController.tradingAccountModels.value?.response.real?[i].balance}", style: GoogleFonts.inter()),
-                          );
-                        }));
-                      }),
+            
+                    UtilitiesWidget.titleContent(
+                      title: "Akun Trading Penerima",
+                      subtitle: "Pastikan jumlah balance anda mencukupi untuk proses internal transfer",
+                      children: [
+                        Obx(
+                          () => VoidTextField(controller: myAccountTradingReceiver, fieldName: "Akun Trading Pengirim", hintText: "Akun Trading Pengirim", labelText: "Akun Trading Pengirim", onPressed: settingController.isLoading.value ? null : () async {
+                            CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Pilih Akun Trading Pengirim", children: List.generate(tradingController.tradingAccountModels.value?.response.real?.length ?? 0, (i){
+                              return ListTile(
+                                onTap: (){
+                                  Navigator.pop(context);
+                                  myAccountTradingReceiver.text = "${tradingController.tradingAccountModels.value?.response.real?[i].login} - \$${tradingController.tradingAccountModels.value?.response.real?[i].balance}";
+                                  selectedTradingIDReceiver(tradingController.tradingAccountModels.value?.response.real?[i].id);
+                                },
+                                title: Text("${tradingController.tradingAccountModels.value?.response.real?[i].login} - \$${tradingController.tradingAccountModels.value?.response.real?[i].balance}", style: GoogleFonts.inter()),
+                              );
+                            }));
+                          }),
+                        ),
+                      ]
                     ),
-                  ]
+            
+                    UtilitiesWidget.titleContent(
+                      title: "Jumlah Transfer",
+                      subtitle: "Pastikan jumlah balance anda mencukupi untuk proses internal transfer",
+                      children: [
+                        NumberTextField(controller: amount, fieldName: "Jumlah Transfer", hintText: "Jumlah Transfer", labelText: "Jumlah Transfer", maxLength: 1),
+                      ]
+                    )
+                  ],
                 ),
-
-                UtilitiesWidget.titleContent(
-                  title: "Jumlah Transfer",
-                  subtitle: "Pastikan jumlah balance anda mencukupi untuk proses internal transfer",
-                  children: [
-                    NumberTextField(controller: amount, fieldName: "Jumlah Transfer", hintText: "Jumlah Transfer", labelText: "Jumlah Transfer", maxLength: 1),
-                  ]
-                )
-              ],
+              ),
             ),
-          ),
+            Obx(() => LoadingOverlay(isLoading: isLoading.value))
+          ],
         ),
       ),
     );

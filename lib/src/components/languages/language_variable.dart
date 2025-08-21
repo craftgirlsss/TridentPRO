@@ -9,6 +9,7 @@ class LanguageGlobalVar {
   static const String WELCOME_TEXT = "Selamat Datang!";
   static const String NOT_HAVE_ACCOUNT = "Tidak punya akun?";
   static const String REGIST_NOW = "Daftar Sekarang";
+  static const String SIGN_IN_WITH_GOOGLE = "Masuk dengan Google";
   static const String OR_REGIST_WITH = "Atau lanjut dengan";
   static const String CREATE_ACCOUNT_FOR_START = "Buat akun untuk memulai trading!";
   static const String SEND_OTP = "Kirim OTP";

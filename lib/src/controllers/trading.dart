@@ -115,7 +115,6 @@ class TradingController extends GetxController {
           );
           newCandles.add(candle);
         } catch (e) {
-          print("Error processing candle data: $e");
           continue;
         }
       }
@@ -126,7 +125,6 @@ class TradingController extends GetxController {
       // print("Current number of candles: ${ohlcDataDeriv.length}");
       return true;
     } catch (e) {
-      print("Error in getMarketForDerivChart: $e");
       return false;
     }
   }
@@ -156,7 +154,6 @@ class TradingController extends GetxController {
       isLoading(true);
       Map<String, dynamic> result = await authService.get("account/info");
       isLoading(false);
-      print(result);
       if (result['statusCode'] == 200) {
         tradingAccountModels(TradingAccountModels.fromJson(result['response']));
         return true;
@@ -177,8 +174,6 @@ class TradingController extends GetxController {
       if (result['status'] != true) {
         return [];
       }
-      print("Ini result get trading account v2");
-      print(result);
 
       List<dynamic> rawList = result['response'];
       List<Map<String, dynamic>> json = rawList.map((e) => Map<String, dynamic>.from(e)).toList();
@@ -194,7 +189,7 @@ class TradingController extends GetxController {
     try {
       isLoading(true);
       Map<String, dynamic> result = await authService.post("regol/createDemo", {});
-      print(result);
+      (result);
       
       isLoading(false);
       if (result['status']) {
@@ -227,7 +222,19 @@ class TradingController extends GetxController {
       Map<String, dynamic> result = await authService.post("market/account/connect", {
         'account_id': accountId
       });
-      print(result);
+      return result;
+
+    } catch (e) {
+      throw Exception("addTradingAccount error: $e");
+    }
+  }
+
+  Future<Map<String, dynamic>> inputPassword({required String accountId, required String password}) async {
+    try {
+      Map<String, dynamic> result = await authService.post("market/account/update", {
+        'account_id': accountId,
+        'password': password
+      });
       return result;
 
     } catch (e) {
@@ -257,10 +264,7 @@ class TradingController extends GetxController {
         'volume': lot,
         'price': price
       });
-      print(result);
-
       return result;
-      
     } catch (e) {
       throw Exception("executionOrder error: $e");
     }
@@ -282,7 +286,6 @@ class TradingController extends GetxController {
     isLoading(true);
     try {
       Map<String, dynamic> result = await authService.get('market/opened-order?login=$login');
-      print(result);
       openOrderModel(OpenOrderModel.fromJson(result));
       isLoading(false);
       return result;

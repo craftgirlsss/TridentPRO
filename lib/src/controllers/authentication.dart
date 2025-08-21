@@ -41,9 +41,7 @@ class AuthController extends GetxController {
         twoFactoryAuth.refreshToken(personalModel.value!.response.refreshToken);
         twoFactoryAuth.accessToken(personalModel.value!.response.accessToken);
         responseMessage.value = result['message'];
-        homeController.profile().then((resultProfile){
-          print(resultProfile);
-        });
+        homeController.profile().then((resultProfile){});
         return true;
       }
       responseMessage.value = result['message'];
@@ -146,6 +144,35 @@ class AuthController extends GetxController {
       return false;
     } catch (e) {
       isLoadingOTP(false);
+      responseMessage.value = e.toString();
+      return false;
+    }
+  }
+
+  /// Send OTP WhatsApp API
+  Future<bool> forgotPassword({String? email}) async {
+    try {
+      isLoading(true);
+      http.Response response = await http.post(
+        Uri.tryParse("${GlobalVariable.mainURL}/auth/forget")!,
+        headers: {
+          'x-api-key': GlobalVariable.x_api_key,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: {
+          'email': email,
+        },
+      );
+      var result = jsonDecode(response.body);
+      isLoading(false);
+      if (response.statusCode == 200) {
+        responseMessage.value = result['message'];
+        return true;
+      }
+      responseMessage.value = result['message'];
+      return false;
+    } catch (e) {
+      isLoading(false);
       responseMessage.value = e.toString();
       return false;
     }

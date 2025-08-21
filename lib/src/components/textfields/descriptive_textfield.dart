@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 
 class DescriptiveTextField extends StatefulWidget {
@@ -11,7 +12,8 @@ class DescriptiveTextField extends StatefulWidget {
   final String? fieldName;
   final TextEditingController? controller;
   final bool? useValidator;
-  const DescriptiveTextField({super.key, this.hintText, this.labelText, this.controller, this.readOnly, this.fieldName, this.useValidator});
+  final IconData? iconData;
+  const DescriptiveTextField({super.key, this.hintText, this.labelText, this.controller, this.readOnly, this.fieldName, this.useValidator, this.iconData});
 
   @override
   State<DescriptiveTextField> createState() => _DescriptiveTextFieldState();
@@ -44,7 +46,7 @@ class _DescriptiveTextFieldState extends State<DescriptiveTextField> {
           keyboardAppearance: Brightness.dark,
           keyboardType: TextInputType.name,
           style: GoogleFonts.inter(),
-          cursorColor: CustomColor.defaultColor,
+          cursorColor: CustomColor.secondaryColor,
           validator: (value) {
             if(widget.useValidator == true){
               if (value == null || value.isEmpty) {
@@ -57,41 +59,42 @@ class _DescriptiveTextFieldState extends State<DescriptiveTextField> {
             return null;
           },
           decoration: InputDecoration(
-              hintText: widget.hintText,
-              alignLabelWithHint: true,
-              hintStyle: GoogleFonts.inter(
-                color: CustomColor.textThemeDarkSoftColor,
-                fontSize: 14
-              ),
-              labelText: widget.labelText,
-              labelStyle: const TextStyle(color: CustomColor.textThemeDarkSoftColor),
-              filled: false,
-              suffix: widget.useValidator == false ? const SizedBox() : AnimatedContainer(
-                duration: const Duration(milliseconds: 500),
-                padding: const EdgeInsets.all(2),
-                decoration:  BoxDecoration(
-                    color: isName.value == false ? Colors.red : CustomColor.defaultColor,
-                    shape: BoxShape.circle),
-                child: isName.value == false ? const Icon(Icons.close, color: Colors.white, size: 16) : const Icon(Icons.done, color: Colors.white, size: 16),
-              ),
-              focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                  borderSide: BorderSide(
-                      color: CustomColor.defaultColor
-                  )
-              ),
-              enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                  borderSide: BorderSide(
-                      color: CustomColor.textThemeDarkSoftColor
-                  )
-              ),
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                  borderSide: BorderSide(
-                      color: CustomColor.textThemeDarkSoftColor
-                  )
-              )
+            hintText: widget.hintText,
+            alignLabelWithHint: true,
+            prefixIcon: SizedBox(width: 30, child: Icon(widget.iconData ?? EvaIcons.person, color: Colors.black54),),
+            hintStyle: GoogleFonts.inter(
+              color: CustomColor.textThemeDarkSoftColor,
+              fontSize: 14
+            ),
+            labelText: widget.labelText,
+            labelStyle: const TextStyle(color: CustomColor.textThemeDarkSoftColor),
+            filled: false,
+            suffix: widget.useValidator == false ? const SizedBox() : AnimatedContainer(
+              duration: const Duration(milliseconds: 500),
+              padding: const EdgeInsets.all(2),
+              decoration:  BoxDecoration(
+                  color: isName.value == false ? Colors.red : CustomColor.secondaryColor,
+                  shape: BoxShape.circle),
+              child: isName.value == false ? const Icon(Icons.close, color: Colors.white, size: 16) : const Icon(Icons.done, color: Colors.white, size: 16),
+            ),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0),
+                borderSide: BorderSide(
+                    color: CustomColor.secondaryColor
+                )
+            ),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0),
+                borderSide: BorderSide(
+                    color: CustomColor.textThemeDarkSoftColor
+                )
+            ),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0),
+                borderSide: BorderSide(
+                    color: CustomColor.textThemeDarkSoftColor
+                )
+            )
           ),
           onChanged: (value) {
             if(value.length > 2){

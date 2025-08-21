@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:tridentpro/src/views/authentications/introduction_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tridentpro/src/components/alerts/default.dart';
 import 'package:tridentpro/src/components/alerts/scaffold_messanger_alert.dart';
@@ -12,7 +13,6 @@ import 'package:tridentpro/src/controllers/home.dart';
 import 'package:tridentpro/src/controllers/trading.dart';
 import 'package:tridentpro/src/controllers/user_controller.dart';
 import 'package:tridentpro/src/helpers/handlers/image_picker.dart';
-import 'package:tridentpro/src/views/authentications/signin.dart';
 import 'package:tridentpro/src/views/settings/deposit_withdrawal_history.dart';
 import 'package:tridentpro/src/views/settings/edit_profile.dart';
 import 'package:tridentpro/src/views/settings/faq.dart';
@@ -46,8 +46,10 @@ class _SettingsState extends State<Settings> {
     super.initState();
     Future.delayed(Duration.zero, (){
       tradingController.getTradingAccount().then((result){
-        if(tradingController.tradingAccountModels.value?.response.real?.length != 0){
+        if(tradingController.tradingAccountModels.value?.response.real?.isNotEmpty == true){
           haveRealAccount(true);
+        }else{
+          haveRealAccount(false);
         }
       });
     });
@@ -72,17 +74,16 @@ class _SettingsState extends State<Settings> {
                 moreThanOneButton: true,
                 onTap: () async {
                   SharedPreferences prefs = await SharedPreferences.getInstance();
-                  debugPrint(prefs.getString("accessToken"));
                   prefs.remove('accessToken');
                   prefs.remove('refreshToken');
                   prefs.remove('loggedIn');
-                  Get.offAll(() => const SignIn());
+                  Get.offAll(() => const IntroductionScreen());
                 },
                 title: "Keluar",
                 textButton: "Ya"
               );
             },
-            child: Icon(MingCute.exit_line, color: CustomColor.defaultColor),
+            child: Icon(MingCute.exit_line, color: CustomColor.secondaryColor),
           )
         ]
       ),
@@ -113,9 +114,7 @@ class _SettingsState extends State<Settings> {
                 );
               },
               onTapImage: () async {
-                debugPrint("pressed");
                 selectedImage(await CustomImagePicker.pickImageFromCameraAndReturnUrl());
-                debugPrint(selectedImage.value);
                 userController.updateAvatar(urlImage: selectedImage.value).then((result) {
                   if(result){
                     setState(() {
@@ -130,45 +129,45 @@ class _SettingsState extends State<Settings> {
             const SizedBox(height: 20),
 
             // Storage Usage Section
-            Container(
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: Colors.green[50],
-              ),
-              child: Row(
-                children: [
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      SizedBox(
-                        height: 60,
-                        width: 60,
-                        child: CircularProgressIndicator(
-                          value: 0.90,
-                          strokeWidth: 6,
-                          strokeCap: StrokeCap.round,
-                          backgroundColor: Colors.grey[300],
-                          valueColor: AlwaysStoppedAnimation<Color>(CustomColor.defaultColor),
-                        ),
-                      ),
-                      Text("90%"),
-                    ],
-                  ),
-                  SizedBox(width: 20),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Kelengkapan Profile", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                        SizedBox(height: 4),
-                        Text("Mohon lengkapi profile anda untuk dapat melakukan pendaftaran akun trading"),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            // Container(
+            //   padding: EdgeInsets.all(16),
+            //   decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(12),
+            //     color: Colors.green[50],
+            //   ),
+            //   child: Row(
+            //     children: [
+            //       Stack(
+            //         alignment: Alignment.center,
+            //         children: [
+            //           SizedBox(
+            //             height: 60,
+            //             width: 60,
+            //             child: CircularProgressIndicator(
+            //               value: 0.90,
+            //               strokeWidth: 6,
+            //               strokeCap: StrokeCap.round,
+            //               backgroundColor: Colors.grey[300],
+            //               valueColor: AlwaysStoppedAnimation<Color>(CustomColor.defaultColor),
+            //             ),
+            //           ),
+            //           Text("90%"),
+            //         ],
+            //       ),
+            //       SizedBox(width: 20),
+            //       Expanded(
+            //         child: Column(
+            //           crossAxisAlignment: CrossAxisAlignment.start,
+            //           children: [
+            //             Text("Kelengkapan Profile", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            //             SizedBox(height: 4),
+            //             Text("Mohon lengkapi profile anda untuk dapat melakukan pendaftaran akun trading"),
+            //           ],
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
             SizedBox(height: 20),
 
             // // Review Large Files
@@ -207,7 +206,7 @@ class _SettingsState extends State<Settings> {
                 Obx(
                   () => SettingComponents.storageCard(
                     "Deposit",
-                    Bootstrap.box_arrow_down, haveRealAccount.value
+                    Bootstrap.box_arrow_in_down, haveRealAccount.value
                       ? () => Get.to(() => const Deposit())
                       : () => CustomScaffoldMessanger.showAppSnackBar(context, message: "Anda belum memiliki akun real", type: SnackBarType.error)
                     ),
@@ -242,9 +241,15 @@ class _SettingsState extends State<Settings> {
               ],
             ),
             SizedBox(height: 12),
-            SettingComponents.listTileItem("Riwayat Deposit Withdrawal", "Semua riwayat deposit akun trading anda", AntDesign.transaction_outline, onTap: (){
-              Get.to(() => const DepositWithdrawalHistory());
-            }),
+            Obx(
+              () => SettingComponents.listTileItem(
+                "Riwayat Deposit Withdrawal", 
+                "Semua riwayat deposit akun trading anda", 
+                AntDesign.transaction_outline, 
+                onTap: haveRealAccount.value ? () => Get.to(() => const DepositWithdrawalHistory()) : () {
+                  CustomScaffoldMessanger.showAppSnackBar(context, message: "Anda belum memiliki akun real", type: SnackBarType.error);
+                }),
+            ),
             SettingComponents.listTileItem("Tickets", "Help your problem", LineAwesome.headset_solid, onTap: () async {
               // SharedPreferences prefs = await SharedPreferences.getInstance();
               // prefs.getString('accessToken');

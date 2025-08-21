@@ -75,7 +75,15 @@ class _Step1UploadPhotoState extends State<Step1UploadPhoto> {
               actions: [
                 CupertinoButton(
                   onPressed: (){
-                    Get.offAll(() => const Mainpage());
+                    CustomAlert.alertDialogCustomInfo(
+                      title: "Confirmation",
+                      message: "Are you sure you want to cancel? All data will be lost.",
+                      moreThanOneButton: true,
+                      onTap: () {
+                        Get.offAll(() => const Mainpage());
+                      },
+                      textButton: "Yes",
+                    );
                   },
                   child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
                 )
@@ -117,16 +125,18 @@ class _Step1UploadPhotoState extends State<Step1UploadPhoto> {
                         },
                           controller: idTypeController, fieldName: LanguageGlobalVar.ID_TYPE.tr, hintText: LanguageGlobalVar.ID_TYPE.tr, labelText: LanguageGlobalVar.ID_TYPE.tr
                         ),
-                        NumberTextField(controller: idTypeNumber, fieldName: LanguageGlobalVar.ID_TYPE_NUMBER.tr, hintText: LanguageGlobalVar.ID_TYPE_NUMBER.tr, labelText: LanguageGlobalVar.ID_TYPE_NUMBER.tr, maxLength: 14),
+                        NumberTextField(controller: idTypeNumber, fieldName: LanguageGlobalVar.ID_TYPE_NUMBER.tr, hintText: LanguageGlobalVar.ID_TYPE_NUMBER.tr, labelText: LanguageGlobalVar.ID_TYPE_NUMBER.tr, maxLength: 16),
                         Obx(
-                          () => isLoading.value ? const SizedBox() : UtilitiesWidget.uploadPhoto(isImageOnline: imageLoaded.value, title: "Foto KTP", onPressed: () async {
+                          () => isLoading.value ? const SizedBox() : UtilitiesWidget.uploadPhotoV2(isImageOnline: imageLoaded.value, title: "Foto KTP", onPressed: () async {
                             idPhoto.value = await CustomImagePicker.pickImageFromCameraAndReturnUrl();
+                            imageLoaded.value = false;
                           }, urlPhoto: idPhoto.value),
                         ),
                         Obx(
                           () => !isLoading.value ? Obx(
-                            () => UtilitiesWidget.uploadPhoto(isImageOnline: imageLoaded.value, title: "Foto Selfie", urlPhoto: idPhotoSelfie.value, onPressed: () async {
+                            () => UtilitiesWidget.uploadPhotoV2(isImageOnline: imageLoaded.value, title: "Foto Selfie", urlPhoto: idPhotoSelfie.value, onPressed: () async {
                               idPhotoSelfie.value = await CustomImagePicker.pickImageFromCameraAndReturnUrl();
+                              imageLoaded.value = false;
                             }),
                           ) : const SizedBox()),
                       ]
@@ -151,11 +161,10 @@ class _Step1UploadPhotoState extends State<Step1UploadPhoto> {
                       CustomAlert.alertError(message: regolController.responseMessage.value);
                       return false;
                     }
-
                     Get.to(() => const Step2StoredData());
                   });
                 },
-                progressEnd: 4,
+                progressEnd: 5,
                 progressStart: 1
               ),
             ),

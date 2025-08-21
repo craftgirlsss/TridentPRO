@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:tridentpro/src/models/settings/admin_bank_model.dart';
 import 'package:tridentpro/src/models/settings/user_bank_model.dart';
+import 'package:tridentpro/src/models/utilities/list_bank_user.dart';
 import 'package:tridentpro/src/service/auth_service.dart';
 
 class SettingController extends GetxController{
@@ -8,6 +9,7 @@ class SettingController extends GetxController{
   AuthService authService = AuthService();
   RxString responseMessage = "".obs;
   Rxn<UserBankModel> userBankModel = Rxn<UserBankModel>();
+  Rxn<ListBankUserV2> userBankModelV2 = Rxn<ListBankUserV2>();
   Rxn<BankAdminModel> adminBankModel = Rxn<BankAdminModel>();
 
 
@@ -16,9 +18,7 @@ class SettingController extends GetxController{
     try {
       isLoading(true);
       Map<String, dynamic> result = await authService.get("profile/user-bank");
-
       isLoading(false);
-      print(result);
       responseMessage(result['message']);
       if (result['status'] != true) {
         return false;
@@ -32,6 +32,27 @@ class SettingController extends GetxController{
     }
   }
 
+  Future<bool> getUserBankV2() async {
+    try {
+      isLoading(true);
+      Map<String, dynamic> result = await authService.get("/bank/list");
+
+      isLoading(false);
+      responseMessage(result['message']);
+      if (result['status'] != true) {
+        return false;
+      }
+      userBankModelV2(ListBankUserV2.fromJson(result));
+      return true;
+    } catch (e) {
+      isLoading(false);
+      responseMessage(e.toString());
+      return false;
+    }
+  }
+
+
+
   // Pernataan Pailit
   Future<bool> editBank(
     {
@@ -39,7 +60,6 @@ class SettingController extends GetxController{
       String? currencyType,
       String? bankName,
       String? owner,
-      String? city,
       String? branch,
       String? type,
       String? number
@@ -56,9 +76,9 @@ class SettingController extends GetxController{
         'type': type,
         'account': number
       });
+      print(result);
 
       isLoading(false);
-      print(result);
       responseMessage(result['message']);
       if (result['status'] != true) {
         return false;
@@ -78,7 +98,6 @@ class SettingController extends GetxController{
       isLoading(true);
       Map<String, dynamic> result = await authService.get("transaction/bank-admin?type_news");
       isLoading(false);
-      print(result);
       responseMessage(result['message']);
       if (result['status'] != true) {
         return false;
@@ -113,7 +132,6 @@ class SettingController extends GetxController{
       };
       Map<String, dynamic> result = await authService.multipart("transaction/deposit", body, file);
       isLoading(false);
-      print(result);
       responseMessage(result['message']);
       if (result['status'] != true) {
         return false;
@@ -125,6 +143,39 @@ class SettingController extends GetxController{
       return false;
     }
   }
+
+
+   // Pernataan Pailit
+  Future<bool> depositNewAccount({
+    String? bankAdminID,
+    String? bankUserID,
+    String? amount,
+    String? imageURL
+  }) async {
+      try {
+        isLoading(true);
+        Map<String, String> body = {
+          'dpnewacc_bankusr': bankUserID!,
+          'dpnewacc_bankcmpy': bankAdminID!,
+          'dpnewacc_dpstval': amount!,
+        };
+        Map<String, String> file = {
+          'dpnewacc_tfprove': imageURL!
+        };
+        Map<String, dynamic> result = await authService.multipart("regol/depositNewAccount", body, file);
+        isLoading(false);
+        print(result);
+        responseMessage(result['message']);
+        if (result['status'] != true) {
+          return false;
+        }
+        return true;
+      } catch (e) {
+        isLoading(false);
+        responseMessage(e.toString());
+        return false;
+      }
+    }
 
   // Pernataan Pailit
   Future<bool> withdrawal({
@@ -140,7 +191,6 @@ class SettingController extends GetxController{
         'bank_user': bankUserID
       });
       isLoading(false);
-      print(result);
       responseMessage(result['message']);
       if (result['status'] != true) {
         return false;
@@ -167,7 +217,6 @@ class SettingController extends GetxController{
         'amount': amount
       });
       isLoading(false);
-      print(result);
       responseMessage(result['message']);
       if (result['status'] != true) {
         return false;

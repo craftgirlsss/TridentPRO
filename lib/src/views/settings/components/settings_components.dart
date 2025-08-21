@@ -15,7 +15,7 @@ class SettingComponents {
         ),
         child: Column(
           children: [
-            Icon(icon, size: 32, color: CustomColor.defaultColor),
+            Icon(icon, size: 32, color: CustomColor.secondaryColor),
             SizedBox(height: 8),
             Text(title),
           ],

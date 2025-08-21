@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:tridentpro/src/components/alerts/default.dart';
+import 'package:tridentpro/src/components/alerts/scaffold_messanger_alert.dart';
 import 'package:tridentpro/src/components/appbars/default.dart';
 import 'package:tridentpro/src/components/bottomsheets/material_bottom_sheets.dart';
 import 'package:tridentpro/src/components/buttons/outlined_button.dart';
@@ -12,9 +14,11 @@ import 'package:tridentpro/src/components/textfields/number_textfield.dart';
 import 'package:tridentpro/src/components/textfields/void_textfield.dart';
 import 'package:tridentpro/src/controllers/setting.dart';
 import 'package:tridentpro/src/controllers/trading.dart';
+import 'package:tridentpro/src/controllers/utilities.dart';
 
 class Withdrawal extends StatefulWidget {
-  const Withdrawal({super.key});
+  const Withdrawal({super.key, this.idLogin});
+  final String? idLogin;
 
   @override
   State<Withdrawal> createState() => _WithdrawalState();
@@ -23,6 +27,7 @@ class Withdrawal extends StatefulWidget {
 class _WithdrawalState extends State<Withdrawal> {
 
   SettingController settingController = Get.put(SettingController());
+  UtilitiesController utilitiesController = Get.find();
   TradingController tradingController = Get.put(TradingController());
   RxString selectedBankUserID = "".obs;
   RxString selectedTradingID = "".obs;
@@ -35,11 +40,16 @@ class _WithdrawalState extends State<Withdrawal> {
   TextEditingController myBankType = TextEditingController();
   TextEditingController myAmount = TextEditingController();
   TextEditingController myAccountTrading = TextEditingController();
+  final TextEditingController convertedAmount = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, (){
+      if(widget.idLogin != null){
+        selectedTradingID(widget.idLogin);
+        myAccountTrading.text = selectedTradingID.value;
+      }
       settingController.getUserBank().then((resultGetMyBank){
         if(!resultGetMyBank){
           CustomAlert.alertError(message: settingController.responseMessage.value);
@@ -64,6 +74,7 @@ class _WithdrawalState extends State<Withdrawal> {
     myBankNumber.dispose();
     myBankType.dispose();
     myAmount.dispose();
+    convertedAmount.dispose();
     super.dispose();
   }
   @override
@@ -142,19 +153,36 @@ class _WithdrawalState extends State<Withdrawal> {
                       NameTextField(controller: myBankType, fieldName: "Tipe", hintText: "Tipe", labelText: "Tipe", readOnly: true, useValidator: false),
                       Obx(
                         () => VoidTextField(controller: myAccountTrading, fieldName: "Akun Trading", hintText: "Akun Trading", labelText: "Akun Trading", onPressed: settingController.isLoading.value ? null : () async {
-                          CustomMaterialBottomSheets.defaultBottomSheet(context, size: size, title: "Pilih Akun Trading", children: List.generate(tradingController.tradingAccountModels.value?.response.real?.length ?? 0, (i){
-                            return ListTile(
-                              onTap: (){
-                                Navigator.pop(context);
-                                myAccountTrading.text = "${tradingController.tradingAccountModels.value?.response.real?[i].login} - \$${tradingController.tradingAccountModels.value?.response.real?[i].balance}";
-                                selectedTradingID(tradingController.tradingAccountModels.value?.response.real?[i].id);
-                              },
-                              title: Text("${tradingController.tradingAccountModels.value?.response.real?[i].login} - \$${tradingController.tradingAccountModels.value?.response.real?[i].balance}", style: GoogleFonts.inter()),
-                            );
-                          }));
+                          if(widget.idLogin == null){
+                            CustomMaterialBottomSheets.defaultBottomSheet(context, title: "Pilih Akun Trading", size: size, children: List.generate(tradingController.tradingAccountModels.value?.response.real?.length ?? 0, (i){
+                            final account = tradingController.tradingAccountModels.value?.response.real?[i];
+                              return ListTile(
+                                subtitle: Text("${account?.currency} - ${account?.login ?? "-"}", style: GoogleFonts.inter(fontWeight: FontWeight.w400, color: Colors.black45)),
+                                title: Text("${account?.namaTipeAkun ?? "-"} (\$${account?.balance})", style: GoogleFonts.inter(fontWeight: FontWeight.w700)),
+                                onTap: (){
+                                  Navigator.pop(context);
+                                  myAccountTrading.text = "${account?.login} - \$${account?.balance}";
+                                  selectedTradingID(account?.id);
+                                },
+                                leading: Icon(Icons.group, color: CustomColor.defaultColor),
+                                trailing: Icon(AntDesign.arrow_right_outline, color: CustomColor.defaultColor),
+                              );
+                            }));
+                          }
                         }),
                       ),
-                      NumberTextField(controller: myAmount, fieldName: "Jumlah Deposit", hintText: "Jumlah Withdrawal", labelText: "Jumlah Withdrawal", maxLength: 1),
+                      Obx(
+                        () => selectedTradingID.value == "" ? const SizedBox() : NumberTextField(controller: myAmount, fieldName: "Jumlah Deposit", hintText: "Jumlah Withdrawal", labelText: "Jumlah Withdrawal", maxLength: 1, currencyType: "US", withCurrencyFormatter: true, onSubmitted: (p0) {
+                          utilitiesController.convertingMoney(amount: myAmount.text, accountID: selectedTradingID.value).then((result){
+                            if(result == false){
+                              CustomScaffoldMessanger.showAppSnackBar(context, message: utilitiesController.responseMessage.value, type: SnackBarType.error);
+                            }else{
+                              convertedAmount.text = result['response']['amount_received'].toString();
+                            }
+                          });
+                        },),
+                      ),
+                      NumberTextField(controller: convertedAmount, fieldName: "Hasil Konversi", hintText: "Hasil Konversi", labelText: "Hasil Konversi", maxLength: 1, currencyType: "ID", withCurrencyFormatter: true, readOnly: true, preffix: "IDR "),
                     ]
                   )
                 ],

@@ -67,6 +67,7 @@ class _Step3Marital extends State<Step3Marital> {
 
   @override
   Widget build(BuildContext context) {
+    print(motherNameController.text);
     final size = MediaQuery.of(context).size;
     return Stack(
       children: [
@@ -80,7 +81,15 @@ class _Step3Marital extends State<Step3Marital> {
               actions: [
                 CupertinoButton(
                   onPressed: (){
-                    Get.offAll(() => const Mainpage());
+                    CustomAlert.alertDialogCustomInfo(
+                      title: "Confirmation",
+                      message: "Are you sure you want to cancel? All data will be lost.",
+                      moreThanOneButton: true,
+                      onTap: () {
+                        Get.offAll(() => const Mainpage());
+                      },
+                      textButton: "Yes",
+                    );
                   },
                   child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
                 )
@@ -154,8 +163,8 @@ class _Step3Marital extends State<Step3Marital> {
                   Get.to(() => const Step4EmergencyContact());
                 });
               },
-              progressEnd: 4,
-              progressStart: 3
+              progressEnd: 5,
+              progressStart: 4
             ),
           ),
         ),

@@ -11,7 +11,7 @@ class IconContainer {
         borderRadius: BorderRadius.circular(24.0)
       ),
       child: Center(
-        child: Icon(icon, color: CustomColor.defaultColor),
+        child: Icon(icon, color: CustomColor.secondaryColor),
       ),
     );
   }

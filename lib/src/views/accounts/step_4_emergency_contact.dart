@@ -56,7 +56,7 @@ class _Step4EmergencyContact extends State<Step4EmergencyContact> {
     relationController.text = regolController.accountModel.value?.drrtStatus ?? "";
     phoneController.text = regolController.accountModel.value?.drrtPhone ?? "";
     addressController.text = regolController.accountModel.value?.drrtAddress ?? "";
-    zipController.text = regolController.accountModel.value?.drrtPostalCode ?? "-";
+    zipController.text = regolController.accountModel.value?.drrtPostalCode ?? "";
   }
 
   @override
@@ -85,7 +85,15 @@ class _Step4EmergencyContact extends State<Step4EmergencyContact> {
             actions: [
               CupertinoButton(
                 onPressed: (){
-                  Get.offAll(() => const Mainpage());
+                  CustomAlert.alertDialogCustomInfo(
+                    title: "Confirmation",
+                    message: "Are you sure you want to cancel? All data will be lost.",
+                    moreThanOneButton: true,
+                    onTap: () {
+                      Get.offAll(() => const Mainpage());
+                    },
+                    textButton: "Yes",
+                  );
                 },
                 child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
               )
@@ -137,7 +145,7 @@ class _Step4EmergencyContact extends State<Step4EmergencyContact> {
                       //     }));
                       //   }),
                       // ),
-                      NumberTextField(controller: zipController, fieldName: "Zip Code", hintText: "Input Zip Code", labelText: "Zip Code", maxLength: 4),
+                      NumberTextField(controller: zipController, fieldName: "Zip Code", hintText: "Input Zip Code", labelText: "Zip Code", maxLength: 5),
                     ]
                 ),
               ],
@@ -165,8 +173,8 @@ class _Step4EmergencyContact extends State<Step4EmergencyContact> {
                 });
               }
             },
-            progressEnd: 4,
-            progressStart: 4
+            progressEnd: 5,
+            progressStart: 5
           ),
         ),
       ),

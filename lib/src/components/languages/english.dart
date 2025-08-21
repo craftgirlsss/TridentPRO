@@ -2,10 +2,11 @@ import 'language_variable.dart';
 
 class English {
   Map<String, String> usa = {
-    LanguageGlobalVar.MASUK: 'Login',
+    LanguageGlobalVar.MASUK: 'Sign in',
     LanguageGlobalVar.SELANJUTNYA: 'Next',
     LanguageGlobalVar.CANCEL: "Cancel",
     LanguageGlobalVar.LUPA: "Forgot Password?",
+    LanguageGlobalVar.SIGN_IN_WITH_GOOGLE: "Continue with Google",
     LanguageGlobalVar.LANGUAGE_CHANGE: "Get Chance investment Global, With Forex Trading Now!",
     LanguageGlobalVar.DESCRIPTIVE_TEXT: "Hundreds of people have joined TridentPRO Futures. What are you waiting for, it's time to grab the investment opportunity now with us!",
     LanguageGlobalVar.INTRODUCTION_TEXT: "Grab Global Opportunities, Invest in Forex Now!",

@@ -53,8 +53,8 @@ class _Step18PrenyataanSimulasiState extends State<Step18PrenyataanSimulasi> {
     super.initState();
     Future.delayed(Duration.zero, () async {
       regolController.isLoading(true);
-      rtController.text = regolController.accountModel.value?.rt ?? '-';
-      rwController.text = regolController.accountModel.value?.rw ?? '-';
+      rtController.text = regolController.accountModel.value?.rt ?? '';
+      rwController.text = regolController.accountModel.value?.rw ?? '';
       addressController.text = regolController.accountModel.value?.address ?? "";
       if(regolController.accountModel.value?.app_foto_simulasi != null){
         simulasiAkunDemoURL(regolController.accountModel.value?.app_foto_simulasi);
@@ -129,7 +129,15 @@ class _Step18PrenyataanSimulasiState extends State<Step18PrenyataanSimulasi> {
               actions: [
                 CupertinoButton(
                   onPressed: () async {
-                    Get.offAll(() => const Mainpage());
+                    CustomAlert.alertDialogCustomInfo(
+                      title: "Confirmation",
+                      message: "Are you sure you want to cancel? All data will be lost.",
+                      moreThanOneButton: true,
+                      onTap: () {
+                        Get.offAll(() => const Mainpage());
+                      },
+                      textButton: "Yes",
+                    );
                   },
                   child: Text(LanguageGlobalVar.CANCEL.tr, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: CustomColor.defaultColor)),
                 )
@@ -228,15 +236,15 @@ class _Step18PrenyataanSimulasiState extends State<Step18PrenyataanSimulasi> {
                           }),
                         // ),
                         // Obx(() => utilitiesController.selectedDesaID.value == "" ? const SizedBox() :
-                        NumberTextField(controller: zipController, hintText: "Kode Pos", labelText: "Kode Pos", maxLength: 4, fieldName: "Kode Pos", useValidator: false),
+                        NumberTextField(controller: zipController, hintText: "Kode Pos", labelText: "Kode Pos", maxLength: 5, fieldName: "Kode Pos", useValidator: false),
                         // ),
                         // Obx(
                         //   () => utilitiesController.selectedDesaID.value == "" ? const SizedBox() :
                           Row(
                             children: [
-                              Expanded(child: NumberTextField(controller: rtController, hintText: "RT", labelText: "RT", maxLength: 1, fieldName: "RT", useValidator: false)),
+                              Expanded(child: NumberTextField(controller: rtController, hintText: "RT", labelText: "RT", maxLength: 5, fieldName: "RT", useValidator: false)),
                               const SizedBox(width: 10.0),
-                              Expanded(child: NumberTextField(controller: rwController, hintText: "RW", labelText: "RW", maxLength: 1, fieldName: "RW", useValidator: false)),
+                              Expanded(child: NumberTextField(controller: rwController, hintText: "RW", labelText: "RW", maxLength: 5, fieldName: "RW", useValidator: false)),
                             ],
                           ),
                         // ),
@@ -269,7 +277,7 @@ class _Step18PrenyataanSimulasiState extends State<Step18PrenyataanSimulasi> {
                                     children: [
                                       Checkbox(
                                         fillColor: WidgetStatePropertyAll(Colors.white),
-                                        checkColor: CustomColor.defaultColor,
+                                        checkColor: CustomColor.secondaryColor,
                                         side: WidgetStateBorderSide.resolveWith((Set<WidgetState> states) {
                                           if (states.contains(WidgetState.selected)) {
                                             return const BorderSide(color: Colors.black45); // tetap tampil meski dicentang
@@ -289,7 +297,7 @@ class _Step18PrenyataanSimulasiState extends State<Step18PrenyataanSimulasi> {
                                     children: [
                                       Checkbox(
                                         fillColor: WidgetStatePropertyAll(Colors.white),
-                                        checkColor: CustomColor.defaultColor,
+                                        checkColor: CustomColor.secondaryColor,
                                         side: WidgetStateBorderSide.resolveWith((Set<WidgetState> states) {
                                           if (states.contains(WidgetState.selected)) {
                                             return const BorderSide(color: Colors.black45); // tetap tampil meski dicentang
@@ -340,7 +348,7 @@ class _Step18PrenyataanSimulasiState extends State<Step18PrenyataanSimulasi> {
                   }
                 },
                 progressEnd: 4,
-                progressStart: 1
+                progressStart: 3
               ),
             ),
           ),

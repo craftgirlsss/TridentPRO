@@ -5,6 +5,7 @@ class IndonesiaLanguage {
     LanguageGlobalVar.MASUK: LanguageGlobalVar.MASUK,
     LanguageGlobalVar.SELANJUTNYA: LanguageGlobalVar.SELANJUTNYA,
     LanguageGlobalVar.CANCEL: LanguageGlobalVar.CANCEL,
+    LanguageGlobalVar.SIGN_IN_WITH_GOOGLE: LanguageGlobalVar.SIGN_IN_WITH_GOOGLE,
     LanguageGlobalVar.LUPA: LanguageGlobalVar.LUPA,
     LanguageGlobalVar.LANGUAGE_CHANGE: LanguageGlobalVar.LANGUAGE_CHANGE,
     LanguageGlobalVar.INTRODUCTION_TEXT: LanguageGlobalVar.INTRODUCTION_TEXT,

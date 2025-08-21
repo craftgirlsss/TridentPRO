@@ -10,19 +10,19 @@ class CustomOutlinedButton {
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
           elevation: 0,
-          overlayColor: CustomColor.defaultColor,
+          overlayColor: CustomColor.secondaryColor,
           padding: const EdgeInsets.symmetric(horizontal: 5),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.0)
           ),
           side: BorderSide(
-            color: CustomColor.defaultColor
+            color: CustomColor.secondaryColor
           )
         ),
         child: Text(title ?? "Submit", textAlign: TextAlign.center, style: GoogleFonts.inter(
           fontWeight: FontWeight.bold,
           fontSize: 12,
-          color: CustomColor.defaultColor
+          color: CustomColor.secondaryColor
         ))
       ),
     );

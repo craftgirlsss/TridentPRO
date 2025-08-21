@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tridentpro/src/components/colors/default.dart';
 import 'package:tridentpro/src/components/painters/progress_painter.dart';
 import 'package:tridentpro/src/components/painters/wave_painter.dart';
 
@@ -84,7 +85,7 @@ class _CircularWaveProgressState extends State<CircularWaveProgress> with Ticker
   }
 
   Color get buttonColor {
-    if (_progressController.isAnimating) return const Color(0xFFF44336);
+    if (_progressController.isAnimating) return CustomColor.secondaryColor;
     if (_progressController.isCompleted) return const Color(0xFF2196F3);
     return const Color(0xFF4CAF50);
   }

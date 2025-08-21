@@ -46,7 +46,6 @@ class _ListTradingAccountPageState extends State<ListTradingAccountPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(accountTrading.length);
     return Scaffold(
       body: Obx(
         () => isLoading.value ? const Text("Getting...") : ListView.builder(

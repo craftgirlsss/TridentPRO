@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:tridentpro/src/components/colors/default.dart';
 
 class OTPTextField extends StatefulWidget {
@@ -31,7 +32,7 @@ class _OTPTextFieldState extends State<OTPTextField> {
           autofillHints: const [AutofillHints.oneTimeCode],
           keyboardAppearance: Brightness.dark,
           keyboardType: TextInputType.number,
-          cursorColor: CustomColor.defaultColor,
+          cursorColor: CustomColor.secondaryColor,
           validator: (value) {
             if (value == null || value.isEmpty) {
               return 'Mohon isikan ${widget.fieldName}';
@@ -42,17 +43,18 @@ class _OTPTextFieldState extends State<OTPTextField> {
           },
           decoration: InputDecoration(
             hintText: widget.hintText,
+            prefixIcon: SizedBox(width: 30, child: Icon(Bootstrap.number_123, color: Colors.black54),),
             hintStyle: GoogleFonts.inter(
               color: CustomColor.textThemeDarkSoftColor,
               fontSize: 14
             ),
             labelText: widget.labelText,
-            labelStyle: const TextStyle(color: CustomColor.defaultColor),
+            labelStyle: const TextStyle(color: CustomColor.secondaryColor),
             filled: false,
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.0),
                 borderSide: BorderSide(
-                    color: CustomColor.defaultColor
+                    color: CustomColor.secondaryColor
                 )
             ),
             enabledBorder: OutlineInputBorder(
